@@ -5,7 +5,7 @@ from numpy import pi, convolve
 def A_weighting(Fs):
     """Design of an A-weighting filter.
     
-    [B,A] = A_weighting(Fs) designs a digital A-weighting filter for 
+    B, A = A_weighting(Fs) designs a digital A-weighting filter for 
     sampling frequency Fs. Usage: y = lfilter(B, A, x).
     Warning: Fs should normally be higher than 20 kHz. For example, 
     Fs = 48000 yields a class 1-compliant filter.
