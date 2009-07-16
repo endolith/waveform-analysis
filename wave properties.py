@@ -1,0 +1,94 @@
+from scipy.signal.filter_design import bilinear
+from scipy.signal import lfilter
+from numpy import log10, pi, convolve, mean
+import numpy as np
+
+def rms_flat(a):
+    """
+    Return the root mean square of all the elements of *a*, flattened out.
+    """
+    return np.sqrt(np.mean(np.absolute(a)**2))
+
+def A_weighting(Fs):
+    """Design of an A-weighting filter.
+    
+    [B,A] = A_weighting(Fs) designs a digital A-weighting filter for 
+    sampling frequency Fs. Usage: Y = FILTER(B,A,X). 
+    Warning: Fs should normally be higher than 20 kHz. For example, 
+    Fs = 48000 yields a class 1-compliant filter.
+    
+    Original also included ASPEC, CDSGN, CSPEC.
+    
+    Author: Christophe Couvreur, Faculte Polytechnique de Mons (Belgium)
+            couvreur@thor.fpms.ac.be
+    Last modification: Aug. 20, 1997, 10:00am.
+    
+    Translated from adsgn.m to PyLab 2009-07-14 endolith@gmail.com
+    
+    References: 
+       [1] IEC/CD 1672: Electroacoustics-Sound Level Meters, Nov. 1996.
+    
+    """
+    
+    # Definition of analog A-weighting filter according to IEC/CD 1672.
+    f1 = 20.598997
+    f2 = 107.65265
+    f3 = 737.86223
+    f4 = 12194.217
+    A1000 = 1.9997
+    
+    NUMs = [(2*pi*f4)**2*(10**(A1000/20)), 0, 0, 0, 0]
+    DENs = convolve([1, +4*pi*f4, (2*pi*f4)**2], [1, +4*pi*f1, (2*pi*f1)**2], mode='full')
+    DENs = convolve(convolve(DENs, [1, 2*pi*f3], mode='full'), [1, 2*pi*f2], mode='full')
+    
+    # Use the bilinear transformation to get the digital filter.
+    # (Octave, MATLAB, and PyLab disagree about Fs vs 1/Fs)
+    return bilinear(NUMs, DENs, Fs)
+
+def main():
+    from scikits.audiolab import Sndfile, Format
+
+    filename = 'Some white noise'
+    f = Sndfile(filename + '.wav', 'r')
+    a = f.read_frames(f.nframes)
+    #TODO: better variable names
+
+    # Calculate dBFS relative to a FS square wave, after eliminating DC
+    level = 20*log10(rms_flat(a-mean(a)))
+
+    # Design an A-weighting filter for this sampling frequency
+    Fs = f.samplerate
+    B, A = A_weighting(Fs)
+
+    # Apply the A-weighting filter to the sound
+    x = lfilter(B,A,a, axis=0)
+
+    # Calculate dBFS relative to a FS square wave, after eliminating DC
+    weighted_level = 20*log10(rms_flat(x-mean(x)))
+
+    format = Format('wav')
+    weighted_filename = filename + ' weighted.wav'
+    g = Sndfile(weighted_filename, 'w', format, f.channels, Fs) #TODO: Channels automatically
+    g.write_frames(x)
+    g.close()
+
+    msg = 'Average RMS value in dB re FS square'
+    title = 'Waveform properties'
+    text = [level, weighted_level]
+    
+    try:
+        import easygui
+    except ImportError:
+        # Print the stuff
+        print 'Level: %.3f dB' % level
+        print 'A-weighted: %.3f dB' % weighted_level
+        print 'weighted output written to ' + weighted_filename
+    else:
+        # Pop the stuff up in a text box
+        easygui.textbox(msg, title, text)
+
+
+
+if __name__ == '__main__':
+    # sys.exit(main())
+    main()
