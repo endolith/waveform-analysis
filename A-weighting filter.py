@@ -6,7 +6,7 @@ def A_weighting(Fs):
     """Design of an A-weighting filter.
     
     [B,A] = A_weighting(Fs) designs a digital A-weighting filter for 
-    sampling frequency Fs. Usage: Y = FILTER(B,A,X). 
+    sampling frequency Fs. Usage: y = lfilter(B, A, x).
     Warning: Fs should normally be higher than 20 kHz. For example, 
     Fs = 48000 yields a class 1-compliant filter.
     
@@ -38,4 +38,5 @@ def A_weighting(Fs):
     # (Octave, MATLAB, and PyLab disagree about Fs vs 1/Fs)
     return bilinear(NUMs, DENs, Fs)
 
-y = lfilter(B, A, X, axis=0)
+# You probably need to specify the axis. Importing a stereo sound file with scikits.audiolab needs axis = 0, for instance:
+y = lfilter(B, A, x, axis = 0)
