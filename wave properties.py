@@ -1,3 +1,10 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Started out as an A-weighting filter and measurement, but made it into a full waveform analysis tool.
+# Please don't blindly trust this.  If I did anything stupid, let me know.
+
+from __future__ import division
 import numpy as np
 from numpy import log10, pi, convolve, mean
 from scipy.signal.filter_design import bilinear
@@ -12,7 +19,7 @@ def A_weighting(Fs):
     Warning: Fs should normally be higher than 20 kHz. For example,
     Fs = 48000 yields a class 1-compliant filter.
 
-    Original also included ASPEC, CDSGN, CSPEC.
+    Originally a MATLAB script. Also included ASPEC, CDSGN, CSPEC.
 
     Author: Christophe Couvreur, Faculte Polytechnique de Mons (Belgium)
             couvreur@thor.fpms.ac.be
@@ -48,6 +55,24 @@ def rms_flat(a):
     """
     return np.sqrt(np.mean(np.absolute(a)**2))
 
+def rms(signal):
+    """Return the RMS level of the signal after removing any DC offset"""
+    return rms_flat(signal - mean(signal))
+
+def channels_identical(a1, a2):
+    """
+    True if two arrays have the same shape and elements, False otherwise.
+
+    """
+    try:
+        a1, a2 = asarray(a1), asarray(a2)
+    except:
+        return False
+    if a1.shape != a2.shape:
+        return False
+    return bool(logical_and.reduce(equal(a1,a2).ravel()))
+
+
 def dB(level):
      """Return a level in decibels.
 
@@ -56,23 +81,22 @@ def dB(level):
      """
      return 20 * log10(level)
 
-def level(signal):
-    """Return the RMS level of the signal after removing any DC offset"""
-    return rms_flat(signal - mean(signal))
+def A_weight(signal, samplerate):
+    """Return the given signal after passing through an A-weighting filter"""
+    B, A = A_weighting(samplerate)
+    return lfilter(B, A, signal, axis = 0)
 
 def analyze(filename):
     f = Sndfile(filename, 'r')
     signal = f.read_frames(f.nframes)
 
-    # Design an A-weighting filter for this sampling frequency
-    Fs = f.samplerate
-    B, A = A_weighting(Fs)
+    signal_level = rms(signal)
+    peak_level = max(max(signal.flat),-min(signal.flat))
+    crest_factor = peak_level/signal_level
 
     # Apply the A-weighting filter to the signal
-    weighted = lfilter(B, A, signal, axis = 0)
-
-    signal_level = dB(level(signal))
-    weighted_level = dB(level(weighted))
+    weighted = A_weight(signal, f.samplerate)
+    weighted_level = rms(weighted)
 
     header = 'dB values are relative to a full-scale square wave'
     title = 'Waveform properties'
@@ -80,22 +104,31 @@ def analyze(filename):
     results = [
     'Properties for "' + filename + '"',
     str(f.format),
-    'Channels: %d' % f.channels,
-    'Sampling rate: %d' % f.samplerate,
+    'Channels: %d' % f.channels]
+
+    if channels_identical(signal):
+        results[2] += ' (channels are identical)'
+
+    results += [
+    'Sampling rate: %d Hz' % f.samplerate,
     'Frames: %d' % f.nframes,
-    'Length: ' + str(f.nframes/f.samplerate) + ' seconds',
-    '\nRMS level: %.3f dB' % signal_level,
-    'A-weighted: %.3f dB' % weighted_level,
-    'Difference: %.3f dB' % (signal_level - weighted_level),
+    'Length: ' + str(f.nframes/f.samplerate) + ' seconds\n',
+    'DC offset: %f (%.3f%%)' % (mean(signal), mean(signal)*100),
+    'Crest factor: %.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
+    'Peak level: %.3f (%.3f dB)' % (peak_level, dB(peak_level)), # Does not take intersample peaks into account!
+    'RMS level: %.3f (%.3f dB)' % (signal_level, dB(signal_level)),
+    'A-weighted: %.3f (%.3f dB)' % (weighted_level, dB(weighted_level)),
+    'A-difference: %.3f dB' % dB(weighted_level/signal_level),
     ]
-    #print 'weighted output written to ' + weighted_filename
+    # everything that Audition does?
+    # histogram, possibly clipped samples, max/min values, min RMS, max RMS, average RMS, total RMS, actual bit depth
+    # Ideally: frequency with +-% accuracy , THD, THD+N, Dynamic range, signal to noise,
+    # should check if channels are identical?
+    #crest factor
 
-    # filename, channels, bit depth, file format, encoding
-    # length in samples, length in seconds
-    # peak value, mean RMS, everything that Audition does?
-    # A-weighted RMS value
-    # Ideally: frequency, THD, THD+N, Dynamic range, signal to noise,
+    #Dc offset
 
+    # Could also make a list of property names and their values and format it into a string later?  Still need to consider float formatting, etc. though
 
     try:
         import easygui
