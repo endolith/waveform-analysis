@@ -30,5 +30,9 @@ To do(?):
 * crest factor  
 * DC offset
 * Real-time analysis of sound card input?
+* Calculate intersample peaks
+* Message about easygui not installed?
+* 2 unique channels vs 2 identical channels vs 1 channel
+
 
 Done:
