@@ -19,7 +19,6 @@ To do(?):
    * possibly clipped samples
    * max/min values
    * min RMS, max RMS, average RMS
-   * total RMS
    * actual bit depth
 * Ideally: frequency with ±% accuracy - better accuracy for longer wavs
 * THD
@@ -27,12 +26,13 @@ To do(?):
 * Dynamic range
 * signal to noise
 * should check if channels are identical?  
-* crest factor  
-* DC offset
 * Real-time analysis of sound card input?
 * Calculate intersample peaks
+  * "If you want to see something really bad on the oversampled meter - try a sequence of maximum and minimum values that goes like this: "1010101101010" - notice that the alternating 1's and 0's suddenly change direction in the middle. The results depends on the filter being used in the reconstruction, with the intersample peak easily exceeding 10dB!"
 * Message about easygui not installed?
 * 2 unique channels vs 2 identical channels vs 1 channel
 
-
 Done:
+* total RMS level
+* crest factor  
+* DC offset
