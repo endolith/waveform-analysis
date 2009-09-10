@@ -1,0 +1,34 @@
+This started out as an A-weighting filter and measurement, but I made it into a full waveform analysis tool.
+
+I was previously using the FFT filter in Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
+
+Please don't blindly trust this.  If I did anything stupid, let me know.
+
+To do(?):
+* Guess the type of waveform?  Noise vs sine vs whatever
+* Frequency estimation if appropriate
+* Histogram of sample values ("matplotlib not installed... skipping histogram")
+* Identify if it is 8-bit samples encoded with 16 bits, for instance
+* Frequency response plot if the input is a sweep ;)  
+  * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
+* py2exe compilation for Windoze
+* Web page describing it
+  * Screenshots compared to Audition analysis results
+* everything that Audition does?
+   * histogram of dB values
+   * possibly clipped samples
+   * max/min values
+   * min RMS, max RMS, average RMS
+   * total RMS
+   * actual bit depth
+* Ideally: frequency with ±% accuracy - better accuracy for longer wavs
+* THD
+* THD+N
+* Dynamic range
+* signal to noise
+* should check if channels are identical?  
+* crest factor  
+* DC offset
+* Real-time analysis of sound card input?
+
+Done:

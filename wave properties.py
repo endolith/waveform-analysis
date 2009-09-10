@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Started out as an A-weighting filter and measurement, but made it into a full waveform analysis tool.
-# Please don't blindly trust this.  If I did anything stupid, let me know.
-
 from __future__ import division
 import numpy as np
 from numpy import log10, pi, convolve, mean
@@ -79,6 +76,7 @@ def display(header, results):
         import easygui
     except ImportError:
         # Print the stuff
+        # Message about easygui not installed?
         print header
         print '-----------------'
         print '\n'.join(results)
@@ -134,13 +132,7 @@ def analyze(filename):
         'A-difference: %.3f dB' % dB(weighted_level/signal_level),
         '-----------------',
         ]
-        # everything that Audition does?
-        # histogram, possibly clipped samples, max/min values, min RMS, max RMS, average RMS, total RMS, actual bit depth
-        # Ideally: frequency with +-% accuracy , THD, THD+N, Dynamic range, signal to noise,
-        # should check if channels are identical?  
-        #crest factor  
-        
-        #Dc offset
+
         
         # Could also make a list of property names and their values and format it into a string later?  Still need to consider float formatting, etc. though
     
