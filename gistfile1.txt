@@ -15,9 +15,10 @@ To do(?):
 * Web page describing it
   * Screenshots compared to Audition analysis results
 * everything that Audition does?
-   * histogram of dB values
-   * possibly clipped samples
-   * max/min values
+   * --histogram of dB values--
+   * number of possibly clipped samples
+   * max/min sample values
+   * peak amplitude
    * min RMS, max RMS, average RMS
    * actual bit depth
 * Ideally: frequency with ±% accuracy - better accuracy for longer wavs
