@@ -1,5 +1,9 @@
 This started out as an A-weighting filter and measurement, but I made it into a full waveform analysis tool.
 
+Usage: python wave_analyzer.py "audio file.flac"
+
+It will open anything supported by audiolab, which basically means anything supported by libsndfile (http://www.mega-nerd.com/libsndfile/).
+
 I was previously using the FFT filter in Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
 
 Please don't blindly trust this.  If I did anything stupid, let me know.
