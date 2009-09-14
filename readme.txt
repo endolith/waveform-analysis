@@ -1,17 +1,27 @@
 This started out as an A-weighting filter and measurement, but I made it into a full waveform analysis tool.
 
+I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
+
+Please don't blindly trust this.  If you use this and find a stupid error, please let me know.  If you use this and don't find any errors, please let me know.
+
+
 Usage: python wave_analyzer.py "audio file.flac"
 
-It will open anything supported by audiolab, which basically means anything supported by libsndfile (http://www.mega-nerd.com/libsndfile/).
+Requires: Python, NumPy, SciPy, Audiolab
+Optional: EasyGUI (output to a window instead of the console), Matplotlib (histogram of sample values)
 
-I was previously using the FFT filter in Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
+http://pypi.python.org/pypi/scikits.audiolab
+http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html
 
-Please don't blindly trust this.  If I did anything stupid, let me know.
+http://easygui.sourceforge.net/
 
-To do(?):
+It will open any file supported by audiolab, which basically means anything supported by libsndfile (http://www.mega-nerd.com/libsndfile/).
+
+
+To do:
 * Guess the type of waveform?  Noise vs sine vs whatever
 * Frequency estimation if appropriate
-* Histogram of sample values ("matplotlib not installed... skipping histogram")
+* Histogram of sample values ("matplotlib not installed... skipping histogram")  hist()
 * Identify if it is 8-bit samples encoded with 16 bits, for instance
 * Frequency response plot if the input is a sweep ;)  
   * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
@@ -41,3 +51,11 @@ Done:
 * total RMS level
 * crest factor  
 * DC offset
+
+1. Get it into publishable form
+2. Post it on gist public
+3. Start using revision control for real
+
+right and left and multichannel are good
+
+may be an error in peak calculation
