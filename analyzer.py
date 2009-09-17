@@ -1,6 +1,8 @@
+# This may or may not work
+
 from scikits.audiolab import wavread, wavwrite
 from numpy import mean
-from A-weighting import A_weighting
+from A_weighting import A_weighting
 
 filename = 'noise.wav'
 y, Fs, bits = wavread(filename)
