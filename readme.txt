@@ -1,3 +1,5 @@
+Crude THD+N calculator in Python
+
 Claimed freq	Script freq	AP THD+N	Script THD+N
 440.1	440.1	0.06%	0.06%
 10003.9	10003.0	0.05%	0.07%
