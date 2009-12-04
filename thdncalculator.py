@@ -13,28 +13,22 @@ def rms_flat(a):
     """
     return sqrt(mean(absolute(a)**2))
 
-def parabolic(f,x):
-    """Quadratic interpolation for estimating intersample peaks
-    
-    estimate the true position of a maximum when nearby samples are known.
+def parabolic(f, x):
+    """Quadratic interpolation for estimating the true position of an 
+    inter-sample maximum when nearby samples are known.
     
     Finds the vertex of a parabola defined by x and its neighbors.
-
     f is a vector and x is an index for that vector.
     
-    Returns (vx, vy), the coordinates of the vertex
-
-    of the parabola that goes through the three points.
+    Returns (vx, vy), the coordinates of the vertex of the parabola that goes
+    through the three points.
     
     Example:
-
     Defining a vector f with a local maximum at index 3 (= 6), find local
-
     maximum if points 2, 3, and 4 actually defined a parabola.
-
     
     In [3]: f = [2, 3, 1, 6, 4, 2, 3, 1]
-    
+        
     In [4]: parabolic(f,argmax(f))
     Out[4]: (3.2142857142857144, 6.1607142857142856)
     
