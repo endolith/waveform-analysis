@@ -5,7 +5,7 @@ Measures
 According to the never-wrong Wikipedia:
 
 * THD is the fundamental alone vs the harmonics alone
-* THD+N is the entire signal (not just the fundamental) vs the entire signal with the fundamental notched out.  (For low distortion, the difference is negligible.)
+* THD+N is the entire signal (not just the fundamental) vs the entire signal with the fundamental notched out.  (For low distortion, the difference between the entire signal and the fundamental is negligible.)
 
 Comparing a test signal on an Audio Precision vs recorded into my 24-bit sound card with this script:
 
