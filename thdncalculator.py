@@ -58,7 +58,7 @@ f = rfft(windowed)
 # throwing away the region around it
 i = argmax(abs(f))  # absolute?
 true_i = parabolic(abs(f), i)[0]
-print 'Frequency:\t%f Hz' % (fs * true_i / len(windowed))
+print 'Frequency: %f Hz' % (fs * true_i / len(windowed))
 
 # TODO: What's the right number of coefficients to use?  Probably depends on sample length, frequency? windowing etc.
 f[i-10: i+11] = 0
@@ -67,4 +67,4 @@ f[i-10: i+11] = 0
 # Could probably calculate the RMS directly in the frequency domain instead
 noise = irfft(f)
 THDN = rms_flat(noise) / total_rms
-print "THD+N:  \t%.4f%% or %.1f dB" % (THDN * 100, 20 * log10(THDN))
+print "THD+N:     %.4f%% or %.1f dB" % (THDN * 100, 20 * log10(THDN))
