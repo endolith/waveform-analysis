@@ -15,6 +15,10 @@ THD+N:  	0.0016% or -96.1 dB
 
 Is this right?  Theoretical SNR of a FS sine is 1.761+6.02*16 = -98.09 dB.  Close, at least.
 
+997 Hz 8-bit    -49.8
+997 Hz 16-bit   -93.4
+997 Hz 32-bit   -143.9
+
 Art Ludwig's Sound Files (http://members.cox.net/artludwig/):
 File                Claimed  Measured  (dB)
 Reference           0.0%     0.0022%   -93.3
@@ -23,3 +27,20 @@ Solid state         0.5%     0.51%     -45.8
 
 Comparing a test device on an Audio Precision vs recorded into my 24-bit sound card with this script:
 
+Frequency   AP THD+N    Script THD+N
+40          1.00%       1.04%
+100         0.15%       0.19%
+100         0.15%       0.14%
+140         0.15%       0.17%
+440         0.06%       0.06%
+961         0.06%       0.07%
+1021        0.08%       0.09%
+1440        0.04%       0.05%
+1483        0.15%       0.15%
+4440        0.05%       0.05%
+9974        7.1%        7.8%
+10036       0.05%       0.12%
+10723       8.2%        9.3%
+20044       0.22%       0.60%
+13640       12.2%       16.8%
+19998       20.2%       56.3%
