@@ -61,7 +61,8 @@ true_i = parabolic(abs(f), i)[0]
 print 'Frequency: %f Hz' % (fs * true_i / len(windowed))
 
 # TODO: What's the right number of coefficients to use?  Probably depends on sample length, frequency? windowing etc.
-f[i-10: i+11] = 0
+width = 10
+f[i-width: i+width+1] = 0
 
 # Transform noise back into the signal domain and measure it
 # Could probably calculate the RMS directly in the frequency domain instead
