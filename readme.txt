@@ -15,6 +15,7 @@ THD+N:  	0.0016% or -96.1 dB
 
 Is this right?  Theoretical SNR of a FS sine is 1.761+6.02*16 = -98.09 dB.  Close, at least.
 
+Adobe Audition with dither:
 997 Hz 8-bit    -49.8
 997 Hz 16-bit   -93.4
 997 Hz 32-bit   -143.9
