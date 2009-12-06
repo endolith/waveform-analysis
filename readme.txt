@@ -50,8 +50,8 @@ Reference           0.0%     0.0022%   -93.3
 Single-ended triode 5.0%     5.06%     -25.9
 Solid state         0.5%     0.51%     -45.8
 
-Comparing a test device on an Audio Precision vs recorded into my 24-bit sound 
-card with this script:
+Comparing a test device on an Audio Precision 22 kHz filtered vs recorded 
+into my 96 kHz 24-bit sound card and measured with this script:
 
 Frequency   AP THD+N    Script THD+N
 40          1.00%       1.04%
@@ -68,7 +68,7 @@ Frequency   AP THD+N    Script THD+N
 10036       0.051%      0.068%
 10723       8.2%        9.3%
 13640       12.2%       16.8%
-19998       20.2%       56.3%
+19998       20.2%       56.3%  (nasty intermodulation distortion)
 20044       0.22%       0.30%
 
 So it's mostly accurate.   Mostly.

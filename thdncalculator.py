@@ -6,8 +6,7 @@ from numpy.fft import rfft, irfft
 from numpy import argmax, sqrt, mean, absolute, arange, log10
 
 def rms_flat(a):
-    """
-    Return the root mean square of all the elements of *a*, flattened out.
+    """Return the root mean square of all the elements of *a*, flattened out.
     
     """
     return sqrt(mean(absolute(a)**2))
