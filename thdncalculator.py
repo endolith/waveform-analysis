@@ -39,7 +39,7 @@ total_rms = rms_flat(windowed)
 # the signal by throwing away values between the nearest local minima
 f = rfft(windowed)
 i = argmax(abs(f))
-print 'Frequency: %f Hz' % (fs * (i / len(windowed)))
+print 'Frequency: %f Hz' % (fs * (i / len(windowed))) # Not exact
 lowermin, uppermin = find_range(abs(f), i)
 f[lowermin: uppermin] = 0
 
