@@ -37,6 +37,8 @@ minima and throw away everything between them.  It works for almost all cases,
 but on peaks with wider "skirts", it gets stuck at any notches.  Should this 
 be considered part of the peak or part of the noise?
 
+Also it computes the FFT for the entire sample, which is a waste of time.  Use short samples.
+
 Adobe Audition with dither:
 997 Hz 8-bit    -49.8
 997 Hz 16-bit   -93.4
