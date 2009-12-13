@@ -1,7 +1,7 @@
 from __future__ import division
 from scikits.audiolab import flacread
 from numpy.fft import rfft, irfft
-from numpy import argmax, sqrt, mean, diff
+from numpy import argmax, sqrt, mean, diff, log
 from matplotlib.mlab import find
 from scipy.signal import blackmanharris, fftconvolve
 from time import time
@@ -39,7 +39,7 @@ def freq_from_fft(sig, fs):
     """Estimate frequency from peak of FFT
     
     Pros: Accurate, usually even more so than zero crossing counter 
-    (1000.000003 Hz for 1000 Hz, for instance).  Due to parabolic interpolation 
+    (1000.000004 Hz for 1000 Hz, for instance).  Due to parabolic interpolation 
     being a very good fit for windowed log FFT peaks?
     https://ccrma.stanford.edu/~jos/sasp/Quadratic_Interpolation_Spectral_Peaks.html
     Accuracy also increases with data length
@@ -54,7 +54,7 @@ def freq_from_fft(sig, fs):
     
     # Find the peak and interpolate to get a more accurate peak
     i = argmax(abs(f)) # Just use this for less-accurate, naive version
-    true_i = parabolic(abs(f), i)[0]
+    true_i = parabolic(log(abs(f)), i)[0]
     
     # Convert to equivalent frequency
     return fs * true_i / len(windowed)
