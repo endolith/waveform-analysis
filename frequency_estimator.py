@@ -1,10 +1,10 @@
 from __future__ import division
 from scikits.audiolab import flacread
 from numpy.fft import rfft, irfft
-from numpy import argmax, sqrt, mean, absolute, linspace, log10, logical_and, average, diff, correlate
+from numpy import argmax, sqrt, mean, diff
 from matplotlib.mlab import find
 from scipy.signal import blackmanharris, fftconvolve
-import time
+from time import time
 import sys
 
 # Faster version from http://projects.scipy.org/scipy/browser/trunk/scipy/signal/signaltools.py
@@ -14,9 +14,11 @@ from parabolic import parabolic
 def freq_from_crossings(sig, fs):
     """Estimate frequency by counting zero crossings
     
-    Pros: Fast, accurate (increasing with data length).  Works well for long low-noise sines, square, triangle, etc.
+    Pros: Fast, accurate (increasing with data length).  Works well for long 
+    low-noise sines, square, triangle, etc.
     
-    Cons: Doesn't work if there are multiple zero crossings per cycle, low-frequency baseline shift, noise, etc.
+    Cons: Doesn't work if there are multiple zero crossings per cycle, 
+    low-frequency baseline shift, noise, etc.
     
     """
     # Find all indices right before a rising-edge zero crossing
@@ -31,7 +33,7 @@ def freq_from_crossings(sig, fs):
     
     # Some other interpolation based on neighboring points might be better. Spline, cubic, whatever
     
-    return fs / average(diff(crossings))
+    return fs / mean(diff(crossings))
 
 def freq_from_fft(sig, fs):
     """Estimate frequency from peak of FFT
@@ -87,16 +89,16 @@ print 'Reading file "%s"\n' % filename
 signal, fs, enc = flacread(filename)
 
 print 'Calculating frequency from FFT:',
-start_time = time.time()
+start_time = time()
 print '%f Hz'   % freq_from_fft(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
+print 'Time elapsed: %.3f s\n' % (time() - start_time)
 
 print 'Calculating frequency from zero crossings:',
-start_time = time.time()
+start_time = time()
 print '%f Hz' % freq_from_crossings(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
+print 'Time elapsed: %.3f s\n' % (time() - start_time)
 
 print 'Calculating frequency from autocorrelation:',
-start_time = time.time()
+start_time = time()
 print '%f Hz' % freq_from_autocorr(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
+print 'Time elapsed: %.3f s\n' % (time() - start_time)
