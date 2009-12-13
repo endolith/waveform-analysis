@@ -45,7 +45,7 @@ def freq_from_fft(sig, fs):
     Accuracy also increases with data length
     
     Cons: Doesn't find the right value if harmonics are stronger than 
-    fundamental, which is common.  Better method would try to identify the fundamental
+    fundamental, which is common.
     
     """
     # Compute Fourier transform of windowed signal
