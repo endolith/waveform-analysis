@@ -57,6 +57,56 @@ def freq_from_fft(sig, fs):
     # Convert to equivalent frequency
     return fs * true_i / len(windowed)
 
+def freq_from_autocorr(sig, fs):
+    """Estimate frequency using autocorrelation
+    
+    Pros: Best method for finding the true fundamental of any repeating wave, 
+    even with strong harmonics or completely missing fundamental
+    
+    Cons: Not as accurate, currently has trouble with finding the true peak
+    
+    """
+    # Calculate autocorrelation and throw away the negative lags
+    corr = fftconvolve(sig, sig[::-1], mode='full')
+    corr = corr[len(corr)/2:]
+    
+    # Find the first low point
+    d = diff(corr)
+    start = find(d > 0)[0]
+    
+    # Find the next peak after the low point (other than 0 lag).  This bit is 
+    # not reliable, due to peaks that occur between samples.
+    peak = argmax(corr[start:]) + start
+    px, py = parabolic(corr, peak)
+    
+    return fs / px
+
+def freq_from_HPS(sig, fs):
+    """
+    
+    Cons: Doesn't work on sine waves.
+    
+    """
+    windowed = signal * blackmanharris(len(signal))
+
+    from pylab import subplot, plot, log, copy, show
+
+    #harmonic product spectrum:
+    c = abs(rfft(windowed))
+    maxharms = 8
+    subplot(maxharms,1,1)
+    plot(log(c))
+    for x in range(2,maxharms):
+        a = copy(c[::x]) #Should average or maximum instead of decimating
+        a.resize(len(c)) #SHould reduce size ,not increas
+        i = argmax(abs(c))
+        true_i = parabolic(abs(c), i)[0]
+        print 'Pass %d: %f Hz' % (x, fs * true_i / len(windowed))
+        c *= a
+        subplot(maxharms,1,x)
+        plot(log(c))
+    show()
+
 filename = sys.argv[1]
 
 print 'Reading file "%s"\n' % filename
@@ -70,4 +120,9 @@ print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
 print 'Calculating frequency from zero crossings:',
 start_time = time.time()
 print '%f Hz' % freq_from_crossings(signal, fs)
+print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
+
+print 'Calculating frequency from autocorrelation:',
+start_time = time.time()
+print '%f Hz' % freq_from_autocorr(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time.time() - start_time)
