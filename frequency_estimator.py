@@ -81,32 +81,6 @@ def freq_from_autocorr(sig, fs):
     
     return fs / px
 
-def freq_from_HPS(sig, fs):
-    """
-    
-    Cons: Doesn't work on sine waves.
-    
-    """
-    windowed = signal * blackmanharris(len(signal))
-
-    from pylab import subplot, plot, log, copy, show
-
-    #harmonic product spectrum:
-    c = abs(rfft(windowed))
-    maxharms = 8
-    subplot(maxharms,1,1)
-    plot(log(c))
-    for x in range(2,maxharms):
-        a = copy(c[::x]) #Should average or maximum instead of decimating
-        a.resize(len(c)) #SHould reduce size ,not increas
-        i = argmax(abs(c))
-        true_i = parabolic(abs(c), i)[0]
-        print 'Pass %d: %f Hz' % (x, fs * true_i / len(windowed))
-        c *= a
-        subplot(maxharms,1,x)
-        plot(log(c))
-    show()
-
 filename = sys.argv[1]
 
 print 'Reading file "%s"\n' % filename
