@@ -14,7 +14,7 @@ from parabolic import parabolic
 def freq_from_crossings(sig, fs):
     """Estimate frequency by counting zero crossings
     
-    Pros: Fast, accurate (increasing with data length).  Works well for long 
+    Pros: Fast, accurate (increasing with signal length).  Works well for long 
     low-noise sines, square, triangle, etc.
     
     Cons: Doesn't work if there are multiple zero crossings per cycle, 
@@ -42,7 +42,7 @@ def freq_from_fft(sig, fs):
     (1000.000004 Hz for 1000 Hz, for instance).  Due to parabolic interpolation 
     being a very good fit for windowed log FFT peaks?
     https://ccrma.stanford.edu/~jos/sasp/Quadratic_Interpolation_Spectral_Peaks.html
-    Accuracy also increases with data length
+    Accuracy also increases with signal length
     
     Cons: Doesn't find the right value if harmonics are stronger than 
     fundamental, which is common.
@@ -78,7 +78,8 @@ def freq_from_autocorr(sig, fs):
     start = find(d > 0)[0]
     
     # Find the next peak after the low point (other than 0 lag).  This bit is 
-    # not reliable, due to peaks that occur between samples.
+    # not reliable for long signals, due to the desired peak occurring between 
+    # samples, and other peaks appearing higher.
     peak = argmax(corr[start:]) + start
     px, py = parabolic(corr, peak)
     
