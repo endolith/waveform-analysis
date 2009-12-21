@@ -68,7 +68,8 @@ def freq_from_autocorr(sig, fs):
     Cons: Not as accurate, currently has trouble with finding the true peak
     
     """
-    # Calculate autocorrelation and throw away the negative lags
+    # Calculate autocorrelation (same thing as convolution, but with one input 
+    # reversed in time), and throw away the negative lags
     corr = fftconvolve(sig, sig[::-1], mode='full')
     corr = corr[len(corr)/2:]
     
