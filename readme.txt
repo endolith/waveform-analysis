@@ -50,7 +50,7 @@ Reference           0.0%     0.0022%   -93.3
 Single-ended triode 5.0%     5.06%     -25.9
 Solid state         0.5%     0.51%     -45.8
 
-Comparing a test device on an Audio Precision 22 kHz filtered vs recorded 
+Comparing a test device on an Audio Precision System One 22 kHz filtered vs recorded 
 into my 96 kHz 24-bit sound card and measured with this script:
 
 Frequency   AP THD+N    Script THD+N
