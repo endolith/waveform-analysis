@@ -35,7 +35,7 @@ f[i-width: i+width+1] = 0
 Instead of a fixed width, it currently just tries to find the nearest local 
 minima and throw away everything between them.  It works for almost all cases, 
 but on peaks with wider "skirts", it gets stuck at any notches.  Should this 
-be considered part of the peak or part of the noise?
+be considered part of the peak or part of the noise (jitter)?
 
 Also it computes the FFT for the entire sample, which is a waste of time.  Use short samples.
 
