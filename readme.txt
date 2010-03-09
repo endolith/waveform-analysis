@@ -55,6 +55,7 @@ Done:
 1. Get it into publishable form
 2. Post it on gist public
 3. Start using revision control for real
+4. Use dBFS instead of dB
 
 right and left and multichannel are good
 
