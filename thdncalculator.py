@@ -29,7 +29,7 @@ filename = sys.argv[1]
 signal, fs, enc = flacread(filename)
 
 # Get rid of DC and window the signal
-signal -= mean(signal)
+signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it
 windowed = signal * blackmanharris(len(signal))
 
 # Measure the total signal before filtering but after windowing
