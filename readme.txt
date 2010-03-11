@@ -40,7 +40,8 @@ be considered part of the peak or part of the noise (jitter)?
 By comparison, Audio Precision manual states "Bandreject Response typically 
 –3 dB at 0.725 f0 & 1.38 f0", which is about 0.93 octaves.
 
-Also it computes the FFT for the entire sample, which is a waste of time.  Use short samples.
+Also it computes the FFT for the entire sample, which is a waste of time.  Use 
+short samples.
 
 Adobe Audition with dither:
 997 Hz 8-bit    -49.8
