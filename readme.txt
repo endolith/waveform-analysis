@@ -45,12 +45,14 @@ To do:
 * Real-time analysis of sound card input?
 * Calculate intersample peaks
   * "If you want to see something really bad on the oversampled meter - try a sequence of maximum and minimum values that goes like this: "1010101101010" - notice that the alternating 1's and 0's suddenly change direction in the middle. The results depends on the filter being used in the reconstruction, with the intersample peak easily exceeding 10dB!"
+* dBFS instead of dB (specify reference in readme)
 
 Maybe:
-* Frequency response plot if the input is a sweep ;)
-  * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
-* Dynamic range from test wave
-* signal to noise from test wave
+ * Frequency response plot if the input is a sweep ;)
+   * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
+ * Dynamic range from test wave
+ * signal to noise from test wave
+    * Same guts as THD script, just input -60 dBFS waveform and compare to maximum value instead of fundamental peak
 
 Done:
 * total RMS level
