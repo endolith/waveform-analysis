@@ -28,7 +28,7 @@ def find_range(f, x):
 
 def THDN(signal, sample_rate):
     # Get rid of DC and window the signal
-    signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it
+    signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
     windowed = signal * blackmanharris(len(signal))  # TODO Kaiser?
 
     # Measure the total signal before filtering but after windowing
@@ -78,15 +78,15 @@ def analyze_file(filename):
         for ch_no, channel in enumerate(signal.transpose()):
             print '-- Channel %d --' % (ch_no + 1)
             THDN(channel, sample_rate)
-    
-    print '\n'
 
 files = sys.argv[1:]
 if files:
     for filename in files:
-        #try:
-        analyze_file(filename)
-        #print 'No URL found in file', filename
+        try:
+            analyze_file(filename)
+        except:
+            print 'Couldn\'t analyze "' + filename + '"'
+        print ''
 else:
     sys.exit("You must provide at least one file to analyze")
 
