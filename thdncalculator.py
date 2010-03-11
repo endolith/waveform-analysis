@@ -1,6 +1,6 @@
 from __future__ import division
 import sys
-from scikits.audiolab import flacread
+from scikits.audiolab import Sndfile
 from scipy.signal import blackmanharris
 from numpy.fft import rfft, irfft
 from numpy import argmax, sqrt, mean, absolute, arange, log10
@@ -26,7 +26,9 @@ def find_range(f, x):
     return (lowermin, uppermin)
 
 filename = sys.argv[1]
-signal, fs, enc = flacread(filename)
+wave_file = Sndfile(filename, 'r')
+signal = wave_file.read_frames(wave_file.nframes)[:,1] # TODO: Handle each channel separately
+fs = wave_file.samplerate
 
 # Get rid of DC and window the signal
 signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it
