@@ -25,16 +25,10 @@ def find_range(f, x):
             break
     return (lowermin, uppermin)
 
-def load(filename):
-    wave_file = Sndfile(filename, 'r')
-    signal = wave_file.read_frames(wave_file.nframes)[:,1] # TODO: Handle each channel separately
-    fs = wave_file.samplerate
-    return signal, fs
-
-def THDN(signal, fs):
+def THDN(signal, sample_rate):
     # Get rid of DC and window the signal
     signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it
-    windowed = signal * blackmanharris(len(signal))
+    windowed = signal * blackmanharris(len(signal))  # TODO Kaiser?
 
     # Measure the total signal before filtering but after windowing
     total_rms = rms_flat(windowed)
@@ -43,7 +37,7 @@ def THDN(signal, fs):
     # the signal by throwing away values between the nearest local minima
     f = rfft(windowed)
     i = argmax(abs(f))
-    print 'Frequency: %f Hz' % (fs * (i / len(windowed))) # Not exact
+    print 'Frequency: %f Hz' % (sample_rate * (i / len(windowed))) # Not exact
     lowermin, uppermin = find_range(abs(f), i)
     f[lowermin: uppermin] = 0
 
@@ -52,8 +46,14 @@ def THDN(signal, fs):
     noise = irfft(f)
     THDN = rms_flat(noise) / total_rms
     print "THD+N:     %.4f%% or %.1f dB" % (THDN * 100, 20 * log10(THDN))
+
+def load(filename):
+    wave_file = Sndfile(filename, 'r')
+    signal = wave_file.read_frames(wave_file.nframes)[:,1] # TODO: Handle each channel separately
+    sample_rate = wave_file.samplerate
+    return signal, sample_rate
     
 filename = sys.argv[1]
-signal, fs = load(filename)
-THDN(signal, fs)
+signal, sample_rate = load(filename)
+THDN(signal, sample_rate)
 
