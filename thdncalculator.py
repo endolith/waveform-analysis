@@ -55,27 +55,38 @@ def load(filename):
     sample_rate = wave_file.samplerate
     return signal, sample_rate, channels
     
-filename = sys.argv[1]
-signal, sample_rate, channels = load(filename)
+def analyze_file(filename):
+    signal, sample_rate, channels = load(filename)
 
-print 'Analyzing "' + filename + '"...'
+    print 'Analyzing "' + filename + '"...'
 
-if channels == 1:
-    # Monaural
-    THDN(signal, sample_rate)
-elif channels == 2:
-    # Stereo
-    if np.array_equal(signal[:,0],signal[:,1]):
-        print '--Left and Right channels are identical:--'
-        THDN(signal[:,0], sample_rate)
+    if channels == 1:
+        # Monaural
+        THDN(signal, sample_rate)
+    elif channels == 2:
+        # Stereo
+        if np.array_equal(signal[:,0],signal[:,1]):
+            print '-- Left and Right channels are identical --'
+            THDN(signal[:,0], sample_rate)
+        else:
+            print '-- Left channel --'
+            THDN(signal[:,0], sample_rate)
+            print '-- Right channel --'
+            THDN(signal[:,1], sample_rate)
     else:
-        print '--Left channel:--'
-        THDN(signal[:,0], sample_rate)
-        print '--Right channel:--'
-        THDN(signal[:,1], sample_rate)
+        # Multi-channel
+        for ch_no, channel in enumerate(signal.transpose()):
+            print '-- Channel %d --' % (ch_no + 1)
+            THDN(channel, sample_rate)
+    
+    print '\n'
+
+files = sys.argv[1:]
+if files:
+    for filename in files:
+        #try:
+        analyze_file(filename)
+        #print 'No URL found in file', filename
 else:
-    # Multi-channel
-    for ch_no, channel in enumerate(signal.transpose()):
-        print '--Channel %d:--' % (ch_no + 1)
-        THDN(channel, sample_rate)
+    sys.exit("You must provide at least one file to analyze")
 
