@@ -11,7 +11,6 @@ from A_weighting import A_weight
 def rms_flat(a):
     """
     Return the root mean square of all the elements of *a*, flattened out.
-    Adapted from matplotlib.mlab
     """
     return sqrt(mean(absolute(a)**2))
 
