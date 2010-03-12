@@ -14,6 +14,14 @@ Please don't blindly trust this.  If you use this and find a stupid error, pleas
 A-weighting:
 I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
 
+Apply an A-weighting filter to a sound stored as a NumPy array.
+
+Use Audiolab or other module to import .wav or .flac files, for instance.
+http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/
+
+Translated from MATLAB script at 
+http://www.mathworks.com/matlabcentral/fileexchange/69
+
 Waveform analyzer:
 
 Usage: python wave_analyzer.py "audio file.flac"
