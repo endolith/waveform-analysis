@@ -51,7 +51,9 @@ http://easygui.sourceforge.net/
 
 It will open any file supported by audiolab, which basically means anything supported by libsndfile (http://www.mega-nerd.com/libsndfile/).
 
-To do or maybe to do:
+Currently this displays wave file information and measurements like crest factor and noise.
+
+== To do or maybe to do ==
 * Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
    * Do FFT, see if there is one continuous peak
    * http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth
@@ -67,7 +69,7 @@ To do or maybe to do:
    * number of possibly clipped samples
    * max/min sample values
    * peak amplitude
-   * min RMS, max RMS, average RMS
+   * min RMS, max RMS, average RMS for chunks of 100 ms or so
    * actual bit depth
      * Identify if it is 8-bit samples encoded with 16 bits, for instance, like Audition does. Also like JACK bitmeter does?
 * THD
@@ -101,11 +103,9 @@ Done:
 3. Start using revision control for real
 4. Use dBFS instead of dB
 
-there may be an error in peak calculation
+there may be an error in peak calculation?
 
 test with crazy files like 1 MHz sampling rate, 3-bit, etc.
 
 high frequencies of A-weighting roll off too quickly at lower sampling rates
 make freq-response graphs at different signal levels and different sampling frequencies
-
-<s>This is more a scientific measurement tool for engineering than a musical tool.  Peak and trough RMS and RMS histogram are not as important?</s>  Include them anyway!
