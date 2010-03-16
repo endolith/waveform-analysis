@@ -74,9 +74,9 @@ def properties(signal, samplerate):
     return [
     'DC offset:\t%f (%.3f%%)' % (DC_offset, DC_offset * 100),
     'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
-    'Peak level:\t%.3f (%.3f dB)' % (peak_level, dB(peak_level)), # Doesn't account for intersample peaks!
-    'RMS level:\t%.3f (%.3f dB)' % (signal_level, dB(signal_level)),
-    'A-weighted:\t%.3f (%.3f dB, %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
+    'Peak level:\t%.3f (%.3f dBFS)' % (peak_level, dB(peak_level)), # Doesn't account for intersample peaks!
+    'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
+    'A-weighted:\t%.3f (%.3f dBFS, %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
     '-----------------',
     ]
     
@@ -85,7 +85,7 @@ def analyze(filename):
     signal = wave_file.read_frames(wave_file.nframes)
     channels = wave_file.channels
     samplerate = wave_file.samplerate
-    header = 'dB values are relative to a full-scale square wave'
+    header = 'dBFS values are relative to a full-scale square wave'
     
     results = [
     'Properties for "' + filename + '"',
