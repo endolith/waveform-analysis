@@ -33,8 +33,9 @@ methods "in the literature", but here is some code for the simple methods.
 
 * Count zero-crossings
  * Using interpolation to find a "truer" zero-crossing gives better accuracy
+ * Spline is better than linear interpolation?
 * Do FFT and find the peak 
- * Using interpolation to find a "truer" peak gives better accuracy
+ * Using quadratic interpolation on a log-scaled spectrum to find a "truer" peak gives better accuracy
 * Do autocorrelation and find the peak
 * Calculate harmonic product spectrum and find the peak
 
