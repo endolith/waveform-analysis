@@ -1,4 +1,4 @@
-Somewhat crude THD+N calculator in Python
+== Somewhat crude THD+N calculator in Python ==
 
 Measures the total harmonic distortion plus noise (THD+N) for a given input 
 signal, by guessing the fundamental frequency (finding the peak in the FFT), 
