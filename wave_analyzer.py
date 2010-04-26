@@ -76,7 +76,7 @@ def properties(signal, samplerate):
     'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
     'Peak level:\t%.3f (%.3f dBFS)' % (peak_level, dB(peak_level)), # Doesn't account for intersample peaks!
     'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
-    'A-weighted:\t%.3f (%.3f dBFS, %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
+    'A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
     '-----------------',
     ]
     

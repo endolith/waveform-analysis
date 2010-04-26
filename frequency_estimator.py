@@ -3,7 +3,7 @@ from scikits.audiolab import flacread
 from numpy.fft import rfft, irfft
 from numpy import argmax, sqrt, mean, diff, log
 from matplotlib.mlab import find
-from scipy.signal import blackmanharris, fftconvolve
+from scipy.signal import blackmanharris, fftconvolve, kaiser, gaussian
 from time import time
 import sys
 
@@ -49,7 +49,7 @@ def freq_from_fft(sig, fs):
     
     """
     # Compute Fourier transform of windowed signal
-    windowed = signal * blackmanharris(len(signal))
+    windowed = signal * kaiser(len(signal),100)
     f = rfft(windowed)
     
     # Find the peak and interpolate to get a more accurate peak
@@ -87,14 +87,17 @@ def freq_from_autocorr(sig, fs):
 
 filename = sys.argv[1]
 
+from common import load
+
 print 'Reading file "%s"\n' % filename
-signal, fs, enc = flacread(filename)
+signal, fs, enc = load(filename)
+
 
 print 'Calculating frequency from FFT:',
 start_time = time()
 print '%f Hz'   % freq_from_fft(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
+"""
 print 'Calculating frequency from zero crossings:',
 start_time = time()
 print '%f Hz' % freq_from_crossings(signal, fs)
@@ -104,3 +107,5 @@ print 'Calculating frequency from autocorrelation:',
 start_time = time()
 print '%f Hz' % freq_from_autocorr(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
+"""
+raw_input()
