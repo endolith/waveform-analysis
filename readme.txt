@@ -83,6 +83,9 @@ Currently this displays wave file information and measurements like crest factor
 * Dynamic range from test wave
 * signal to noise from test wave
     * Same guts as THD script, just input -60 dBFS waveform and compare to maximum value instead of fundamental peak
+* Implement a 468-weighting filter, too.
+    * http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
+    * http://www.mathworks.com/products/filterdesign/demos.html?file=/products/demos/shipping/filterdesign/audioweightingdemo.html#4
 
 Done:
 * total RMS level
