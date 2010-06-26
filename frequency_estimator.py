@@ -7,9 +7,12 @@ from scipy.signal import blackmanharris, fftconvolve, kaiser, gaussian
 from time import time
 import sys
 
-# Faster version from http://projects.scipy.org/scipy/browser/trunk/scipy/signal/signaltools.py
-# from signaltoolsmod import fftconvolve
-from parabolic import parabolic
+# I have a modified version for speed from
+# http://projects.scipy.org/scipy/browser/trunk/scipy/signal/signaltools.py?rev=5968
+from signaltools import fftconvolve
+
+from common import load
+from common import parabolic_polyfit as parabolic
 
 def freq_from_crossings(sig, fs):
     """Estimate frequency by counting zero crossings
@@ -49,9 +52,8 @@ def freq_from_fft(sig, fs):
     
     """
     # Compute Fourier transform of windowed signal
-    windowed = signal * kaiser(len(signal),100)
+    windowed = signal * kaiser(len(signal),100)    #  because 0.001% accuracy just isn't good enough
     f = rfft(windowed)
-    
     # Find the peak and interpolate to get a more accurate peak
     i = argmax(abs(f)) # Just use this for less-accurate, naive version
     true_i = parabolic(log(abs(f)), i)[0]
@@ -86,18 +88,15 @@ def freq_from_autocorr(sig, fs):
     return fs / px
 
 filename = sys.argv[1]
-
-from common import load
-
 print 'Reading file "%s"\n' % filename
-signal, fs, enc = load(filename)
-
+signal, fs, channels = load(filename)
+#plot (signal)
 
 print 'Calculating frequency from FFT:',
 start_time = time()
-print '%f Hz'   % freq_from_fft(signal, fs)
+print '%.9f Hz'   % freq_from_fft(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
-"""
+
 print 'Calculating frequency from zero crossings:',
 start_time = time()
 print '%f Hz' % freq_from_crossings(signal, fs)
@@ -107,5 +106,3 @@ print 'Calculating frequency from autocorrelation:',
 start_time = time()
 print '%f Hz' % freq_from_autocorr(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
-"""
-raw_input()

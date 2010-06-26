@@ -1,2 +1,5 @@
-/easygui.py
+*~
 *.pyc
+/easygui.py
+/signaltools.py
+
