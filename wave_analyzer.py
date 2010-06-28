@@ -36,6 +36,7 @@ def display(header, results):
         print header
         print '-----------------'
         print '\n'.join(results)
+        raw_input()
     else:
         # Pop the stuff up in a text box
         title = 'Waveform properties'
