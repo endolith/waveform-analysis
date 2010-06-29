@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from __future__ import division
 from numpy import pi, convolve
 from scipy.signal.filter_design import bilinear
 from scipy.signal import lfilter
@@ -51,4 +52,3 @@ def A_weight(signal, samplerate):
 
 # When importing a stereo sound file with scikits.audiolab, it needs axis = 0:
 # y = lfilter(B, A, x, axis = 0)
-

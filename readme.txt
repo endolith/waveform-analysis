@@ -57,6 +57,7 @@ Currently this displays wave file information and measurements like crest factor
 * Implement a 468-weighting filter, too.
     * http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
     * http://www.mathworks.com/products/filterdesign/demos.html?file=/products/demos/shipping/filterdesign/audioweightingdemo.html#4
+* Frequency analyzer should give "unknown" if SNR below some threshold, etc.
 
 Done:
 * total RMS level

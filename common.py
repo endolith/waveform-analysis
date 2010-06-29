@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from __future__ import division
 from scikits.audiolab import Sndfile
 from numpy import array_equal, polyfit

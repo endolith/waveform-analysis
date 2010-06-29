@@ -1,18 +1,20 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from __future__ import division
+from common import load, analyze_channels
+from common import parabolic_polyfit as parabolic
 from scikits.audiolab import flacread
 from numpy.fft import rfft, irfft
 from numpy import argmax, sqrt, mean, diff, log
 from matplotlib.mlab import find
-from scipy.signal import blackmanharris, fftconvolve, kaiser, gaussian
+from scipy.signal import fftconvolve, blackmanharris, kaiser, gaussian
 from time import time
 import sys
 
 # I have a modified version for speed from
 # http://projects.scipy.org/scipy/browser/trunk/scipy/signal/signaltools.py?rev=5968
 from signaltools import fftconvolve
-
-from common import load
-from common import parabolic_polyfit as parabolic
 
 def freq_from_crossings(sig, fs):
     """Estimate frequency by counting zero crossings
@@ -38,7 +40,7 @@ def freq_from_crossings(sig, fs):
     
     return fs / mean(diff(crossings))
 
-def freq_from_fft(sig, fs):
+def freq_from_fft(signal, fs):
     """Estimate frequency from peak of FFT
     
     Pros: Accurate, usually even more so than zero crossing counter 
@@ -52,14 +54,17 @@ def freq_from_fft(sig, fs):
     
     """
     # Compute Fourier transform of windowed signal
-    windowed = signal * kaiser(len(signal),100)    #  because 0.001% accuracy just isn't good enough
+    windowed = signal * kaiser(len(signal), 100)    #  because 0.001% accuracy just isn't good enough
     f = rfft(windowed)
     # Find the peak and interpolate to get a more accurate peak
     i = argmax(abs(f)) # Just use this for less-accurate, naive version
     true_i = parabolic(log(abs(f)), i)[0]
     
-    # Convert to equivalent frequency
-    return fs * true_i / len(windowed)
+    # Convert to equivalent frequency 
+    freq = fs * true_i / len(windowed)
+    
+    print '%f Hz' % freq
+    return freq # Hz
 
 def freq_from_autocorr(sig, fs):
     """Estimate frequency using autocorrelation
@@ -87,6 +92,23 @@ def freq_from_autocorr(sig, fs):
     
     return fs / px
 
+files = sys.argv[1:]
+if files:
+    for filename in files:
+        try:
+            start_time = time()
+            analyze_channels(filename, freq_from_fft)
+            print '\nTime elapsed: %.3f s\n' % (time() - start_time)
+
+        except IOError:
+            print 'Couldn\'t analyze "' + filename + '"\n'
+        print ''
+else:
+    sys.exit("You must provide at least one file to analyze")
+raw_input()
+
+"""
+obsolete
 filename = sys.argv[1]
 print 'Reading file "%s"\n' % filename
 signal, fs, channels = load(filename)
@@ -97,7 +119,6 @@ start_time = time()
 print '%.9f Hz'   % freq_from_fft(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
 
-"""
 print 'Calculating frequency from zero crossings:',
 start_time = time()
 print '%f Hz' % freq_from_crossings(signal, fs)
@@ -108,5 +129,3 @@ start_time = time()
 print '%f Hz' % freq_from_autocorr(signal, fs)
 print 'Time elapsed: %.3f s\n' % (time() - start_time)
 """
-
-raw_input()
