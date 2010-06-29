@@ -3,7 +3,7 @@
 
 from __future__ import division
 from scikits.audiolab import Sndfile
-from numpy import array_equal, polyfit
+from numpy import array_equal, polyfit, sqrt, mean, absolute, log10
 
 def load(filename):
     """Load a wave file and return the signal, sample rate and number of channels.
@@ -42,6 +42,24 @@ def analyze_channels(filename, function):
         for ch_no, channel in enumerate(signal.transpose()):
             print '-- Channel %d --' % (ch_no + 1)
             function(channel, sample_rate)
+
+def rms_flat(a):
+    """Return the root mean square of all the elements of *a*, flattened out.
+    
+    """
+    return sqrt(mean(absolute(a)**2))
+
+def dB(level):
+    """Return a level in decibels.
+    
+    Decibels (dBFS) are relative to the RMS level of a full-scale square wave 
+    of peak amplitude 1.0.
+    
+    A full-scale square wave is 0 dB
+    A full-scale sine wave is -3.01 dB
+    
+    """
+    return 20 * log10(level)
 
 def parabolic(f, x):
     """Quadratic interpolation for estimating the true position of an

@@ -6,13 +6,7 @@ import sys
 from scipy.signal import blackmanharris
 from numpy.fft import rfft, irfft
 from numpy import argmax, sqrt, mean, absolute, arange, log10
-from common import analyze_channels
-
-def rms_flat(a):
-    """Return the root mean square of all the elements of *a*, flattened out.
-    
-    """
-    return sqrt(mean(absolute(a)**2))
+from common import analyze_channels, rms_flat
 
 def find_range(f, x):
     """Find range between nearest local minima from peak at index x

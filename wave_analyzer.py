@@ -7,24 +7,7 @@ from scipy.signal.filter_design import bilinear
 from scipy.signal import lfilter
 from scikits.audiolab import Sndfile, Format
 from A_weighting import A_weight
-
-def rms_flat(a):
-    """
-    Return the root mean square of all the elements of *a*, flattened out.
-    """
-    return sqrt(mean(absolute(a)**2))
-
-def dB(level):
-    """Return a level in decibels.
-    
-    Decibels (dBFS) are relative to the RMS level of a full-scale square wave 
-    of peak amplitude 1.0.
-    
-    A full-scale square wave is 0 dB
-    A full-scale sine wave is -3.01 dB
-    
-    """
-    return 20 * log10(level)
+from common import rms_flat, dB
 
 def display(header, results):
     """Display header string and list of result lines"""
@@ -36,6 +19,7 @@ def display(header, results):
         print header
         print '-----------------'
         print '\n'.join(results)
+        raw_input()
     else:
         # Pop the stuff up in a text box
         title = 'Waveform properties'

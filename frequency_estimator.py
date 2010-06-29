@@ -62,7 +62,8 @@ def freq_from_fft(signal, fs):
     
     # Convert to equivalent frequency 
     freq = fs * true_i / len(windowed)
-    
+
+    # Get rid of this print statement and just have the function return the value.
     print '%f Hz' % freq
     return freq # Hz
 
@@ -108,7 +109,7 @@ else:
 raw_input()
 
 """
-obsolete
+obsolete?
 filename = sys.argv[1]
 print 'Reading file "%s"\n' % filename
 signal, fs, channels = load(filename)
