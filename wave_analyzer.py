@@ -19,7 +19,7 @@ def display(header, results):
         print header
         print '-----------------'
         print '\n'.join(results)
-        raw_input()
+        raw_input('Press any key...')
     else:
         # Pop the stuff up in a text box
         title = 'Waveform properties'

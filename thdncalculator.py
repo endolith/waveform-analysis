@@ -65,4 +65,4 @@ if files:
         print ''
 else:
     sys.exit("You must provide at least one file to analyze")
-raw_input()
+raw_input('Press any key...')

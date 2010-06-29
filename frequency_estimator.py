@@ -61,11 +61,7 @@ def freq_from_fft(signal, fs):
     true_i = parabolic(log(abs(f)), i)[0]
     
     # Convert to equivalent frequency 
-    freq = fs * true_i / len(windowed)
-
-    # Get rid of this print statement and just have the function return the value.
-    print '%f Hz' % freq
-    return freq # Hz
+    return fs * true_i / len(windowed) # Hz
 
 def freq_from_autocorr(sig, fs):
     """Estimate frequency using autocorrelation
@@ -93,12 +89,16 @@ def freq_from_autocorr(sig, fs):
     
     return fs / px
 
+def freq_wrapper(signal, fs):
+    freq = freq_from_fft(signal, fs)
+    print '%f Hz' % freq
+
 files = sys.argv[1:]
 if files:
     for filename in files:
         try:
             start_time = time()
-            analyze_channels(filename, freq_from_fft)
+            analyze_channels(filename, freq_wrapper)
             print '\nTime elapsed: %.3f s\n' % (time() - start_time)
 
         except IOError:
@@ -106,7 +106,7 @@ if files:
         print ''
 else:
     sys.exit("You must provide at least one file to analyze")
-raw_input()
+raw_input('Press any key...')
 
 """
 obsolete?
