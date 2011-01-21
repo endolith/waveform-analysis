@@ -19,7 +19,6 @@ def display(header, results):
         print header
         print '-----------------'
         print '\n'.join(results)
-        raw_input('Press any key...')
     else:
         # Pop the stuff up in a text box
         title = 'Waveform properties'
@@ -110,10 +109,15 @@ def analyze(filename):
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) == 2:
-        filename = sys.argv[1]
-        analyze(filename)
+    files = sys.argv[1:]
+    if files:
+        for filename in files:
+            try:
+                analyze(filename)
+            except IOError:
+                print 'Couldn\'t analyze "' + filename + '"\n'
+            print ''
     else:
-        print 'You need to provide a filename:\n'
-        print 'python wave_analyzer.py filename.wav'
-        
+        sys.exit("You must provide at least one file to analyze:\npython wave_analyzer.py filename.wav")
+
+raw_input('Press Enter...')
