@@ -1,34 +1,34 @@
-This was originally several different scripts for measuring or processing waveforms, which I pasted on gist:
+﻿This was originally several different scripts for measuring or processing waveforms, which I pasted on gist:
 
-http://gist.github.com/246092 total harmonic distortion measurement
-http://gist.github.com/148112 A-weighting
-http://gist.github.com/129445 frequency estimation with zero crossings
-http://gist.github.com/255291 frequency estimation a bunch of ways
-https://gist.github.com/2c786bf5b53b99ca3879 waveform analyzer (RMS level, A-weighted RMS, crest factor)
+* [Total harmonic distortion measurement](http://gist.github.com/246092)
+* [A-weighting](http://gist.github.com/148112)
+* [Frequency estimation with zero crossings](http://gist.github.com/129445)
+* [Frequency estimation a bunch of ways](http://gist.github.com/255291)
+* [Waveform analyzer (RMS level, A-weighted RMS, crest factor)](https://gist.github.com/2c786bf5b53b99ca3879)
 
-Since they have a lot in common, I'm combining them into one repository so I'm not duplicating effort.
+Since they have a lot in common, I'm trying to combine them into one repository, so I'm not duplicating effort.  It's a mess so far, though.
 
 Please don't blindly trust this.  If you use this and find a stupid error, please let me know.  Also let me know if you use this and it works perfectly.  :D
 
-== Waveform analyzer ==
-Usage: python wave_analyzer.py "audio file.flac"
 
-Requires: Python, NumPy, SciPy, Audiolab
-Optional: EasyGUI (output to a window instead of the console), Matplotlib (histogram of sample values)
+Waveform analyzer
+=================
 
-http://pypi.python.org/pypi/scikits.audiolab
-http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html
+Usage: `python wave_analyzer.py "audio file.flac"`
 
-http://easygui.sourceforge.net/
+**Requires:** Python, NumPy, SciPy, [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html) ([PyPI](http://pypi.python.org/pypi/scikits.audiolab))
 
-It will open any file supported by audiolab, which basically means anything supported by libsndfile (http://www.mega-nerd.com/libsndfile/).
+**Optional:** [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console), Matplotlib (histogram of sample values)
+
+It will open any file supported by audiolab, which basically means anything supported by [libsndfile](http://www.mega-nerd.com/libsndfile/).
 
 Currently this displays wave file information and measurements like crest factor and noise.
 
-== To do or maybe to do ==
+To do
+-----
 * Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
    * Do FFT, see if there is one continuous peak
-   * http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth
+   * [Identifying common periodic waveforms (square, sine, sawtooth, …)](http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth)
 * Frequency estimation
    * Ideally: frequency with ±% accuracy - better accuracy for longer files
 * py2exe compilation for Windoze
@@ -37,11 +37,12 @@ Currently this displays wave file information and measurements like crest factor
 * Histogram of sample values
    * ("matplotlib not installed... skipping histogram")  hist()
 * everything that Audition does?
-   * --histogram of dB values--
+   * ~~histogram of dB values~~
    * number of possibly clipped samples
    * max/min sample values
    * peak amplitude
    * min RMS, max RMS, average RMS for chunks of 100 ms or so
+       * ~~This is more a scientific measurement tool for engineering than a musical tool.  Peak and trough RMS and RMS histogram are not as important?~~  Include them anyway!
    * actual bit depth
      * Identify if it is 8-bit samples encoded with 16 bits, for instance, like Audition does. Also like JACK bitmeter does?
 * THD
@@ -49,19 +50,24 @@ Currently this displays wave file information and measurements like crest factor
 * Calculate intersample peaks
   * "If you want to see something really bad on the oversampled meter - try a sequence of maximum and minimum values that goes like this: "1010101101010" - notice that the alternating 1's and 0's suddenly change direction in the middle. The results depends on the filter being used in the reconstruction, with the intersample peak easily exceeding 10dB!"
 * say dBFS instead of dB (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
-* Frequency response plot if the input is a sweep ;)
+* Extract frequency response plot if the input is a sweep ;)
    * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
-* Dynamic range from test wave
-* signal to noise from test wave
-    * Same guts as THD script, just input -60 dBFS waveform and compare to maximum value instead of fundamental peak
-* Implement a 468-weighting filter, too.
-    * http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
+* Dynamic range from test file
+* signal to noise from test file
+    * Same guts as THD script, just input −60 dBFS waveform and compare to maximum value instead of fundamental peak
+* Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
     * http://www.mathworks.com/products/filterdesign/demos.html?file=/products/demos/shipping/filterdesign/audioweightingdemo.html#4
 * Frequency analyzer should give "unknown" if SNR below some threshold, etc.
+* there may be an error in peak calculation?
+* test with crazy files like 1 MHz sampling rate, 3-bit, etc.
+* Bug: high frequencies of A-weighting roll off too quickly at lower sampling rates
+    * make freq-response graphs at different signal levels and different sampling frequencies
 
-Done:
-* total RMS level
-* crest factor  
+Done
+----
+
+* Total RMS level
+* Crest factor
 * DC offset
 * should check if channels are identical
   * 2 unique channels vs 2 identical channels vs 1 channel
@@ -69,45 +75,32 @@ Done:
 * THD+N
 * Frequency estimation
    * Guess frequency from FFT
-   * <s>FFT Filter out noise and get just the fundamental</s>
-   * <s>Count zero-crossings</s>
+   * ~~FFT Filter out noise and get just the fundamental~~
+   * ~~Count zero-crossings~~
    * actually, interpolated FFT is the best, without any filtering or crossings counting
 
 
-1. Get it into publishable form
-2. Post it on github
-3. Start using revision control for real
-4. Use dBFS instead of dB
+A-weighting
+===========
 
-there may be an error in peak calculation?
-
-test with crazy files like 1 MHz sampling rate, 3-bit, etc.
-
-high frequencies of A-weighting roll off too quickly at lower sampling rates
-make freq-response graphs at different signal levels and different sampling frequencies
-
-<s>This is more a scientific measurement tool for engineering than a musical tool.  Peak and trough RMS and RMS histogram are not as important?</s>  Include them anyway!
-
-== A-weighting ==
 I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
 
 Apply an A-weighting filter to a sound stored as a NumPy array.
 
-Use Audiolab or other module to import .wav or .flac files, for instance.
-http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/
+Use [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/) or other module to import .wav or .flac files, for instance.
 
-Translated from MATLAB script at 
-http://www.mathworks.com/matlabcentral/fileexchange/69
+Translated from [MATLAB script at File Exchange](http://www.mathworks.com/matlabcentral/fileexchange/69)
 
-== Frequency estimator ==
+
+Frequency estimator
+===================
+
 A few simple frequency estimation methods in Python
 
 These are the methods that everyone recommends when someone asks about 
-frequency estimation or pitch detection.  (Such as here: 
-http://stackoverflow.com/questions/65268/music-how-do-you-analyse-the-fundamental-frequency-of-a-pcm-or-wac-sample/)
+frequency estimation or pitch detection.  (Such as here: [Music - How do you analyse the fundamental frequency of a PCM or WAV sample](http://stackoverflow.com/questions/65268/music-how-do-you-analyse-the-fundamental-frequency-of-a-pcm-or-wac-sample/))
 
-None of them work well in all situations, and I am sure there are much better 
-methods "in the literature", but here is some code for the simple methods.
+None of them work well in all situations, these are "offline", not real-time, and I am sure there are much better methods "in the literature", but here is some code for the simple methods at least.
 
 * Count zero-crossings
  * Using interpolation to find a "truer" zero-crossing gives better accuracy
@@ -116,27 +109,28 @@ methods "in the literature", but here is some code for the simple methods.
  * Using quadratic interpolation on a log-scaled spectrum to find a "truer" peak gives better accuracy
 * Do autocorrelation and find the peak
 * Calculate harmonic product spectrum and find the peak
-== Somewhat crude THD+N calculator in Python ==
+
+
+THD+N calculator
+================
 
 Measures the total harmonic distortion plus noise (THD+N) for a given input 
 signal, by guessing the fundamental frequency (finding the peak in the FFT), 
 and notching it out in the frequency domain.
 
-Depends on Audiolab and SciPy
-* http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/
-* http://www.scipy.org/
+Depends on [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/) and [SciPy](http://www.scipy.org/)
 
 Example of usage, with 997 Hz full-scale sine wave generated by Adobe Audition 
 at 96 kHz, showing the 16-bit quantization distortion:
 
-> python thdcalculator.py "perfect 997 Hz no dither.flac"
-Frequency:	997.000000 Hz
-THD+N:  	0.0016% or -96.1 dB
+    > python thdcalculator.py "perfect 997 Hz no dither.flac"
+    Frequency:  997.000000 Hz
+    THD+N:  	0.0016% or -96.1 dB
 
-(Is this right?  Theoretical SNR of a FS sine is 1.761+6.02*16 = -98.09 dB.  
-Close, at least.)
+(Is this right?  Theoretical SNR of a full-scale sine is 1.761+6.02⋅16 = −98.09 dB.  Close, at least.)
 
 According to the never-wrong Wikipedia:
+
 * THD is the fundamental alone vs the harmonics alone
 * THD+N is the entire signal (not just the fundamental) vs the entire signal 
 with the fundamental notched out.  (For low distortion, the difference between 
@@ -147,8 +141,8 @@ the surrounding region of the peak to throw away.  Probably the way to match
 other test equipment is to just calculate the width of a certain bandwidth, 
 but is that really ideal?
 
-width = 50
-f[i-width: i+width+1] = 0
+    width = 50
+    f[i-width: i+width+1] = 0
 
 Instead of a fixed width, it currently just tries to find the nearest local 
 minima and throw away everything between them.  It works for almost all cases, 
@@ -162,35 +156,37 @@ Also it computes the FFT for the entire sample, which is a waste of time.  Use
 short samples.
 
 Adobe Audition with dither:
-997 Hz 8-bit    -49.8
-997 Hz 16-bit   -93.4
-997 Hz 32-bit   -143.9
 
-Art Ludwig's Sound Files (http://members.cox.net/artludwig/):
-File                Claimed  Measured  (dB)
-Reference           0.0%     0.0022%   -93.3
-Single-ended triode 5.0%     5.06%     -25.9
-Solid state         0.5%     0.51%     -45.8
+    997 Hz 8-bit    -49.8
+    997 Hz 16-bit   -93.4
+    997 Hz 32-bit   -143.9
+
+[Art Ludwig's Sound Files](http://members.cox.net/artludwig/):
+
+    File                Claimed  Measured  (dB)
+    Reference           0.0%     0.0022%   -93.3
+    Single-ended triode 5.0%     5.06%     -25.9
+    Solid state         0.5%     0.51%     -45.8
 
 Comparing a test device on an Audio Precision System One 22 kHz filtered vs 
 recorded into my 96 kHz 24-bit sound card and measured with this script:
 
-Frequency   AP THD+N    Script THD+N
-40          1.00%       1.04%
-100         0.15%       0.19%
-100         0.15%       0.14%
-140         0.15%       0.17%
-440         0.056%      0.057%
-961         0.062%      0.067%
-1021        0.080%      0.082%
-1440        0.042%      0.041%
-1483        0.15%       0.15%
-4440        0.048%      0.046%
-9974        7.1%        7.8%
-10036       0.051%      0.068%
-10723       8.2%        9.3%
-13640       12.2%       16.8%
-19998       20.2%       56.3%  (nasty intermodulation distortion)
-20044       0.22%       0.30%
+    Frequency   AP THD+N    Script THD+N
+    40          1.00%       1.04%
+    100         0.15%       0.19%
+    100         0.15%       0.14%
+    140         0.15%       0.17%
+    440         0.056%      0.057%
+    961         0.062%      0.067%
+    1021        0.080%      0.082%
+    1440        0.042%      0.041%
+    1483        0.15%       0.15%
+    4440        0.048%      0.046%
+    9974        7.1%        7.8%
+    10036       0.051%      0.068%
+    10723       8.2%        9.3%
+    13640       12.2%       16.8%
+    19998       20.2%       56.3%  (nasty intermodulation distortion)
+    20044       0.22%       0.30%
 
 So it's mostly accurate.   Mostly.
