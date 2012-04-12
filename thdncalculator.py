@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# TODO: Add A-weighting
+
 from __future__ import division
-from scipy.signal import blackmanharris, kaiser
+from scipy.signal import kaiser
 from numpy.fft import rfft, irfft
-from numpy import argmax, sqrt, mean, absolute, arange, log10, log
+from numpy import argmax, mean, arange, log10, log
 from common import analyze_channels, rms_flat, parabolic
 
 def find_range(f, x):
@@ -82,16 +84,21 @@ def THD(signal, sample_rate):
     return
 
 if __name__ == '__main__':
-    import sys
-    files = sys.argv[1:]
-    if files:
-        for filename in files:
-            try:
-                analyze_channels(filename, THDN)
-            except IOError:
-                print 'Couldn\'t analyze "' + filename + '"\n'
-            print ''
-    else:
-        sys.exit("You must provide at least one file to analyze")
-
-raw_input('Press Enter...')
+    try:
+        import sys
+        files = sys.argv[1:]
+        if files:
+            for filename in files:
+                try:
+                    analyze_channels(filename, THDN)
+                except IOError:
+                    print 'Couldn\'t analyze "' + filename + '"\n'
+                print ''
+        else:
+            sys.exit("You must provide at least one file to analyze")
+    except BaseException as e:
+        print('Error:')
+        print(e)
+        raise
+    finally:
+        raw_input('(Press <Enter> to close)') # Otherwise Windows closes the window too quickly to read

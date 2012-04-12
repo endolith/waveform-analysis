@@ -2,10 +2,8 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from numpy import log10, pi, convolve, mean, sqrt, absolute, array_equal
-from scipy.signal.filter_design import bilinear
-from scipy.signal import lfilter
-from scikits.audiolab import Sndfile, Format
+from numpy import mean, absolute, array_equal
+from scikits.audiolab import Sndfile
 from A_weighting import A_weight
 from common import rms_flat, dB
 
@@ -108,16 +106,21 @@ def analyze(filename):
         histogram(signal)
 
 if __name__ == '__main__':
-    import sys
-    files = sys.argv[1:]
-    if files:
-        for filename in files:
-            try:
-                analyze(filename)
-            except IOError:
-                print 'Couldn\'t analyze "' + filename + '"\n'
-            print ''
-    else:
-        sys.exit("You must provide at least one file to analyze:\npython wave_analyzer.py filename.wav")
-
-raw_input('Press Enter...')
+    try:
+        import sys
+        files = sys.argv[1:]
+        if files:
+            for filename in files:
+                try:
+                    analyze(filename)
+                except IOError:
+                    print 'Couldn\'t analyze "' + filename + '"\n'             
+                print ''
+        else:
+            sys.exit("You must provide at least one file to analyze:\npython wave_analyzer.py filename.wav")
+    except BaseException as e:
+        print('Error:')
+        print(e)
+        raise
+    finally:
+        raw_input('(Press <Enter> to close)') # Otherwise Windows closes the window too quickly to read

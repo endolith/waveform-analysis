@@ -2,19 +2,13 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from common import load, analyze_channels
+from common import analyze_channels
 from common import parabolic_polyfit as parabolic
-from scikits.audiolab import flacread
-from numpy.fft import rfft, irfft
-from numpy import argmax, sqrt, mean, diff, log
+from numpy.fft import rfft
+from numpy import argmax, mean, diff, log
 from matplotlib.mlab import find
-from scipy.signal import fftconvolve, blackmanharris, kaiser, gaussian
+from scipy.signal import fftconvolve, kaiser
 from time import time
-import sys
-
-# I have a modified version for speed from
-# http://projects.scipy.org/scipy/browser/trunk/scipy/signal/signaltools.py?rev=5968
-from signaltools import fftconvolve
 
 def freq_from_crossings(sig, fs):
     """Estimate frequency by counting zero crossings
@@ -89,24 +83,33 @@ def freq_from_autocorr(sig, fs):
     
     return fs / px
 
-def freq_wrapper(signal, fs):
-    freq = freq_from_fft(signal, fs)
-    print '%f Hz' % freq
+if __name__ == '__main__':
+    try:
+        import sys
+        def freq_wrapper(signal, fs):
+            freq = freq_from_fft(signal, fs)
+            print '%f Hz' % freq
 
-files = sys.argv[1:]
-if files:
-    for filename in files:
-        try:
-            start_time = time()
-            analyze_channels(filename, freq_wrapper)
-            print '\nTime elapsed: %.3f s\n' % (time() - start_time)
+        files = sys.argv[1:]
+        if files:
+            for filename in files:
+                try:
+                    start_time = time()
+                    analyze_channels(filename, freq_wrapper)
+                    print '\nTime elapsed: %.3f s\n' % (time() - start_time)
+        
+                except IOError:
+                    print 'Couldn\'t analyze "' + filename + '"\n'
+                print ''
+        else:
+            sys.exit("You must provide at least one file to analyze")
+    except BaseException as e:
+        print('Error:')
+        print(e)
+        raise
+    finally:
+        raw_input('(Press <Enter> to close)') # Otherwise Windows closes the window too quickly to read
 
-        except IOError:
-            print 'Couldn\'t analyze "' + filename + '"\n'
-        print ''
-else:
-    sys.exit("You must provide at least one file to analyze")
-raw_input('Press Enter...')
 
 """
 obsolete?
