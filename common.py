@@ -86,8 +86,12 @@ def parabolic(f, x):
     return (xv, yv)
 
 def parabolic_polyfit(f, x):
-    """Use the built-in polyfit() function to find the peak of a parabola"""
-    a, b, c = polyfit([x-3,x-2,x-1,x,x+1,x+2,x+3],f[x-3:x+4],2)
-    xv = -0.5*b/a
-    yv = a*xv**2 + b*xv + c
+    """Use the built-in polyfit() function to find the peak of a parabola
+    
+    Slower, but could be adapted to non-uniformly spaced data?
+
+    """
+    a, b, c = polyfit([x-1, x, x+1], f[x-1:x+2], 2)
+    xv = -0.5 * b/a
+    yv = a * xv**2 + b * xv + c
     return (xv, yv)
