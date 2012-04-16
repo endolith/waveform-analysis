@@ -46,7 +46,9 @@ def A_weighting(Fs):
     return bilinear(NUMs, DENs, Fs)
 
 def A_weight(signal, samplerate):
-    """Return the given signal after passing through an A-weighting filter"""
+    """Return the given signal after passing through an A-weighting filter
+    
+    """
     B, A = A_weighting(samplerate)
     return lfilter(B, A, signal)
 

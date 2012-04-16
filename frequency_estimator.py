@@ -48,7 +48,7 @@ def freq_from_fft(signal, fs):
     
     """
     # Compute Fourier transform of windowed signal
-    windowed = signal * kaiser(len(signal), 100)    #  because 0.001% accuracy just isn't good enough
+    windowed = signal * kaiser(len(signal), 100)
     f = rfft(windowed)
     # Find the peak and interpolate to get a more accurate peak
     i = argmax(abs(f)) # Just use this for less-accurate, naive version
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         def freq_wrapper(signal, fs):
             freq = freq_from_fft(signal, fs)
             print '%f Hz' % freq
-
+        
         files = sys.argv[1:]
         if files:
             for filename in files:
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                     start_time = time()
                     analyze_channels(filename, freq_wrapper)
                     print '\nTime elapsed: %.3f s\n' % (time() - start_time)
-        
+                    
                 except IOError:
                     print 'Couldn\'t analyze "' + filename + '"\n'
                 print ''

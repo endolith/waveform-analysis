@@ -1,27 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# TODO: Add A-weighting
-
 from __future__ import division
 from scipy.signal import kaiser
 from numpy.fft import rfft, irfft
-from numpy import argmax, mean, arange, log10, log
+from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
 from common import analyze_channels, rms_flat, parabolic
-
-def find_range(f, x):
-    """Find range between nearest local minima from peak at index x
-    
-    """
-    for i in arange(x+1, len(f)):
-        if f[i+1] >= f[i]:
-            uppermin = i
-            break
-    for i in arange(x-1, 0, -1):
-        if f[i] <= f[i-1]:
-            lowermin = i + 1
-            break
-    return (lowermin, uppermin)
+from A_weighting import A_weight
 
 def THDN(signal, sample_rate):
     """Measure the THD+N for a signal and print the results
@@ -30,38 +15,58 @@ def THDN(signal, sample_rate):
     calculated from the ratio of the entire signal before and after 
     notch-filtering.
     
-    Currently this tries to find the "skirt" around the fundamental and notch 
-    out the entire thing.  A fixed-width filter would probably be just as good, 
-    if not better.
+    This notch-filters by nulling out the frequency coefficients ±10% of the 
+    fundamental
     
     """
     # Get rid of DC and window the signal
     signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
     windowed = signal * kaiser(len(signal), 100)
-
+    del signal
+   
+    # Zero pad to nearest power of two
+    new_len = 2**ceil( log(len(windowed)) / log(2) )
+    windowed = concatenate((windowed, zeros(new_len - len(windowed))))
+    
     # Measure the total signal before filtering but after windowing
     total_rms = rms_flat(windowed)
-
-    # Find the peak of the frequency spectrum (fundamental frequency), and filter 
-    # the signal by throwing away values between the nearest local minima
+    
+    # Find the peak of the frequency spectrum (fundamental frequency)
     f = rfft(windowed)
     i = argmax(abs(f))
-    print 'Frequency: %f Hz' % (sample_rate * (i / len(windowed))) # Not exact
-    lowermin, uppermin = find_range(abs(f), i)
+    true_i = parabolic(log(abs(f)), i)[0]
+    print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))
+    
+    # Filter out fundamental by throwing away values ±10%
+    lowermin = true_i - 0.1 * true_i
+    uppermin = true_i + 0.1 * true_i
     f[lowermin: uppermin] = 0
-
-    # Transform noise back into the signal domain and measure it
-    # TODO: Could probably calculate the RMS directly in the frequency domain instead
+    
+    # Transform noise back into the time domain and measure it
     noise = irfft(f)
     THDN = rms_flat(noise) / total_rms
-    print "THD+N:     %.4f%% or %.1f dB" % (THDN * 100, 20 * log10(THDN))
+    
+    # TODO: RMS and A-weighting in frequency domain?
+    
+    # Apply A-weighting to residual noise (Not normally used for distortion, 
+    # but used to measure dynamic range with -60 dBFS signal, for instance)
+    weighted = A_weight(noise, sample_rate)
+    THDNA = rms_flat(weighted) / total_rms
+    
+    print "THD+N:      %.4f%% or %.1f dB"    % (THDN  * 100, 20 * log10(THDN))
+    print "A-weighted: %.4f%% or %.1f dB(A)" % (THDNA * 100, 20 * log10(THDNA))
 
 def THD(signal, sample_rate):
     """Measure the THD for a signal
     
+    This function is not yet trustworthy.
+    
     Returns the estimated fundamental frequency and the measured THD,
     calculated by finding peaks in the spectrum.
-        
+    
+    There are two definitions for THD, a power ratio or an amplitude ratio
+    When finished, this will list both
+    
     """
     # Get rid of DC and window the signal
     signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
@@ -70,14 +75,16 @@ def THD(signal, sample_rate):
     # Find the peak of the frequency spectrum (fundamental frequency)
     f = rfft(windowed)
     i = argmax(abs(f))
-    i = parabolic(log(abs(f)), i)[0]
-    
-    print 'Frequency: %f Hz' % (sample_rate * (i / len(windowed))) # Not exact
+    true_i = parabolic(log(abs(f)), i)[0]
+    print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))
     
     print 'fundamental amplitude: %.3f' % abs(f[i])
     
+    # Find the values for the first 15 harmonics.
+    # TODO: Should peak-find near each one, not just assume
+    # TODO: Should non-harmonic peaks be included?  Just include the highest n peaks?
     for x in range(2, 15):
-        print '%.3f' % abs(f[i*x]),
+        print '%.3f' % abs(f[i * x]),
    
     THD = sum([abs(f[i*x]) for x in range(2,15)]) / abs(f[i])
     print '\nTHD: %f%%' % (THD * 100)

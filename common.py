@@ -4,6 +4,7 @@
 from __future__ import division
 from scikits.audiolab import Sndfile
 from numpy import array_equal, polyfit, sqrt, mean, absolute, log10
+from scipy.stats import gmean
 
 def load(filename):
     """Load a wave file and return the signal, sample rate and number of channels.
@@ -52,14 +53,17 @@ def rms_flat(a):
 def dB(level):
     """Return a level in decibels.
     
-    Decibels (dBFS) are relative to the RMS level of a full-scale square wave 
-    of peak amplitude 1.0.
-    
-    A full-scale square wave is 0 dB
-    A full-scale sine wave is -3.01 dB
-    
     """
     return 20 * log10(level)
+
+def spectral_flatness(spectrum):
+    """The spectral flatness is calculated by dividing the geometric mean of 
+    the power spectrum by the arithmetic mean of the power spectrum
+
+    I'm not sure if the spectrum should be squared first...
+    
+    """
+    return gmean(spectrum)/mean(spectrum)
 
 def parabolic(f, x):
     """Quadratic interpolation for estimating the true position of an
@@ -86,8 +90,12 @@ def parabolic(f, x):
     return (xv, yv)
 
 def parabolic_polyfit(f, x):
-    """Use the built-in polyfit() function to find the peak of a parabola"""
-    a, b, c = polyfit([x-3,x-2,x-1,x,x+1,x+2,x+3],f[x-3:x+4],2)
-    xv = -0.5*b/a
-    yv = a*xv**2 + b*xv + c
+    """Use the built-in polyfit() function to find the peak of a parabola
+    
+    Slower, but could be adapted to non-uniformly spaced data?
+
+    """
+    a, b, c = polyfit([x-1, x, x+1], f[x-1:x+2], 2)
+    xv = -0.5 * b/a
+    yv = a * xv**2 + b * xv + c
     return (xv, yv)

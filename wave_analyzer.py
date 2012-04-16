@@ -8,7 +8,9 @@ from A_weighting import A_weight
 from common import rms_flat, dB
 
 def display(header, results):
-    """Display header string and list of result lines"""
+    """Display header string and list of result lines
+    
+    """
     try:
         import easygui
     except ImportError:
@@ -23,18 +25,22 @@ def display(header, results):
         easygui.textbox(header, title, '\n'.join(results))
 
 def histogram(signal):
-    """Plot a histogram of the sample values"""
+    """Plot a histogram of the sample values
+    
+    """
     try:
         from matplotlib.pyplot import hist, show
     except ImportError:
         print 'Matplotlib not installed - skipping histogram'
     else:
         print 'Plotting histogram'
-        hist(signal) #parameters
+        hist(signal) #TODO: parameters, abs(signal)?
         show()
 
-def properties(signal, samplerate):
-    """Return a list of some wave properties for a given 1-D signal"""
+def properties(signal, sample_rate):
+    """Return a list of some wave properties for a given 1-D signal
+    
+    """
     # Measurements that include DC component
     DC_offset = mean(signal)
     # Maximum/minimum sample value
@@ -49,15 +55,17 @@ def properties(signal, samplerate):
     crest_factor = peak_level/signal_level
     
     # Apply the A-weighting filter to the signal
-    weighted = A_weight(signal, samplerate)
+    weighted = A_weight(signal, sample_rate)
     weighted_level = rms_flat(weighted)
-        
+    
+    # TODO: rjust instead of tabs
+    
     return [
     'DC offset:\t%f (%.3f%%)' % (DC_offset, DC_offset * 100),
     'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
     'Peak level:\t%.3f (%.3f dBFS)' % (peak_level, dB(peak_level)), # Doesn't account for intersample peaks!
     'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
-    'A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
+    'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
     '-----------------',
     ]
     
@@ -65,16 +73,16 @@ def analyze(filename):
     wave_file = Sndfile(filename, 'r')
     signal = wave_file.read_frames(wave_file.nframes)
     channels = wave_file.channels
-    samplerate = wave_file.samplerate
+    sample_rate = wave_file.samplerate
     header = 'dBFS values are relative to a full-scale square wave'
     
     results = [
     'Properties for "' + filename + '"',
     str(wave_file.format),
     'Channels:\t%d' % channels,
-    'Sampling rate:\t%d Hz' % samplerate,
-    'Frames:\t%d' % wave_file.nframes,
-    'Length:\t' + str(wave_file.nframes/samplerate) + ' seconds',
+    'Sampling rate:\t%d Hz' % sample_rate,
+    'Frames/samples:\t%d' % wave_file.nframes,
+    'Length: \t' + str(wave_file.nframes/sample_rate) + ' seconds',
     '-----------------',
     ]
     
@@ -82,22 +90,22 @@ def analyze(filename):
     
     if channels == 1:
         # Monaural
-        results += properties(signal, samplerate)
+        results += properties(signal, sample_rate)
     elif channels == 2:
         # Stereo
         if array_equal(signal[:,0],signal[:,1]):
             results += ['Left and Right channels are identical:']
-            results += properties(signal[:,0], samplerate)
+            results += properties(signal[:,0], sample_rate)
         else:
             results += ['Left channel:']
-            results += properties(signal[:,0], samplerate)
+            results += properties(signal[:,0], sample_rate)
             results += ['Right channel:']
-            results += properties(signal[:,1], samplerate)
+            results += properties(signal[:,1], sample_rate)
     else:
         # Multi-channel
         for ch_no, channel in enumerate(signal.transpose()):
             results += ['Channel %d:' % (ch_no + 1)]
-            results += properties(channel, samplerate)
+            results += properties(channel, sample_rate)
     
     display(header, results)
     
