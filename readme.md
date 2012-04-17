@@ -10,61 +10,6 @@ Since they have a lot in common, I'm trying to combine them into one repository,
 
 Please don't blindly trust this.  If you use this and find a stupid error, please let me know.  Also let me know if you use this and it works perfectly.  :D
 
-To do
-=====
-* Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
-  * Do FFT, see if there is one continuous peak
-  * [Identifying common periodic waveforms (square, sine, sawtooth, …)](http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth)
-  * Report spectral flatness and then do THD+N for sine waves, etc.
-  * Frequency analyzer should give "unknown" if SNR below some threshold, etc.
-* Frequency estimation
-  * Ideally: frequency with ±% accuracy - better accuracy for longer files
-* py2exe compilation for Windoze
-* Web page describing it
-  * Screenshots compared to Audition analysis results
-* Histogram of sample values
-  * ("matplotlib not installed... skipping histogram")  hist()
-* everything that Audition does?
-  * ~~histogram of dB values~~
-  * number of possibly clipped samples
-  * max/min sample values
-  * peak amplitude
-  * min RMS, max RMS, average RMS for chunks of 100 ms or so
-    * ~~This is more a scientific measurement tool for engineering than a musical tool.  Peak and trough RMS and RMS histogram are not as important?~~  Include them anyway!
-  * actual bit depth
-    * Identify if it is 8-bit samples encoded with 16 bits, for instance, like Audition does. Also like JACK bitmeter does?
-* THD
-* Real-time analysis of sound card input?
-* Calculate intersample peaks
-  * "If you want to see something really bad on the oversampled meter - try a sequence of maximum and minimum values that goes like this: "1010101101010" - notice that the alternating 1's and 0's suddenly change direction in the middle. The results depends on the filter being used in the reconstruction, with the intersample peak easily exceeding 10dB!"
-* Extract frequency response plot if the input is a sweep ;)
-  * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
-* Signal to noise and dynamic range from test file
-  * Same guts as THD script, just input −60 dBFS waveform and compare to maximum value instead of fundamental peak
-* Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
-  * http://www.mathworks.com/products/filterdesign/demos.html?file=/products/demos/shipping/filterdesign/audioweightingdemo.html#4
-* there may be an error in peak calculation?
-* test with crazy files like 1 MHz sampling rate, 3-bit, etc.
-* Bug: high frequencies of A-weighting roll off too quickly at lower sampling rates
-  * make freq-response graphs at different signal levels and different sampling frequencies
-
-Done
-----
-
-* Total RMS level
-* Crest factor
-* DC offset
-* should check if channels are identical
-  * 2 unique channels vs 2 identical channels vs 1 channel
-* Message about easygui not installed
-* THD+N
-* Frequency estimation
-  * Guess frequency from FFT
-  * ~~FFT Filter out noise and get just the fundamental~~
-  * ~~Count zero-crossings~~
-  * actually, interpolated FFT is the best, without any filtering or crossings counting
-* say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
-
 
 Waveform analyzer
 =================
@@ -193,3 +138,60 @@ recorded into my 96 kHz 24-bit sound card and measured with this script:
 (This was done with local minima method.  Redo with 10% method.)
 
 So it's mostly accurate.   Mostly.
+
+
+To do
+=====
+* Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
+  * Do FFT, see if there is one continuous peak
+  * [Identifying common periodic waveforms (square, sine, sawtooth, …)](http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth)
+  * Report spectral flatness and then do THD+N for sine waves, etc.
+  * Frequency analyzer should give "unknown" if SNR below some threshold, etc.
+* Frequency estimation
+  * Ideally: frequency with ±% accuracy - better accuracy for longer files
+* py2exe compilation for Windoze
+* Web page describing it
+  * Screenshots compared to Audition analysis results
+* Histogram of sample values
+  * ("matplotlib not installed... skipping histogram")  hist()
+* everything that Audition does?
+  * ~~histogram of dB values~~
+  * number of possibly clipped samples
+  * max/min sample values
+  * peak amplitude
+  * min RMS, max RMS, average RMS for chunks of 100 ms or so
+    * ~~This is more a scientific measurement tool for engineering than a musical tool.  Peak and trough RMS and RMS histogram are not as important?~~  Include them anyway!
+  * actual bit depth
+    * Identify if it is 8-bit samples encoded with 16 bits, for instance, like Audition does. Also like JACK bitmeter does?
+* THD
+* Real-time analysis of sound card input?
+* Calculate intersample peaks
+  * "If you want to see something really bad on the oversampled meter - try a sequence of maximum and minimum values that goes like this: "1010101101010" - notice that the alternating 1's and 0's suddenly change direction in the middle. The results depends on the filter being used in the reconstruction, with the intersample peak easily exceeding 10dB!"
+* Extract frequency response plot if the input is a sweep ;)
+  * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
+* Signal to noise and dynamic range from test file
+  * Same guts as THD script, just input −60 dBFS waveform and compare to maximum value instead of fundamental peak
+* Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
+  * http://www.mathworks.com/products/filterdesign/demos.html?file=/products/demos/shipping/filterdesign/audioweightingdemo.html#4
+* there may be an error in peak calculation?
+* test with crazy files like 1 MHz sampling rate, 3-bit, etc.
+* Bug: high frequencies of A-weighting roll off too quickly at lower sampling rates
+  * make freq-response graphs at different signal levels and different sampling frequencies
+
+  
+Done
+----
+
+* Total RMS level
+* Crest factor
+* DC offset
+* should check if channels are identical
+  * 2 unique channels vs 2 identical channels vs 1 channel
+* Message about easygui not installed
+* THD+N
+* Frequency estimation
+  * Guess frequency from FFT
+  * ~~FFT Filter out noise and get just the fundamental~~
+  * ~~Count zero-crossings~~
+  * actually, interpolated FFT is the best, without any filtering or crossings counting
+* say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
