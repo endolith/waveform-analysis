@@ -84,18 +84,19 @@ def parabolic(f, x):
     Out[4]: (3.2142857142857144, 6.1607142857142856)
     
     """
-    # Requires real division.  Insert float() somewhere to force it?
-    xv = 1/2 * (f[x-1] - f[x+1]) / (f[x-1] - 2 * f[x] + f[x+1]) + x
-    yv = f[x] - 1/4 * (f[x-1] - f[x+1]) * (xv - x)
+    xv = 1/2. * (f[x-1] - f[x+1]) / (f[x-1] - 2 * f[x] + f[x+1]) + x
+    yv = f[x] - 1/4. * (f[x-1] - f[x+1]) * (xv - x)
     return (xv, yv)
 
-def parabolic_polyfit(f, x):
+def parabolic_polyfit(f, x, n):
     """Use the built-in polyfit() function to find the peak of a parabola
     
-    Slower, but could be adapted to non-uniformly spaced data?
+    f is a vector and x is an index for that vector.
+    
+    n is the number of samples of the curve used to fit the parabola.
 
     """
-    a, b, c = polyfit([x-1, x, x+1], f[x-1:x+2], 2)
+    a, b, c = polyfit(arange(x-n//2, x+n//2+1), f[x-n//2:x+n//2+1], 2)
     xv = -0.5 * b/a
     yv = a * xv**2 + b * xv + c
     return (xv, yv)

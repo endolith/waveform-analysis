@@ -80,9 +80,9 @@ def THD(signal, sample_rate):
     
     print 'fundamental amplitude: %.3f' % abs(f[i])
     
-    # Find the values for the first 15 harmonics.
-    # TODO: Should peak-find near each one, not just assume
-    # TODO: Should non-harmonic peaks be included?  Just include the highest n peaks?
+    # Find the values for the first 15 harmonics.  Includes harmonic peaks only, by definition
+    # TODO: Should peak-find near each one, not just assume that fundamental was perfectly estimated.
+    # Instead of limited to 15, figure out how many fit based on f0 and sampling rate and report this "4 harmonics" and list the strength of each
     for x in range(2, 15):
         print '%.3f' % abs(f[i * x]),
    
