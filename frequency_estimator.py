@@ -145,27 +145,3 @@ if __name__ == '__main__':
         raise
     finally:
         raw_input('(Press <Enter> to close)') # Otherwise Windows closes the window too quickly to read
-
-
-"""
-obsolete?
-filename = sys.argv[1]
-print 'Reading file "%s"\n' % filename
-signal, fs, channels = load(filename)
-#plot (signal)
-
-print 'Calculating frequency from FFT:',
-start_time = time()
-print '%.9f Hz'   % freq_from_fft(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
-print 'Calculating frequency from zero crossings:',
-start_time = time()
-print '%f Hz' % freq_from_crossings(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-
-print 'Calculating frequency from autocorrelation:',
-start_time = time()
-print '%f Hz' % freq_from_autocorr(signal, fs)
-print 'Time elapsed: %.3f s\n' % (time() - start_time)
-"""
