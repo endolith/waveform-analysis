@@ -81,7 +81,7 @@ def analyze(filename):
     str(wave_file.format),
     'Channels:\t%d' % channels,
     'Sampling rate:\t%d Hz' % sample_rate,
-    'Frames/samples:\t%d' % wave_file.nframes,
+    'Samples:\t%d' % wave_file.nframes,
     'Length: \t' + str(wave_file.nframes/sample_rate) + ' seconds',
     '-----------------',
     ]
@@ -125,6 +125,7 @@ if __name__ == '__main__':
                     print 'Couldn\'t analyze "' + filename + '"\n'             
                 print ''
         else:
+            # TODO: realtime analyzer goes here
             sys.exit("You must provide at least one file to analyze:\npython wave_analyzer.py filename.wav")
     except BaseException as e:
         print('Error:')
