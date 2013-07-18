@@ -174,7 +174,8 @@ To do
 * Signal to noise and dynamic range from test file
   * Same guts as THD script, just input −60 dBFS waveform and compare to maximum value instead of fundamental peak
 * Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
-  * http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4
+  * analog spec: http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR
+  * digital approximation: http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4
   * ITU-R 468: 0 dB at 1 kHz, true quasi-peak meter, for professional equipment
   * ITU-R ARM: 0 dB at 2 kHz, average-response meter, for commercial equipment 
 * there may be an error in peak calculation?
