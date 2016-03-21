@@ -5,7 +5,7 @@ from __future__ import division
 from scipy.signal import kaiser
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
-from common import analyze_channels, rms_flat, parabolic
+from common import analyze_channels, rms_flat, parabolic, round2
 from A_weighting import A_weight
 
 def THDN(signal, sample_rate):
@@ -32,7 +32,7 @@ def THDN(signal, sample_rate):
     total_rms = rms_flat(windowed)
     
     # Find the peak of the frequency spectrum (fundamental frequency)
-    f = rfft(windowed)
+    f = rfft(windowed, round2(len(windowed)))
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
     print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))
@@ -43,7 +43,7 @@ def THDN(signal, sample_rate):
     f[lowermin: uppermin] = 0
     
     # Transform noise back into the time domain and measure it
-    noise = irfft(f)
+    noise = irfft(f)[:len(windowed)]
     THDN = rms_flat(noise) / total_rms
     
     # TODO: RMS and A-weighting in frequency domain?
@@ -73,7 +73,7 @@ def THD(signal, sample_rate):
     windowed = signal * kaiser(len(signal), 100)
     
     # Find the peak of the frequency spectrum (fundamental frequency)
-    f = rfft(windowed)
+    f = rfft(windowed, round2(len(windowed)))
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
     print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))

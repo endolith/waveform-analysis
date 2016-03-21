@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from common import analyze_channels
-from common import parabolic as parabolic
+from common import analyze_channels, parabolic, round2
 from numpy.fft import rfft
 from numpy import argmax, mean, diff, log, copy, arange
 from matplotlib.mlab import find
@@ -53,7 +52,7 @@ def freq_from_fft(signal, fs):
     
     # Compute Fourier transform of windowed signal
     windowed = signal * kaiser(N, 100)
-    f = rfft(windowed)
+    f = rfft(windowed, round2(N))
     # Find the peak and interpolate to get a more accurate peak
     i_peak = argmax(abs(f)) # Just use this value for less-accurate result
     i_interp = parabolic(log(abs(f)), i_peak)[0]
@@ -103,7 +102,7 @@ def freq_from_hps(signal, fs):
     windowed = signal * kaiser(N, 100)
     
     # Get spectrum
-    X = log(abs(rfft(windowed)))
+    X = log(abs(rfft(windowed, round2(N))))
     
     # Downsample sum logs of spectra instead of multiplying
     hps = copy(X)
