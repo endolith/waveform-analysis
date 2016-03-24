@@ -101,13 +101,3 @@ def parabolic_polyfit(f, x, n):
     yv = a * xv**2 + b * xv + c
     return (xv, yv)
 
-	:
-def round2(x):
-    """round x to the next highest power of 2
-
-    always returns an int
-    
-    """
-    return 2**int(ceil(log2(x)))
-
-

@@ -5,8 +5,10 @@ from __future__ import division
 from scipy.signal import kaiser
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
-from common import analyze_channels, rms_flat, parabolic, round2
+from scipy.signal import _next_regular # TODO: will be named _next_opt_len() soon. See https://github.com/endolith/waveform-analyzer/pull/6#1
+from common import analyze_channels, rms_flat, parabolic
 from A_weighting import A_weight
+
 
 def THDN(signal, sample_rate):
     """Measure the THD+N for a signal and print the results
@@ -32,7 +34,7 @@ def THDN(signal, sample_rate):
     total_rms = rms_flat(windowed)
     
     # Find the peak of the frequency spectrum (fundamental frequency)
-    f = rfft(windowed, round2(len(windowed)))
+    f = rfft(windowed, _next_regular(len(windowed)))
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
     print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))
@@ -73,7 +75,7 @@ def THD(signal, sample_rate):
     windowed = signal * kaiser(len(signal), 100)
     
     # Find the peak of the frequency spectrum (fundamental frequency)
-    f = rfft(windowed, round2(len(windowed)))
+    f = rfft(windowed, _next_regular(len(windowed)))
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
     print 'Frequency: %f Hz' % (sample_rate * (true_i / len(windowed)))
