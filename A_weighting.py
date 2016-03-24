@@ -15,7 +15,7 @@ Translated from adsgn.m to SciPy 2009-07-14 endolith@gmail.com
 """
 
 from __future__ import division
-from numpy import pi, convolve
+from numpy import pi, polymul
 from scipy.signal.filter_design import bilinear
 from scipy.signal import lfilter
 
@@ -37,13 +37,16 @@ def A_weighting(Fs):
     f3 = 737.86223
     f4 = 12194.217
     A1000 = 1.9997
-    
-    NUMs = [(2 * pi * f4)**2 * (10**(A1000/20)), 0, 0, 0, 0]
-    DENs = convolve([1, +4 * pi * f4, (2 * pi * f4)**2], 
-                    [1, +4 * pi * f1, (2 * pi * f1)**2], mode='full')
-    DENs = convolve(convolve(DENs, [1, 2 * pi * f3], mode='full'), 
-                                   [1, 2 * pi * f2], mode='full')
-    
+
+    NUMs = [(2*pi * f4)**2 * (10**(A1000/20)), 0, 0, 0, 0]
+
+    DENs = polymul([1, 4*pi * f4, (2*pi * f4)**2],
+                   [1, 4*pi * f1, (2*pi * f1)**2])
+    DENs = polymul(DENs, [1, 2*pi * f3])
+    DENs = polymul(DENs, [1, 2*pi * f2])
+
+    # Analog confirmed to match https://en.wikipedia.org/wiki/A-weighting#A_2
+
     # Use the bilinear transformation to get the digital filter.
     # (Octave, MATLAB, and PyLab disagree about Fs vs 1/Fs)
     return bilinear(NUMs, DENs, Fs)
