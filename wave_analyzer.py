@@ -8,8 +8,8 @@ from A_weighting import A_weight
 from common import rms_flat, dB
 
 def display(header, results):
-    """Display header string and list of result lines
-    
+    """
+    Display header string and list of result lines
     """
     try:
         import easygui
@@ -25,8 +25,8 @@ def display(header, results):
         easygui.textbox(header, title, '\n'.join(results))
 
 def histogram(signal):
-    """Plot a histogram of the sample values
-    
+    """
+    Plot a histogram of the sample values
     """
     try:
         from matplotlib.pyplot import hist, show
@@ -38,8 +38,8 @@ def histogram(signal):
         show()
 
 def properties(signal, sample_rate):
-    """Return a list of some wave properties for a given 1-D signal
-    
+    """
+    Return a list of some wave properties for a given 1-D signal
     """
     # Measurements that include DC component
     DC_offset = mean(signal)
