@@ -26,11 +26,14 @@ from scipy.signal import bilinear, lfilter
 def A_weighting(fs):
     """
     Design of an A-weighting filter.
-    
+
     Designs a digital A-weighting filter for
     sampling frequency `fs`. Usage: y = lfilter(b, a, x).
     Warning: fs should normally be higher than 20 kHz. For example,
     fs = 48000 yields a class 1-compliant filter.
+
+    fs : float
+        Sampling frequency
 
     Since this uses the bilinear transform, frequency response around fs/2 will
     be inaccurate at lower sampling rates.  A-weighting is undefined above
