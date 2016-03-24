@@ -19,18 +19,19 @@ from numpy import pi, polymul
 from scipy.signal.filter_design import bilinear
 from scipy.signal import lfilter
 
-def A_weighting(Fs):
-    """Design of an A-weighting filter.
+def A_weighting(fs):
+    """
+    Design of an A-weighting filter.
     
-    B, A = A_weighting(Fs) designs a digital A-weighting filter for 
-    sampling frequency Fs. Usage: y = lfilter(B, A, x).
-    Warning: Fs should normally be higher than 20 kHz. For example, 
-    Fs = 48000 yields a class 1-compliant filter.
+    B, A = A_weighting(fs) designs a digital A-weighting filter for
+    sampling frequency fs. Usage: y = lfilter(b, a, x).
+    Warning: fs should normally be higher than 20 kHz. For example,
+    fs = 48000 yields a class 1-compliant filter.
 
     References:
        [1] IEC/CD 1672: Electroacoustics-Sound Level Meters, Nov. 1996.
-    
     """
+
     # Definition of analog A-weighting filter according to IEC/CD 1672.
     f1 = 20.598997
     f2 = 107.65265
@@ -48,15 +49,21 @@ def A_weighting(Fs):
     # Analog confirmed to match https://en.wikipedia.org/wiki/A-weighting#A_2
 
     # Use the bilinear transformation to get the digital filter.
-    # (Octave, MATLAB, and PyLab disagree about Fs vs 1/Fs)
-    return bilinear(NUMs, DENs, Fs)
+    return bilinear(NUMs, DENs, fs)
 
-def A_weight(signal, samplerate):
-    """Return the given signal after passing through an A-weighting filter
-    
+
+def A_weight(signal, fs):
     """
-    B, A = A_weighting(samplerate)
-    return lfilter(B, A, signal)
+    Return the given signal after passing through an A-weighting filter
+
+    signal : array_like
+        Input signal
+    fs : float
+        Sampling frequency
+    """
+
+    b, a = A_weighting(fs)
+    return lfilter(b, a, signal)
 
 # When importing a stereo sound file with scikits.audiolab, it needs axis = 0:
 # y = lfilter(B, A, x, axis = 0)
