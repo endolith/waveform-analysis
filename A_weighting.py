@@ -1,6 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Originally a MATLAB script. Also included ASPEC, CDSGN, CSPEC:
+
+Author: Christophe Couvreur, Faculte Polytechnique de Mons (Belgium)
+        couvreur@thor.fpms.ac.be
+Last modification: Aug. 20, 1997, 10:00am.
+
+http://www.mathworks.com/matlabcentral/fileexchange/69
+http://replaygain.hydrogenaudio.org/mfiles/adsgn.m
+
+Translated from adsgn.m to SciPy 2009-07-14 endolith@gmail.com
+"""
+
 from __future__ import division
 from numpy import pi, convolve
 from scipy.signal.filter_design import bilinear
@@ -13,18 +26,8 @@ def A_weighting(Fs):
     sampling frequency Fs. Usage: y = lfilter(B, A, x).
     Warning: Fs should normally be higher than 20 kHz. For example, 
     Fs = 48000 yields a class 1-compliant filter.
-    
-    Originally a MATLAB script. Also included ASPEC, CDSGN, CSPEC.
-    
-    Author: Christophe Couvreur, Faculte Polytechnique de Mons (Belgium)
-            couvreur@thor.fpms.ac.be
-    Last modification: Aug. 20, 1997, 10:00am.
-    
-    http://www.mathworks.com/matlabcentral/fileexchange/69
-    http://replaygain.hydrogenaudio.org/mfiles/adsgn.m
-    Translated from adsgn.m to PyLab 2009-07-14 endolith@gmail.com
-    
-    References: 
+
+    References:
        [1] IEC/CD 1672: Electroacoustics-Sound Level Meters, Nov. 1996.
     
     """
