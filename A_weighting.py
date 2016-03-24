@@ -20,8 +20,8 @@ y = lfilter(b, a, x, axis = 0)
 
 from __future__ import division
 from numpy import pi, polymul
-from scipy.signal.filter_design import bilinear
-from scipy.signal import lfilter
+from scipy.signal import bilinear, lfilter
+
 
 def A_weighting(fs):
     """
