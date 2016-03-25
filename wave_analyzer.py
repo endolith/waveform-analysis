@@ -145,13 +145,18 @@ def analyze(filename):
 
     header = 'dBFS values are relative to a full-scale square wave'
 
+    if samples/sample_rate >= 1:
+        length = str(samples/sample_rate) + ' seconds'
+    else:
+        length = str(samples/sample_rate*1000) + ' milliseconds'
+
     results = [
         'Properties for "' + filename + '"',
         str(file_format),
         'Channels:\t%d' % channels,
         'Sampling rate:\t%d Hz' % sample_rate,
         'Samples:\t%d' % samples,
-        'Length: \t' + str(wave_file.nframes/sample_rate) + ' seconds',
+        'Length: \t' + length,
         '-----------------',
         ]
 
