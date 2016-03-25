@@ -5,6 +5,7 @@ from __future__ import division
 from numpy import mean, absolute, array_equal
 from scikits.audiolab import Sndfile
 from A_weighting import A_weight
+from ITU_R_468_weighting import ITU_R_468_weight
 from common import rms_flat, dB
 
 try:
@@ -61,18 +62,28 @@ def properties(signal, sample_rate):
     crest_factor = peak_level/signal_level
 
     # Apply the A-weighting filter to the signal
-    weighted = A_weight(signal, sample_rate)
-    weighted_level = rms_flat(weighted)
+    Aweighted = A_weight(signal, sample_rate)
+    Aweighted_level = rms_flat(Aweighted)
+
+    # Apply the ITU-R 468 weighting filter to the signal
+    ITUweighted = ITU_R_468_weight(signal, sample_rate)
+    ITUweighted_level = rms_flat(ITUweighted)
 
     # TODO: rjust instead of tabs
 
     return [
-    'DC offset:\t%f (%.3f%%)' % (DC_offset, DC_offset * 100),
-    'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
-    'Peak level:\t%.3f (%.3f dBFS)' % (peak_level, dB(peak_level)), # Doesn't account for intersample peaks!
-    'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
-    'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' % (weighted_level, dB(weighted_level), dB(weighted_level/signal_level)),
-    '-----------------',
+        'DC offset:\t%f (%.3f%%)' % (DC_offset, DC_offset * 100),
+        'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
+        'Peak level:\t%.3f (%.3f dBFS)' %
+        (peak_level, dB(peak_level)),  # Doesn't account for intersample peaks!
+        'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
+        'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
+        (Aweighted_level, dB(Aweighted_level),
+         dB(Aweighted_level/signal_level)),
+        'RMS 468-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
+        (ITUweighted_level, dB(ITUweighted_level),
+         dB(ITUweighted_level/signal_level)),
+        '-----------------',
     ]
 
 
