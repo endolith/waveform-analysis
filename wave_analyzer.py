@@ -7,22 +7,27 @@ from scikits.audiolab import Sndfile
 from A_weighting import A_weight
 from common import rms_flat, dB
 
+try:
+    import easygui
+    displayer = 'easygui'
+except:
+    displayer = 'stdout'
+
+
 def display(header, results):
     """
     Display header string and list of result lines
     """
-    try:
-        import easygui
-    except ImportError:
-        #Print to console
-        print 'EasyGUI not installed - printing output to console\n'
+    if displayer == 'easygui':
+        title = 'Waveform properties'
+        easygui.codebox(header, title, '\n'.join(results))
+    else:
+        print 'No EasyGUI; printing output to console\n'
         print header
         print '-----------------'
         print '\n'.join(results)
-    else:
-        # Pop the stuff up in a text box
-        title = 'Waveform properties'
-        easygui.textbox(header, title, '\n'.join(results))
+
+
 
 def histogram(signal):
     """
