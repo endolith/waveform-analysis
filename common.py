@@ -112,3 +112,4 @@ def parabolic_polyfit(f, x, n):
     xv = -0.5 * b/a
     yv = a * xv**2 + b * xv + c
     return (xv, yv)
+

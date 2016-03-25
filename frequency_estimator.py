@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from common import analyze_channels
-from common import parabolic as parabolic
+from common import analyze_channels, parabolic
 from numpy.fft import rfft
 from numpy import argmax, mean, diff, log, copy, arange
 from matplotlib.mlab import find
 from scipy.signal import fftconvolve, kaiser, decimate
+from scipy.signal import _next_regular # TODO: will be named _next_opt_len() soon. See https://github.com/endolith/waveform-analyzer/pull/6#1
 from time import time
+
 
 
 def freq_from_crossings(signal, fs):
@@ -53,7 +54,7 @@ def freq_from_fft(signal, fs):
     
     # Compute Fourier transform of windowed signal
     windowed = signal * kaiser(N, 100)
-    f = rfft(windowed)
+    f = rfft(windowed, _next_regular(N))
     # Find the peak and interpolate to get a more accurate peak
     i_peak = argmax(abs(f)) # Just use this value for less-accurate result
     i_interp = parabolic(log(abs(f)), i_peak)[0]
@@ -103,7 +104,7 @@ def freq_from_hps(signal, fs):
     windowed = signal * kaiser(N, 100)
     
     # Get spectrum
-    X = log(abs(rfft(windowed)))
+    X = log(abs(rfft(windowed, _next_regular(N))))
     
     # Downsample sum logs of spectra instead of multiplying
     hps = copy(X)
