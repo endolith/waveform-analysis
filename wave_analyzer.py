@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
+import sys
 from numpy import mean, absolute, array_equal
 from A_weighting import A_weight
 from ITU_R_468_weighting import ITU_R_468_weight
@@ -185,23 +186,16 @@ def analyze(filename):
     if plot_histogram:
         histogram(signal)
 
-if __name__ == '__main__':
-    try:
-        import sys
-        files = sys.argv[1:]
-        if files:
-            for filename in files:
-                try:
-                    analyze(filename)
-                except IOError:
-                    print 'Couldn\'t analyze "' + filename + '"\n'             
-                print ''
-        else:
-            # TODO: realtime analyzer goes here
-            sys.exit("You must provide at least one file to analyze:\npython wave_analyzer.py filename.wav")
-    except BaseException as e:
-        print('Error:')
-        print(e)
-        raise
-    finally:
-        raw_input('(Press <Enter> to close)') # Otherwise Windows closes the window too quickly to read
+
+def wave_analyzer(files):
+    if files:
+        for filename in files:
+            try:
+                analyze(filename)
+            except IOError:
+                print 'Couldn\'t analyze "' + filename + '"\n'
+            print ''
+    else:
+        # TODO: realtime analyzer goes here
+        sys.exit("You must provide at least one file to analyze:\n"
+                 "python wave_analyzer.py filename.wav")
