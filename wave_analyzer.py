@@ -3,10 +3,24 @@
 
 from __future__ import division
 from numpy import mean, absolute, array_equal
-from scikits.audiolab import Sndfile
 from A_weighting import A_weight
 from ITU_R_468_weighting import ITU_R_468_weight
 from common import rms_flat, dB
+
+try:
+    from soundfile import SoundFile
+    wav_loader = 'pysoundfile'
+except:
+    try:
+        from scikits.audiolab import Sndfile
+        wav_loader = 'audiolab'
+    except:
+        try:
+            from scipy.io.wavfile import read
+            wav_loader = 'scipy'
+        except:
+            raise ImportError('No sound file loading package installed '
+                              '(pysoundfile, scikits.audiolab, or scipy')
 
 try:
     import easygui
@@ -27,7 +41,6 @@ def display(header, results):
         print header
         print '-----------------'
         print '\n'.join(results)
-
 
 
 def histogram(signal):
@@ -88,24 +101,60 @@ def properties(signal, sample_rate):
 
 
 def analyze(filename):
-    wave_file = Sndfile(filename, 'r')
-    signal = wave_file.read_frames(wave_file.nframes)
-    channels = wave_file.channels
-    sample_rate = wave_file.samplerate
+    if wav_loader == 'pysoundfile':
+        sf = SoundFile(filename)
+        signal = sf.read()
+        channels = sf.channels
+        sample_rate = sf.samplerate
+        samples = len(sf)
+        file_format = sf.format_info + ' ' + sf.subtype_info
+        sf.close()
+    elif wav_loader == 'audiolab':
+        sf = Sndfile(filename, 'r')
+        signal = sf.read_frames(sf.nframes)
+        channels = sf.channels
+        sample_rate = sf.samplerate
+        samples = sf.nframes
+        file_format = sf.format
+        sf.close()
+    elif wav_loader == 'scipy':
+        sample_rate, signal = read(filename)
+        try:
+            channels = signal.shape[1]
+        except IndexError:
+            channels = 1
+        samples = signal.shape[0]
+        file_format = str(signal.dtype)
+
+        # Scale common formats
+        # Other bit depths (24, 20) are not handled by SciPy correctly.
+        if file_format == 'int16':
+            signal = signal.astype(float) / (2**15)
+        elif file_format == 'uint8':
+            signal = (signal.astype(float) - 128) / (2**7)
+        elif file_format == 'int32':
+            signal = signal.astype(float) / (2**31)
+        elif file_format == 'float32':
+            pass
+        else:
+            raise Exception("Don't know how to handle file "
+                            "format {}".format(file_format))
+
+    else:
+        raise Exception("wav_loader has failed")
+
     header = 'dBFS values are relative to a full-scale square wave'
 
     results = [
-    'Properties for "' + filename + '"',
-    str(wave_file.format),
-    'Channels:\t%d' % channels,
-    'Sampling rate:\t%d Hz' % sample_rate,
-    'Samples:\t%d' % wave_file.nframes,
-    'Length: \t' + str(wave_file.nframes/sample_rate) + ' seconds',
-    '-----------------',
-    ]
-    
-    wave_file.close()
-    
+        'Properties for "' + filename + '"',
+        str(file_format),
+        'Channels:\t%d' % channels,
+        'Sampling rate:\t%d Hz' % sample_rate,
+        'Samples:\t%d' % samples,
+        'Length: \t' + str(wave_file.nframes/sample_rate) + ' seconds',
+        '-----------------',
+        ]
+
     if channels == 1:
         # Monaural
         results += properties(signal, sample_rate)
