@@ -2,8 +2,12 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-from scikits.audiolab import Sndfile
-from numpy import array_equal, polyfit, sqrt, mean, absolute, log10
+try:
+    from scikits.audiolab import Sndfile
+except:
+    print "common.py can't import scikits.audiolab"
+
+from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
 from scipy.stats import gmean
 
 
