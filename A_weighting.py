@@ -23,6 +23,31 @@ from numpy import pi, polymul
 from scipy.signal import bilinear, lfilter
 
 
+def A_weighting_analog():
+    """
+    Design of an A-weighting filter.
+
+    Return ITU-R 468 analog weighting filter numerator, denominator
+    """
+    # Definition of analog A-weighting filter according to IEC/CD 1672.
+    f1 = 20.598997
+    f2 = 107.65265
+    f3 = 737.86223
+    f4 = 12194.217
+    A1000 = 1.9997
+
+    NUMs = [(2*pi * f4)**2 * (10**(A1000/20)), 0, 0, 0, 0]
+
+    DENs = polymul([1, 4*pi * f4, (2*pi * f4)**2],
+                   [1, 4*pi * f1, (2*pi * f1)**2])
+    DENs = polymul(DENs, [1, 2*pi * f3])
+    DENs = polymul(DENs, [1, 2*pi * f2])
+
+    # Confirmed to match https://en.wikipedia.org/wiki/A-weighting#A_2
+
+    return NUMs, DENs
+
+
 def A_weighting(fs):
     """
     Design of an A-weighting filter.
@@ -55,25 +80,10 @@ def A_weighting(fs):
     References:
        [1] IEC/CD 1672: Electroacoustics-Sound Level Meters, Nov. 1996.
     """
-
-    # Definition of analog A-weighting filter according to IEC/CD 1672.
-    f1 = 20.598997
-    f2 = 107.65265
-    f3 = 737.86223
-    f4 = 12194.217
-    A1000 = 1.9997
-
-    NUMs = [(2*pi * f4)**2 * (10**(A1000/20)), 0, 0, 0, 0]
-
-    DENs = polymul([1, 4*pi * f4, (2*pi * f4)**2],
-                   [1, 4*pi * f1, (2*pi * f1)**2])
-    DENs = polymul(DENs, [1, 2*pi * f3])
-    DENs = polymul(DENs, [1, 2*pi * f2])
-
-    # Analog confirmed to match https://en.wikipedia.org/wiki/A-weighting#A_2
+    b, a = A_weighting_analog()
 
     # Use the bilinear transformation to get the digital filter.
-    return bilinear(NUMs, DENs, fs)
+    return bilinear(b, a, fs)
 
 
 def A_weight(signal, fs):
