@@ -14,14 +14,14 @@ try:
 except:
     try:
         from scikits.audiolab import Sndfile
-        wav_loader = 'audiolab'
+        wav_loader = 'scikits.audiolab'
     except:
         try:
             from scipy.io.wavfile import read
-            wav_loader = 'scipy'
+            wav_loader = 'scipy.io.wavfile'
         except:
             raise ImportError('No sound file loading package installed '
-                              '(pysoundfile, scikits.audiolab, or scipy')
+                              '(PySoundFile, scikits.audiolab, or SciPy)')
 
 try:
     import easygui
@@ -94,7 +94,7 @@ def properties(signal, sample_rate):
         'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
         (Aweighted_level, dB(Aweighted_level),
          dB(Aweighted_level/signal_level)),
-        'RMS 468-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
+        'RMS 468-weighted:\t%.3f (%.3f dBFS(468), %.3f dB)' %
         (ITUweighted_level, dB(ITUweighted_level),
          dB(ITUweighted_level/signal_level)),
         '-----------------',
@@ -110,7 +110,7 @@ def analyze(filename):
         samples = len(sf)
         file_format = sf.format_info + ' ' + sf.subtype_info
         sf.close()
-    elif wav_loader == 'audiolab':
+    elif wav_loader == 'scikits.audiolab':
         sf = Sndfile(filename, 'r')
         signal = sf.read_frames(sf.nframes)
         channels = sf.channels
@@ -118,7 +118,7 @@ def analyze(filename):
         samples = sf.nframes
         file_format = sf.format
         sf.close()
-    elif wav_loader == 'scipy':
+    elif wav_loader == 'scipy.io.wavfile':
         sample_rate, signal = read(filename)
         try:
             channels = signal.shape[1]
@@ -152,6 +152,7 @@ def analyze(filename):
         length = str(samples/sample_rate*1000) + ' milliseconds'
 
     results = [
+        "Using sound file backend '" + wav_loader + "'",
         'Properties for "' + filename + '"',
         str(file_format),
         'Channels:\t%d' % channels,

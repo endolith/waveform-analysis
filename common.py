@@ -5,7 +5,7 @@ from __future__ import division
 try:
     from scikits.audiolab import Sndfile
 except:
-    print "common.py can't import scikits.audiolab"
+    print "warning: common.py can't import scikits.audiolab"
 
 from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
 from scipy.stats import gmean

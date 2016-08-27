@@ -6,8 +6,9 @@ Created a SendTo shortcut to
 
     C:\...\pythonw.exe "C:\...\wave_analyzer_launcher.py"
 
-and multiple files can be selected and analyzed from Explorer context menu,
-with no command line window, and any errors are displayed in a GUI window.
+and multiple files can then be selected and analyzed from the Explorer context 
+menu, with no command line window, and any errors are displayed in a GUI
+window.
 """
 
 from __future__ import division
@@ -22,7 +23,7 @@ try:
 # but that's ok because it re-raises them.
 except BaseException as e:
     try:
-        # Tkinter is built-in so it should just work?
+        # Tkinter is built-in so it should always Just Work?
         from Tkinter import Tk
         import tkMessageBox
         root = Tk().withdraw()  # hiding the main window

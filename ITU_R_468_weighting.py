@@ -122,7 +122,7 @@ def test_ITU_R_468_weight(fs=None):
         b, a = zpk2tf(z, p, k)
         w, h = freqs(b, a, 2*pi*frequencies)
     else:
-        # Passes if fs >= 180000 Hz but not at typical audio fs
+        # Passes if fs >= 180000 Hz but not at typical audio sample rates
         b, a = ITU_R_468_weighting(fs)
         w = 2*pi * frequencies / fs
         w, h = freqz(b, a, w)
