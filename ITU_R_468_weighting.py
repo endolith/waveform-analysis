@@ -132,6 +132,11 @@ def test_ITU_R_468_weight(fs=None):
     plt.semilogx(frequencies, levels)
     plt.semilogx(frequencies, responses + upper_limits, 'r--')
     plt.semilogx(frequencies, responses + lower_limits, 'r--')
+    plt.grid(True, color='0.7', linestyle='-', which='major')
+    plt.grid(True, color='0.9', linestyle='-', which='minor')
 
     assert all(np.less_equal(levels, responses + upper_limits))
     assert all(np.greater_equal(levels, responses + lower_limits))
+
+if __name__ == '__main__':
+    test_ITU_R_468_weight()
