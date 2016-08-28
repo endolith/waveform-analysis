@@ -6,7 +6,7 @@ Created a SendTo shortcut to
 
     C:\...\pythonw.exe "C:\...\wave_analyzer_launcher.py"
 
-and multiple files can then be selected and analyzed from the Explorer context 
+and multiple files can then be selected and analyzed from the Explorer context
 menu, with no command line window, and any errors are displayed in a GUI
 window.
 """
