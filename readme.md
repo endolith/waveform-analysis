@@ -18,12 +18,19 @@ Currently this displays file information and measurements like crest factor and 
 
 Usage: `python wave_analyzer.py "audio file.flac"`
 
-**Requires:** Python, NumPy, SciPy, [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html) ([PyPI](http://pypi.python.org/pypi/scikits.audiolab))
+For Windows' SendTo menu: `pythonw wave_analyzer_launcher.py`
 
-**Optional:** [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console), Matplotlib (histogram of sample values)
+**Requires:**
+- Python
+- NumPy
+- SciPy
 
-It will open any file supported by audiolab, which basically means anything supported by [libsndfile](http://www.mega-nerd.com/libsndfile/).  No MP3s yet.
-
+**Recommended:**
+-  [PySoundFile](http://pysoundfile.readthedocs.io) or [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html) ([PyPI](http://pypi.python.org/pypi/scikits.audiolab)) for opening any file format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/).  ([No MP3s yet.](https://github.com/bastibe/PySoundFile/issues/162))
+ 
+**Optional:**
+- [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console)
+- Matplotlib (histogram of sample values)
 
 A-weighting
 ===========
@@ -173,15 +180,14 @@ To do
   * Probably should just make a separate script for each function like this, and this one can be a noise analysis script
 * Signal to noise and dynamic range from test file
   * Same guts as THD script, just input −60 dBFS waveform and compare to maximum value instead of fundamental peak
-* Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
-  * analog spec: http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR
-  * digital approximation: http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4
+* Both normalizations of 468:
   * ITU-R 468: 0 dB at 1 kHz, true quasi-peak meter, for professional equipment
   * ITU-R ARM: 0 dB at 2 kHz, average-response meter, for commercial equipment 
 * there may be an error in peak calculation?
 * test with crazy files like 1 MHz sampling rate, 3-bit, etc.
 * Bug: high frequencies of A-weighting roll off too quickly at lower sampling rates
   * make freq-response graphs at different signal levels and different sampling frequencies
+* What I've been calling "dBFS" is [probably better referred to](https://en.wikipedia.org/wiki/DBFS#RMS_levels) as "dBov".
 
   
 Done
@@ -200,3 +206,6 @@ Done
   * ~~Count zero-crossings~~
   * actually, interpolated FFT is the best, without any filtering or crossings counting
 * say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
+* Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
+  * analog spec: http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR
+  * digital approximation: http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4
