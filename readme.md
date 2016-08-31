@@ -188,6 +188,7 @@ To do
 * Bug: high frequencies of A-weighting roll off too quickly at lower sampling rates
   * make freq-response graphs at different signal levels and different sampling frequencies
 * What I've been calling "dBFS" is [probably better referred to](https://en.wikipedia.org/wiki/DBFS#RMS_levels) as "dBov".
+* `THD()` should use a flat-top window for improved accuracy.
 
   
 Done
