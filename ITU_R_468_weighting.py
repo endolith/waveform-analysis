@@ -11,7 +11,7 @@ http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR
 https://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
 """
 
-from numpy import pi
+from numpy import pi, inf
 from scipy.signal import zpk2tf, freqs, bilinear, lfilter
 
 
@@ -73,7 +73,7 @@ def ITU_R_468_weighting(fs):
 
 def ITU_R_468_weight(signal, fs):
     """
-    Return the given signal after passing through an A-weighting filter
+    Return the given signal after passing through an 468-weighting filter
 
     signal : array_like
         Input signal
@@ -114,7 +114,7 @@ def test_ITU_R_468_weight(fs=None):
     lower_limits = np.array((
         -2.0, -1.4, -1.0, -0.85, -0.7, -0.55, -0.5, -0.5, -0.5, -0.5, -0.5,
         -0.01,   # Actually 0 tolerance, but specified as "+12.2" dB
-        -0.2, -0.4, -0.6, -0.8, -1.2, -1.4, -1.6, -2.0, -float('inf')
+        -0.2, -0.4, -0.6, -0.8, -1.2, -1.4, -1.6, -2.0, -inf
         ))
 
     if fs is None:
@@ -130,8 +130,8 @@ def test_ITU_R_468_weight(fs=None):
     levels = 20 * np.log10(abs(h))
 
     plt.semilogx(frequencies, levels)
-    plt.semilogx(frequencies, responses + upper_limits, 'r--')
-    plt.semilogx(frequencies, responses + lower_limits, 'r--')
+    plt.semilogx(frequencies, responses + upper_limits, 'r:')
+    plt.semilogx(frequencies, responses + lower_limits, 'r:')
     plt.grid(True, color='0.7', linestyle='-', which='major')
     plt.grid(True, color='0.9', linestyle='-', which='minor')
 
