@@ -69,8 +69,9 @@ def freq_from_autocorr(signal, fs):
     Pros: Best method for finding the true fundamental of any repeating wave,
     even with strong harmonics or completely missing fundamental
 
-    Cons: Not as accurate, doesn't work for inharmonic things like musical
-    instruments, this implementation has trouble with finding the true peak
+    Cons: Not as accurate, doesn't find fundamental for inharmonic things like
+    musical instruments, this implementation has trouble with finding the true
+    peak
 
     """
     # Calculate autocorrelation (same thing as convolution, but with one input
