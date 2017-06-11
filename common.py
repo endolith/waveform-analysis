@@ -2,25 +2,56 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import division
-try:
-    from scikits.audiolab import Sndfile
-except:
-    print "warning: common.py can't import scikits.audiolab"
-
 from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
 from scipy.stats import gmean
+
+try:
+    from soundfile import SoundFile
+    wav_loader = 'pysoundfile'
+except:
+    try:
+        from scikits.audiolab import Sndfile
+        wav_loader = 'scikits.audiolab'
+    except:
+        try:
+            from scipy.io.wavfile import read
+            wav_loader = 'scipy.io.wavfile'
+        except:
+            raise ImportError('No sound file loading package installed '
+                              '(PySoundFile, scikits.audiolab, or SciPy)')
 
 
 def load(filename):
     """
     Load a wave file and return the signal, sample rate and number of channels.
 
-    Can be any format that libsndfile supports, like .wav, .flac, etc.
+    Can be any format supported by the underlying library (libsndfile or SciPy)
     """
-    wave_file = Sndfile(filename, 'r')
-    signal = wave_file.read_frames(wave_file.nframes)
-    channels = wave_file.channels
-    sample_rate = wave_file.samplerate
+    if wav_loader == 'pysoundfile':
+        sf = SoundFile(filename)
+        signal = sf.read()
+        channels = sf.channels
+        sample_rate = sf.samplerate
+        samples = len(sf)
+        file_format = sf.format_info + ' ' + sf.subtype_info
+        sf.close()
+    elif wav_loader == 'scikits.audiolab':
+        sf = Sndfile(filename, 'r')
+        signal = sf.read_frames(sf.nframes)
+        channels = sf.channels
+        sample_rate = sf.samplerate
+        samples = sf.nframes
+        file_format = sf.format
+        sf.close()
+    elif wav_loader == 'scipy.io.wavfile':
+        sample_rate, signal = read(filename)
+        try:
+            channels = signal.shape[1]
+        except IndexError:
+            channels = 1
+        samples = signal.shape[0]
+        file_format = str(signal.dtype)
+
     return signal, sample_rate, channels
 
 
