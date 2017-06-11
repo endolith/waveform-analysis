@@ -106,10 +106,15 @@ def freq_from_hps(signal, fs):
     # Get spectrum
     X = log(abs(rfft(windowed)))
 
+    # Remove mean of spectrum (so sum is not increasingly offset
+    # only in overlap region)
+    X -= mean(X)
+
     # Downsample sum logs of spectra instead of multiplying
     hps = copy(X)
-    for h in arange(2, 9): # TODO: choose a smarter upper limit
-        dec = decimate(X, h)
+    for h in arange(2, 9):  # TODO: choose a smarter upper limit
+        h = int(h)  # https://github.com/scipy/scipy/pull/7351
+        dec = decimate(X, h, zero_phase=True)
         hps[:len(dec)] += dec
 
     # Find the peak and interpolate to get a more accurate peak
