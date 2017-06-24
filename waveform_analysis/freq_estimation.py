@@ -7,7 +7,7 @@ from matplotlib.mlab import find
 from scipy.signal import correlate, kaiser, decimate
 
 
-def freq_from_crossings(signal, fs):
+def freq_from_crossings(signal, fs, interp='linear'):
     """
     Estimate frequency by counting zero crossings
 
@@ -23,15 +23,19 @@ def freq_from_crossings(signal, fs):
     # Find all indices right before a rising-edge zero crossing
     indices = find((signal[1:] >= 0) & (signal[:-1] < 0))
 
-    # Naive (Measures 1000.185 Hz for 1000 Hz, for instance)
-    # crossings = indices
+    if interp == 'linear':
+        # More accurate, using linear interpolation to find intersample
+        # zero-crossings (Measures 1000.000129 Hz for 1000 Hz, for instance)
+        crossings = [i - signal[i] / (signal[i+1] - signal[i])
+                     for i in indices]
+    elif interp == 'none' or interp is None:
+        # Naive (Measures 1000.185 Hz for 1000 Hz, for instance)
+        crossings = indices
+    else:
+        raise ValueError('Interpolation method not understood')
 
-    # More accurate, using linear interpolation to find intersample
-    # zero-crossings (Measures 1000.000129 Hz for 1000 Hz, for instance)
-    crossings = [i - signal[i] / (signal[i+1] - signal[i]) for i in indices]
-
-    # Some other interpolation based on neighboring points might be better.
-    # Spline, cubic, whatever
+        # TODO: Some other interpolation based on neighboring points might be
+        # better.  Spline, cubic, whatever  Can pass it a function?
 
     return fs / mean(diff(crossings))
 
