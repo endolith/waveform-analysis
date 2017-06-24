@@ -131,3 +131,8 @@ def freq_from_hps(signal, fs):
 
     # Convert to equivalent frequency
     return fs * i_interp / N  # Hz
+
+
+if __name__ == '__main__':
+    import pytest
+    pytest.main(['./tests/test_freq_estimation.py', "--capture=sys"])
