@@ -21,14 +21,14 @@ try:
 # but that's ok because it re-raises them.
 except BaseException as e:
     try:
-        # Tkinter is built-in so it should always Just Work?
+        # Tkinter is built-in, so it should always Just Work?
         from tkinter import Tk
         import tkinter.messagebox
         root = Tk().withdraw()  # hiding the main window
         var = tkinter.messagebox.showerror('Waveform analyzer',
                                            'Exception:\n' + str(e))
         raise
-    except ImportError:
+    except:  # ImportError:
         # This shouldn't ever happen, and if it does it will be hidden by
         # pythonw.exe?
         print('Error:')
