@@ -41,7 +41,7 @@ flattops = {
     }
 
 
-def THDN(signal, sample_rate):
+def THDN(signal, fs):
     """Measure the THD+N for a signal and print the results
 
     Prints the estimated fundamental frequency and the measured THD+N.  This is
@@ -72,7 +72,7 @@ def THDN(signal, sample_rate):
     f = rfft(windowed)
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
-    print('Frequency: %f Hz' % (sample_rate * (true_i / len(windowed))))
+    print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
 
     # Filter out fundamental by throwing away values ±10%
     lowermin = int(true_i * 0.9)
@@ -94,7 +94,7 @@ def THDN(signal, sample_rate):
     print("A-weighted: %.4f%% or %.1f dB(A)" % (THDNA * 100, 20 * log10(THDNA)))
 
 
-def THD(signal, sample_rate):
+def THD(signal, fs):
     """Measure the THD for a signal
 
     This function is not yet trustworthy.
@@ -119,7 +119,7 @@ def THD(signal, sample_rate):
     f = rfft(windowed)
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
-    print('Frequency: %f Hz' % (sample_rate * (true_i / len(windowed))))
+    print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
 
     print('fundamental amplitude: %.3f' % abs(f[i]))
 
