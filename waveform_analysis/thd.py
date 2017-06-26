@@ -1,8 +1,8 @@
 from scipy.signal.windows import _cos_win
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
-from common import rms_flat, parabolic
-from A_weighting import A_weight
+from waveform_analysis._common import rms_flat, parabolic
+from waveform_analysis import A_weight
 
 
 # This requires accurately measuring frequency component amplitudes, so use a
