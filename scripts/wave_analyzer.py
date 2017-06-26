@@ -2,9 +2,8 @@
 
 import sys
 from numpy import mean, absolute, array_equal
-from A_weighting import A_weight
-from ITU_R_468_weighting import ITU_R_468_weight
-from common import rms_flat, dB
+from waveform_analysis import A_weight, ITU_R_468_weight
+from waveform_analysis._common import rms_flat, dB
 
 try:
     from soundfile import SoundFile
