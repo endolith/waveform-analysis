@@ -41,7 +41,7 @@ flattops = {
     }
 
 
-def THDN(signal, fs):
+def THDN(signal, fs, weight=None):
     """Measure the THD+N for a signal and print the results
 
     Prints the estimated fundamental frequency and the measured THD+N.  This is
@@ -87,9 +87,17 @@ def THDN(signal, fs):
     noise = irfft(f)
     # TODO: RMS and A-weighting in frequency domain?  Parseval?
 
-    # Apply A-weighting to residual noise (Not normally used for distortion,
-    # but used to measure dynamic range with -60 dBFS signal, for instance)
-    weighted = A_weight(noise, sample_rate)
+    if weight is None:
+        pass
+    elif weight == 'A':
+        # Apply A-weighting to residual noise (Not normally used for
+        # distortion, but used to measure dynamic range with -60 dBFS signal,
+        # for instance)
+        noise = A_weight(noise, fs)
+        # TODO: filtfilt? tail end of filter?
+    else:
+        raise ValueError('Weighting not understood')
+
     # TODO: Return a dict or list of frequency, THD+N?
     return rms_flat(noise) / total_rms
 
