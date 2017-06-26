@@ -1,10 +1,42 @@
-#!/usr/bin/env python
-
-from scipy.signal import kaiser
+from scipy.signal.windows import _cos_win
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
 from common import rms_flat, parabolic
 from A_weighting import A_weight
+
+
+# This requires accurately measuring frequency component amplitudes, so use a
+# flat-top window
+flattops = {
+    'dantona3': [0.2811, 0.5209, 0.1980],
+    'dantona5': [0.21557895, 0.41663158, 0.277263158, 0.083578947,
+                 0.006947368],
+    'SFT3F': [0.26526, 0.5, 0.23474],
+    'SFT4F': [0.21706, 0.42103, 0.28294, 0.07897],
+    'SFT5F': [0.1881, 0.36923, 0.28702, 0.13077, 0.02488],
+    'SFT3M': [0.28235, 0.52105, 0.19659],
+    'SFT4M': [0.241906, 0.460841, 0.255381, 0.041872],
+    'SFT5M': [0.209671, 0.407331, 0.281225, 0.092669, 0.0091036],
+    'FTSRS': [1.0, 1.93, 1.29, 0.388, 0.028],
+    'FTNI': [0.2810639, 0.5208972, 0.1980399],
+    'FTHP': [1.0, 1.912510941, 1.079173272, 0.1832630879],
+    'HFT70': [1, 1.90796, 1.07349, 0.18199],
+    'HFT95': [1, 1.9383379, 1.3045202, 0.4028270, 0.0350665],
+    'HFT90D': [1, 1.942604, 1.340318, 0.440811, 0.043097],
+    'HFT116D': [1, 1.9575375, 1.4780705, 0.6367431, 0.1228389, 0.0066288],
+    'HFT144D': [1, 1.96760033, 1.57983607, 0.81123644, 0.22583558, 0.02773848,
+                0.00090360],
+    'HFT169D': [1, 1.97441842, 1.65409888, 0.95788186, 0.33673420, 0.06364621,
+                0.00521942, 0.00010599],
+    'HFT196D': [1, 1.979280420, 1.710288951, 1.081629853, 0.448734314,
+                0.112376628, 0.015122992, 0.000871252, 0.000011896],
+    'HFT223D': [1, 1.98298997309, 1.75556083063, 1.19037717712, 0.56155440797,
+                0.17296769663, 0.03233247087, 0.00324954578, 0.00013801040,
+                0.00000132725],
+    'HFT248D': [1, 1.985844164102, 1.791176438506, 1.282075284005,
+                0.667777530266, 0.240160796576, 0.056656381764, 0.008134974479,
+                0.000624544650, 0.000019808998, 0.000000132974],
+    }
 
 
 def THDN(signal, sample_rate):
@@ -19,8 +51,12 @@ def THDN(signal, sample_rate):
 
     """
     # Get rid of DC and window the signal
-    signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
-    windowed = signal * kaiser(len(signal), 100)
+    signal = np.asarray(signal) + 0.0  # Float-like array
+    # TODO: Do this in the frequency domain, and take any skirts with it?
+    signal -= mean(signal)
+
+    window = _cos_win(len(signal), flattops['HFT248D'])
+    windowed = signal * window
     del signal
 
     # Zero pad to nearest power of two
@@ -70,7 +106,10 @@ def THD(signal, sample_rate):
     """
     # Get rid of DC and window the signal
     signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
-    windowed = signal * kaiser(len(signal), 100)
+
+    window = _cos_win(len(signal), flattops['HFT248D'])
+    windowed = signal * window
+    del signal
 
     # Find the peak of the frequency spectrum (fundamental frequency)
     f = rfft(windowed)
