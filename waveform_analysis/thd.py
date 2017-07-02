@@ -2,6 +2,7 @@ from scipy.signal.windows import _cos_win
 from scipy.fftpack import next_fast_len
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log, concatenate, zeros
+import numpy as np
 from waveform_analysis._common import rms_flat, parabolic
 from waveform_analysis import A_weight
 
@@ -106,7 +107,9 @@ def THD(signal, sample_rate):
 
     """
     # Get rid of DC and window the signal
-    signal -= mean(signal) # TODO: Do this in the frequency domain, and take any skirts with it?
+    signal = np.asarray(signal) + 0.0  # Float-like array
+    # TODO: Do this in the frequency domain, and take any skirts with it?
+    signal -= mean(signal)
 
     window = _cos_win(len(signal), flattops['HFT248D'])
     windowed = signal * window
