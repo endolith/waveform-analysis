@@ -1,0 +1,31 @@
+* text=auto
+	
+# Source files
+# ============
+*.pxd		text
+*.py 		text
+*.pyw 		text
+*.pyx  		text
+
+# Binary files
+# ============
+*.db		binary
+*.p 		binary
+*.pkl 		binary
+*.pyc 		binary
+*.pyd		binary
+*.pyo 		binary
+
+*.wav       binary
+*.png       binary
+
+# Documentation / packaging
+# =========================
+*.txt   text
+*.md    text
+*.yml   text
+
+# Note: .db, .p, and .pkl files are associated
+# with the python modules ``pickle``, ``dbm.*``,
+# ``shelve``, ``marshal``, ``anydbm``, & ``bsddb``
+# (among others).
