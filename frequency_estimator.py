@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from __future__ import division
 from common import analyze_channels
 from common import parabolic as parabolic
 from numpy.fft import rfft
@@ -78,7 +76,7 @@ def freq_from_autocorr(signal, fs):
     # reversed in time), and throw away the negative lags
     signal -= mean(signal)  # Remove DC offset
     corr = fftconvolve(signal, signal[::-1], mode='full')
-    corr = corr[len(corr)/2:]
+    corr = corr[len(corr)//2:]
 
     # Find the first low point
     d = diff(corr)
@@ -113,8 +111,7 @@ def freq_from_hps(signal, fs):
 
     # Downsample sum logs of spectra instead of multiplying
     hps = copy(X)
-    for h in arange(2, 9):  # TODO: choose a smarter upper limit
-        h = int(h)  # https://github.com/scipy/scipy/pull/7351
+    for h in range(2, 9):  # TODO: choose a smarter upper limit
         dec = decimate(X, h, zero_phase=True)
         hps[:len(dec)] += dec
 
@@ -132,7 +129,7 @@ if __name__ == '__main__':
 
         def freq_wrapper(signal, fs):
             freq = freq_from_fft(signal, fs)
-            print '%f Hz' % freq
+            print('%f Hz' % freq)
 
         files = sys.argv[1:]
         if files:
@@ -140,11 +137,11 @@ if __name__ == '__main__':
                 try:
                     start_time = time()
                     analyze_channels(filename, freq_wrapper)
-                    print '\nTime elapsed: %.3f s\n' % (time() - start_time)
+                    print('\nTime elapsed: %.3f s\n' % (time() - start_time))
 
                 except IOError:
-                    print 'Couldn\'t analyze "' + filename + '"\n'
-                print ''
+                    print('Couldn\'t analyze "' + filename + '"\n')
+                print('')
         else:
             sys.exit("You must provide at least one file to analyze")
     except BaseException as e:
@@ -153,4 +150,4 @@ if __name__ == '__main__':
         raise
     finally:
         # Otherwise Windows closes the window too quickly to read
-        raw_input('(Press <Enter> to close)')
+        input('(Press <Enter> to close)')

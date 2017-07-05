@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from __future__ import division
 from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
 from scipy.stats import gmean
 
@@ -61,7 +59,7 @@ def analyze_channels(filename, function):
     file
     """
     signal, sample_rate, channels = load(filename)
-    print 'Analyzing "' + filename + '"...'
+    print('Analyzing "' + filename + '"...')
 
     if channels == 1:
         # Monaural
@@ -69,17 +67,17 @@ def analyze_channels(filename, function):
     elif channels == 2:
         # Stereo
         if array_equal(signal[:, 0], signal[:, 1]):
-            print '-- Left and Right channels are identical --'
+            print('-- Left and Right channels are identical --')
             function(signal[:, 0], sample_rate)
         else:
-            print '-- Left channel --'
+            print('-- Left channel --')
             function(signal[:, 0], sample_rate)
-            print '-- Right channel --'
+            print('-- Right channel --')
             function(signal[:, 1], sample_rate)
     else:
         # Multi-channel
         for ch_no, channel in enumerate(signal.transpose()):
-            print '-- Channel %d --' % (ch_no + 1)
+            print('-- Channel %d --' % (ch_no + 1))
             function(channel, sample_rate)
 
 

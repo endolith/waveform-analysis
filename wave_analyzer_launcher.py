@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 """
 Created a SendTo shortcut to
@@ -11,7 +10,6 @@ menu, with no command line window, and any errors are displayed in a GUI
 window.
 """
 
-from __future__ import division
 import sys
 
 try:
@@ -24,11 +22,11 @@ try:
 except BaseException as e:
     try:
         # Tkinter is built-in so it should always Just Work?
-        from Tkinter import Tk
-        import tkMessageBox
+        from tkinter import Tk
+        import tkinter.messagebox
         root = Tk().withdraw()  # hiding the main window
-        var = tkMessageBox.showerror('Waveform analyzer',
-                                     'Exception:\n' + str(e))
+        var = tkinter.messagebox.showerror('Waveform analyzer',
+                                           'Exception:\n' + str(e))
         raise
     except ImportError:
         # This shouldn't ever happen, and if it does it will be hidden by
@@ -36,5 +34,5 @@ except BaseException as e:
         print('Error:')
         print(e)
         # Otherwise Windows closes the window too quickly to read
-        raw_input('(Press <Enter> to close)')
+        input('(Press <Enter> to close)')
         raise

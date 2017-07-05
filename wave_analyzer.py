@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
-from __future__ import division
 import sys
 from numpy import mean, absolute, array_equal
 from A_weighting import A_weight
@@ -38,10 +36,10 @@ def display(header, results):
         title = 'Waveform properties'
         easygui.codebox(header, title, '\n'.join(results))
     else:
-        print 'No EasyGUI; printing output to console\n'
-        print header
-        print '-----------------'
-        print '\n'.join(results)
+        print('No EasyGUI; printing output to console\n')
+        print(header)
+        print('-----------------')
+        print('\n'.join(results))
 
 
 def histogram(signal):
@@ -51,10 +49,10 @@ def histogram(signal):
     try:
         from matplotlib.pyplot import hist, show
     except ImportError:
-        print 'Matplotlib not installed - skipping histogram'
+        print('Matplotlib not installed - skipping histogram')
     else:
-        print 'Plotting histogram'
-        hist(signal) #TODO: parameters, abs(signal)?
+        print('Plotting histogram')
+        hist(signal)  # TODO: parameters, abs(signal)?
         show()
 
 
@@ -194,8 +192,8 @@ def wave_analyzer(files):
             try:
                 analyze(filename)
             except IOError:
-                print 'Couldn\'t analyze "' + filename + '"\n'
-            print ''
+                print('Couldn\'t analyze "' + filename + '"\n')
+            print('')
     else:
         # TODO: realtime analyzer goes here
         sys.exit("You must provide at least one file to analyze:\n"
