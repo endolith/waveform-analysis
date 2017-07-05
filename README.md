@@ -39,8 +39,6 @@ Applies an A-weighting filter to a sound file stored as a NumPy array.
 
 I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
 
-Translated from [MATLAB script at File Exchange](http://www.mathworks.com/matlabcentral/fileexchange/69)
-
 
 Frequency estimator
 ===================
