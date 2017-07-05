@@ -1,0 +1,4 @@
+[report]
+exclude_lines =
+    def _
+    if __name__ == .__main__.:
