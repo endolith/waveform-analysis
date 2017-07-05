@@ -53,6 +53,43 @@ def load(filename):
     return signal, sample_rate, channels
 
 
+def load_dict(filename):
+    """
+    Load a wave file and return the signal, sample rate and number of channels.
+
+    Can be any format supported by the underlying library (libsndfile or SciPy)
+    """
+    soundfile = {}
+    if wav_loader == 'pysoundfile':
+        sf = SoundFile(filename)
+        soundfile['signal'] = sf.read()
+        soundfile['channels'] = sf.channels
+        soundfile['fs'] = sf.samplerate
+        soundfile['samples'] = len(sf)
+        soundfile['format'] = sf.format_info + ' ' + sf.subtype_info
+        sf.close()
+    elif wav_loader == 'scikits.audiolab':
+        sf = Sndfile(filename, 'r')
+        soundfile['signal'] = sf.read_frames(sf.nframes)
+        soundfile['channels'] = sf.channels
+        soundfile['fs'] = sf.samplerate
+        soundfile['samples'] = sf.nframes
+        soundfile['format'] = sf.format
+        sf.close()
+    elif wav_loader == 'scipy.io.wavfile':
+        soundfile['fs'], soundfile['signal'] = read(filename)
+        try:
+            soundfile['channels'] = soundfile['signal'].shape[1]
+        except IndexError:
+            soundfile['channels'] = 1
+        soundfile['samples'] = soundfile['signal'].shape[0]
+        soundfile['format'] = str(soundfile['signal'].dtype)
+
+    return soundfile
+
+
+
+
 def analyze_channels(filename, function):
     """
     Given a filename, run the given analyzer function on each channel of the
