@@ -3,7 +3,7 @@
 from scipy.signal import kaiser
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
-from common import analyze_channels, rms_flat, parabolic
+from common import rms_flat, parabolic
 from A_weighting import A_weight
 
 
@@ -92,24 +92,3 @@ def THD(signal, sample_rate):
     THD = sum([abs(f[i*x]) for x in range(2, 15)]) / abs(f[i])
     print('\nTHD: %f%%' % (THD * 100))
     return
-
-if __name__ == '__main__':
-    try:
-        import sys
-        files = sys.argv[1:]
-        if files:
-            for filename in files:
-                try:
-                    analyze_channels(filename, THDN)
-                except IOError:
-                    print 'Couldn\'t analyze "' + filename + '"\n'
-                print ''
-        else:
-            sys.exit("You must provide at least one file to analyze")
-    except BaseException as e:
-        print('Error:')
-        print(e)
-        raise
-    finally:
-        # Otherwise Windows closes the window too quickly to read
-        raw_input('(Press <Enter> to close)')
