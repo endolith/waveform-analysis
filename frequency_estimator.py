@@ -78,8 +78,9 @@ def freq_from_autocorr(signal, fs):
     # reversed in time), and throw away the negative lags
     signal -= mean(signal)  # Remove DC offset
     corr = fftconvolve(signal, signal[::-1], mode='full')
-    corr = corr[len(corr)/2:]
-
+    indx= int((len(corr))/2)    # fftconvolve returns a 2n-1 sized array
+    corr = corr[indx:]
+    
     # Find the first low point
     d = diff(corr)
     start = find(d > 0)[0]
