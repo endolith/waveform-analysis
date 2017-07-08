@@ -19,18 +19,21 @@ intended tolerances for the measurement of A-weighted sound level by a
 precision (type 1) sound level meter."
 """
 
-from __future__ import division
-from scipy import signal
 from numpy import pi, log10
-import matplotlib.pyplot as plt
+from scipy.signal import zpk2tf, zpk2sos, freqs, sosfilt
+from waveform_analysis.weighting_filters._filter_design import _zpkbilinear
+
+__all__ = ['ABC_weighting', 'A_weighting', 'A_weight']
 
 
 def ABC_weighting(curve='A'):
     """
-    Return zeros, poles, gain of analog weighting filter with A, B, or C curve.
+    Design of an analog weighting filter with A, B, or C curve.
 
-    Example:
+    Returns zeros, poles, gain of the filter.
 
+    Examples
+    --------
     Plot all 3 curves:
 
     >>> from scipy import signal
@@ -86,31 +89,38 @@ def ABC_weighting(curve='A'):
         # ANSI S1.4-1983 B weighting
         #    Same as C weighting +
         #    1 pole on real axis at "10^2.2 (or 158.5) Hz"
+
         p.append(-2*pi*10**2.2)  # exact
         z.append(0)
 
     # TODO: Calculate actual constants for this
     # Normalize to 0 dB at 1 kHz for all curves
-    b, a = signal.zpk2tf(z, p, k)
-    k /= abs(signal.freqs(b, a, [2*pi*1000])[1][0])
+    b, a = zpk2tf(z, p, k)
+    k /= abs(freqs(b, a, [2*pi*1000])[1][0])
 
     return z, p, k
 
 
-# TODO: Rename?
-def A_weighting(fs):
+def A_weighting(fs, output='ba'):
     """
-    Design of an A-weighting filter.
+    Design of a digital A-weighting filter.
 
     Designs a digital A-weighting filter for
-    sampling frequency `fs`. Usage: y = lfilter(b, a, x).
+    sampling frequency `fs`.
     Warning: fs should normally be higher than 20 kHz. For example,
     fs = 48000 yields a class 1-compliant filter.
 
+    Parameters
+    ----------
     fs : float
         Sampling frequency
+    output : {'ba', 'zpk', 'sos'}, optional
+        Type of output:  numerator/denominator ('ba'), pole-zero ('zpk'), or
+        second-order sections ('sos'). Default is 'ba'.
 
-    Example:
+    Examples
+    --------
+    Plot frequency response
 
     >>> from scipy.signal import freqz
     >>> import matplotlib.pyplot as plt
@@ -129,35 +139,34 @@ def A_weighting(fs):
     z, p, k = ABC_weighting('A')
 
     # Use the bilinear transformation to get the digital filter.
-#    try:
-#        # Currently private but more accurate
-#        zz, pz, kz = signal.filter_design._zpkbilinear(z, p, k, fs)
-#        return signal.zpk2tf(zz, pz, kz)
-    # TODO: THIS DOESN'T WORK< WHY?
-#    except AttributeError:
-    if True:
-        b, a = signal.zpk2tf(z, p, k)
-        return signal.bilinear(b, a, fs)
+    zz, pz, kz = _zpkbilinear(z, p, k, fs)
+
+    if output == 'zpk':
+        return zz, pz, kz
+    elif output in {'ba', 'tf'}:
+        return zpk2tf(zz, pz, kz)
+    elif output == 'sos':
+        return zpk2sos(zz, pz, kz)
+    else:
+        raise ValueError("'%s' is not a valid output form." % output)
 
 
 def A_weight(signal, fs):
     """
-    Return the given signal after passing through an A-weighting filter
+    Return the given signal after passing through a digital A-weighting filter
 
     signal : array_like
-        Input signal
+        Input signal, with time as dimension
     fs : float
         Sampling frequency
     """
-
-    b, a = A_weighting(fs)
-    return signal.lfilter(b, a, signal)
-
-"""
-When importing a stereo sound file with scikits.audiolab or pysoundfile, it
-needs axis = 0:
-y = lfilter(b, a, x, axis = 0)
-"""
+    # TODO: Upsample signal high enough that filter response meets Type 0
+    # limits.  A passes if fs >= 260 kHz, but not at typical audio sample
+    # rates. So upsample 48 kHz by 6 times to get an accurate measurement?
+    # TODO: Also this could just be a measurement function that doesn't
+    # save the whole filtered waveform.
+    sos = A_weighting(fs, output='sos')
+    return sosfilt(sos, signal)
 
 
 def _derive_coefficients():
@@ -210,114 +219,6 @@ def _derive_coefficients():
     for norm in ('C1000', 'A1000'):
         print(f'{norm} = {float(eval(norm))}')
 
-
-###########################################
-################### TESTS
-
-
-def check_weighting(curve='A', fs=None):
-    """
-    Test that frequency response meets tolerance from ANSI S1.4-1983
-    """
-
-    import numpy as np
-    import matplotlib.pyplot as plt
-    from scipy.signal import freqz
-    from scipy.signal import zpk2tf, freqs
-
-    # ANSI S1.4-1983 Table AI "Exact frequency"
-    frequencies = np.array((10.00, 12.59, 15.85, 19.95, 25.12, 31.62, 39.81,
-                            50.12, 65.10, 79.43, 100.00, 125.90, 158.50,
-                            199.50, 251.20, 316.20, 398.10, 501.20, 631.00,
-                            794.30, 1000.00, 1259.00, 1585.00, 1995.00,
-                            2512.00, 3162.00, 3981.00, 5012.00, 6310.00,
-                            7943.00, 10000.00, 12590.00, 15850.00, 19950.00,
-                            25120.00, 31620.00, 39810.00, 50120.00, 63100.00,
-                            79430.00, 100000.00,
-                            ))
-
-    responses = {}
-
-    # ANSI S1.4-1983 Table AI "A weighting"
-    responses['A'] = np.array((-70.4, -63.4, -56.7, -50.5, -44.7, -39.4, -34.6,
-                               -30.2, -26.2, -22.5, -19.1, -16.1, -13.4, -10.9,
-                               -8.6, -6.6, -4.8, -3.2, -1.9, -0.8, 0.0, +0.6,
-                               +1.0, +1.2, +1.3, +1.2, +1.0, +0.5, -0.1, -1.1,
-                               -2.5, -4.3, -6.6, -9.3, -12.4, -15.8, -19.3,
-                               -23.1, -26.9, -30.8, -34.7,
-                               ))
-
-    # ANSI S1.4-1983 Table IV "B Weighting"
-    responses['B'] = np.array((-38.2, -33.2, -28.5, -24.2, -20.4, -17.1, -14.2,
-                               -11.6, -9.3, -7.4, -5.6, -4.2, -3.0, -2.0, -1.3,
-                               -0.8, -0.5, -0.3, -0.1, 0.0, 0.0, 0.0, 0.0,
-                               -0.1, -0.2, -0.4, -0.7, -1.2, -1.9, -2.9, -4.3,
-                               -6.1, -8.4, -11.1,
-                               ))
-
-    # ANSI S1.4-1983 Table IV "C Weighting"
-    responses['C'] = np.array((-14.3, -11.2, -8.5, -6.2, -4.4, -3.0, -2.0,
-                               -1.3, -0.8, -0.5, -0.3, -0.2, -0.1, 0.0, 0.0,
-                               0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.1, -0.2,
-                               -0.3, -0.5, -0.8, -1.3, -2.0, -3.0, -4.4, -6.2,
-                               -8.5, -11.2,
-                               ))
-
-    # ANSI S1.4-1983 Table AII "Type 0"
-    # Stricter than IEC 61672-1 (2002) Table 2 Class 1 (±1.1 dB at 1 kHz)
-    upper_limits = np.array((+2.0, +2.0, +2.0, +2.0, +1.5, +1.0, +1.0, +1.0,
-                             +1.0, +1.0, +0.7, +0.7, +0.7, +0.7, +0.7, +0.7,
-                             +0.7, +0.7, +0.7, +0.7, +0.7, +0.7, +0.7, +0.7,
-                             +0.7, +0.7, +0.7, +1.0, +1.0, +1.0, +2.0, +2.0,
-                             +2.0, +2.0, +2.4, +2.8, +3.3, +4.1, +4.9, +5.1,
-                             +5.6,
-                             ))
-
-    lower_limits = np.array((-5.0, -4.0, -3.0, -2.0, -1.5, -1.0, -1.0, -1.0,
-                             -1.0, -1.0, -0.7, -0.7, -0.7, -0.7, -0.7, -0.7,
-                             -0.7, -0.7, -0.7, -0.7, -0.7, -0.7, -0.7, -0.7,
-                             -0.7, -0.7, -0.7, -1.0, -1.5, -2.0, -3.0, -3.0,
-                             -3.0, -3.0, -4.5, -6.2, -7.9, -9.3, -10.9, -12.2,
-                             -14.3,
-                             ))
-
-    if fs is None:
-        z, p, k = ABC_weighting(curve)
-        b, a = zpk2tf(z, p, k)
-        w, h = freqs(b, a, 2*pi*frequencies)
-    else:
-        # A passes if fs >= 260 kHz, but not at typical audio sample rates
-        # So upsample 48 kHz by 6 times to get an accurate measurement?
-        b, a = A_weighting(fs)
-        w = 2*pi * frequencies / fs
-        w, h = freqz(b, a, w)
-
-    levels = 20 * np.log10(abs(h))
-
-    levels = levels[:len(responses[curve])]
-    frequencies = frequencies[:len(responses[curve])]
-    upper_limits = upper_limits[:len(responses[curve])]
-    lower_limits = lower_limits[:len(responses[curve])]
-
-    plt.semilogx(frequencies, levels)
-    plt.semilogx(frequencies, responses[curve] + upper_limits, 'r:')
-    plt.semilogx(frequencies, responses[curve] + lower_limits, 'r:')
-    plt.grid(True, color='0.7', linestyle='-', which='major')
-    plt.grid(True, color='0.9', linestyle='-', which='minor')
-
-    assert all(np.less_equal(levels, responses[curve] + upper_limits))
-    assert all(np.greater_equal(levels, responses[curve] + lower_limits))
-
-
 if __name__ == '__main__':
-    plt.figure('A')
-    check_weighting('A')
-    check_weighting('A', 260000)
-
-    plt.figure('B')
-    check_weighting('B')
-    # check_weighting('B', 260000)
-
-    plt.figure('C')
-    check_weighting('C')
-    # check_weighting('C', 260000)
+    import pytest
+    pytest.main(['../tests/test_weighting.py', "--capture=sys"])
