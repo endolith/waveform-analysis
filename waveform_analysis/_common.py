@@ -30,16 +30,12 @@ def load(filename):
         signal = sf.read()
         channels = sf.channels
         sample_rate = sf.samplerate
-        samples = len(sf)
-        file_format = sf.format_info + ' ' + sf.subtype_info
         sf.close()
     elif wav_loader == 'scikits.audiolab':
         sf = Sndfile(filename, 'r')
         signal = sf.read_frames(sf.nframes)
         channels = sf.channels
         sample_rate = sf.samplerate
-        samples = sf.nframes
-        file_format = sf.format
         sf.close()
     elif wav_loader == 'scipy.io.wavfile':
         sample_rate, signal = read(filename)
@@ -47,8 +43,6 @@ def load(filename):
             channels = signal.shape[1]
         except IndexError:
             channels = 1
-        samples = signal.shape[0]
-        file_format = str(signal.dtype)
 
     return signal, sample_rate, channels
 
@@ -88,8 +82,6 @@ def load_dict(filename):
     return soundfile
 
 
-
-
 def analyze_channels(filename, function):
     """
     Given a filename, run the given analyzer function on each channel of the
@@ -125,11 +117,11 @@ def rms_flat(a):
     return sqrt(mean(absolute(a)**2))
 
 
-def dB(level):
+def dB(q):
     """
-    Return a level in decibels.
+    Return the level of a field quantity in decibels.
     """
-    return 20 * log10(level)
+    return 20 * log10(q)
 
 
 def spectral_flatness(spectrum):
