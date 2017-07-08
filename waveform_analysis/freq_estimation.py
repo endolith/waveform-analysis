@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from common import analyze_channels
-from common import parabolic as parabolic
+from waveform_analysis._common import analyze_channels, parabolic
 from numpy.fft import rfft
 from numpy import argmax, mean, diff, log, copy, arange
 from matplotlib.mlab import find
