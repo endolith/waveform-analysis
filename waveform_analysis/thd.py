@@ -1,6 +1,7 @@
 from scipy.signal.windows import _cos_win
+from scipy.fftpack import next_fast_len
 from numpy.fft import rfft, irfft
-from numpy import argmax, mean, log10, log, ceil, concatenate, zeros
+from numpy import argmax, mean, log, concatenate, zeros
 from waveform_analysis._common import rms_flat, parabolic
 from waveform_analysis import A_weight
 
@@ -60,7 +61,7 @@ def THDN(signal, sample_rate):
     del signal
 
     # Zero pad to nearest power of two
-    new_len = int(2**ceil( log(len(windowed)) / log(2) ))  # TODO: round up or down?
+    new_len = next_fast_len(len(windowed))
     windowed = concatenate((windowed, zeros(new_len - len(windowed))))
 
     # Measure the total signal before filtering but after windowing
