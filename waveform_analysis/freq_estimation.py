@@ -3,7 +3,7 @@
 from waveform_analysis._common import parabolic
 from numpy.fft import rfft
 from numpy import asarray, argmax, mean, diff, log, copy
-from matplotlib.mlab import find
+from waveform_analysis._common import find
 from scipy.signal import correlate, kaiser, decimate
 
 

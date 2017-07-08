@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
+import numpy as np
 from scipy.stats import gmean
 
 try:
@@ -110,11 +111,19 @@ def analyze_channels(filename, function):
             function(channel, sample_rate)
 
 
+# Copied from matplotlib.mlab:
+
 def rms_flat(a):
     """
     Return the root mean square of all the elements of *a*, flattened out.
     """
     return sqrt(mean(absolute(a)**2))
+
+
+def find(condition):
+    "Return the indices where ravel(condition) is true"
+    res, = np.nonzero(np.ravel(condition))
+    return res
 
 
 def dB(q):
