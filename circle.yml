@@ -4,11 +4,12 @@ machine:
     
 dependencies:
   override:
-    - pip install -q numpy scipy pytest pytest-cov
+    - pip install numpy scipy pytest pytest-cov codecov
     - git submodule init
     - git submodule update
 
 test:
   override:
     - pip install .
-    - pytest --cov=waveform_analysis --cov-report html
+    - pytest --cov=waveform_analysis
+    - codecov
