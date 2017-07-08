@@ -204,7 +204,7 @@ def _derive_coefficients():
     assert abs(float(f_4) - 12194) < 0.5
 
     for f in ('f_1', 'f_2', 'f_3', 'f_4'):
-        print(f'{f} = {float(eval(f))}')
+        print('{} = {}'.format(f, float(eval(f))))
 
     # Section 5.4.8  Normalizations
     f = 1000
@@ -217,7 +217,7 @@ def _derive_coefficients():
     assert abs(20*log10(float(A1000)) + 2.000) < 0.0005
 
     for norm in ('C1000', 'A1000'):
-        print(f'{norm} = {float(eval(norm))}')
+        print('{} = {}'.format(norm, float(eval(norm))))
 
 if __name__ == '__main__':
     import pytest
