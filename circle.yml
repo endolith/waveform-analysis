@@ -1,3 +1,7 @@
+machine:
+  python:
+    version: 3.6.1
+    
 dependencies:
   override:
     - pip install -q numpy scipy pytest pytest-cov
@@ -6,4 +10,5 @@ dependencies:
 
 test:
   override:
+    - pip install .
     - pytest --cov=waveform_analysis --cov-report html
