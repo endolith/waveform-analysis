@@ -51,6 +51,9 @@ def THDN(signal, fs):
     This notch-filters by nulling out the frequency coefficients ±10% of the
     fundamental
 
+    TODO: Make R vs F reference a parameter (currently is R)
+    TODO: Or report all of the above in a dictionary?
+
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
@@ -72,26 +75,23 @@ def THDN(signal, fs):
     f = rfft(windowed)
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
-    print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
+    frequency = fs * (true_i / len(windowed))
 
     # Filter out fundamental by throwing away values ±10%
     lowermin = int(true_i * 0.9)
     uppermin = int(true_i * 1.1)
     f[lowermin: uppermin] = 0
+    # TODO: Zeroing FFT bins is bad
 
     # Transform noise back into the time domain and measure it
     noise = irfft(f)
-    THDN = rms_flat(noise) / total_rms
-
-    # TODO: RMS and A-weighting in frequency domain?
+    # TODO: RMS and A-weighting in frequency domain?  Parseval?
 
     # Apply A-weighting to residual noise (Not normally used for distortion,
     # but used to measure dynamic range with -60 dBFS signal, for instance)
     weighted = A_weight(noise, sample_rate)
-    THDNA = rms_flat(weighted) / total_rms
-
-    print("THD+N:      %.4f%% or %.1f dB"    % (THDN  * 100, 20 * log10(THDN)))
-    print("A-weighted: %.4f%% or %.1f dB(A)" % (THDNA * 100, 20 * log10(THDNA)))
+    # TODO: Return a dict or list of frequency, THD+N?
+    return rms_flat(noise) / total_rms
 
 
 def THD(signal, fs):
@@ -102,8 +102,8 @@ def THD(signal, fs):
     Returns the estimated fundamental frequency and the measured THD,
     calculated by finding peaks in the spectrum.
 
-    There are two definitions for THD, a power ratio or an amplitude ratio
-    When finished, this will list both
+    TODO: Make weighting a parameter
+    TODO: Make R vs F reference a parameter (F as default??)
 
     """
     # Get rid of DC and window the signal
