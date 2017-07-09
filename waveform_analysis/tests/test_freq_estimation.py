@@ -32,13 +32,14 @@ class TestFreqFromCrossings(object):
             freq_from_crossings(None)
 
         with pytest.raises(TypeError):
-            freq_from_crossings(np.array([1, 2]), fs='eggs')
+            freq_from_crossings(np.array([-2, 2, -1, 1]), fs='eggs')
 
         with pytest.raises(ValueError):
             freq_from_crossings(np.array([1, 2]), fs=40, interp='cubic')
 
     def test_array_like(self):
-        freq_from_crossings([-1, +1, -1, +1], 10)
+        signal = [-1, 0, +1, 0, -1, 0, +1, 0]
+        assert freq_from_crossings(signal, 8) == pytest.approx(2)
 
     def test_sine(self):
         for fs in {48000, 44100}:  # Hz
@@ -64,7 +65,8 @@ class TestFreqFromFFT(object):
             freq_from_fft(np.array([1, 2]), fs='eggs')
 
     def test_array_like(self):
-        freq_from_fft([-1, 0, +1, 0], 10)
+        signal = [-1, 0, +1, 0, -1, 0, +1, 0]
+        assert freq_from_fft(signal, 8) == pytest.approx(2)
 
     def test_sine(self):
         for fs in {48000, 44100}:  # Hz
