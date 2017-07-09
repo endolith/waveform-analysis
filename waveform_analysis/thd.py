@@ -8,7 +8,7 @@ from waveform_analysis import A_weight
 
 
 # This requires accurately measuring frequency component amplitudes, so use a
-# flat-top window
+# flat-top window (https://holometer.fnal.gov/GH_FFT.pdf)
 flattops = {
     'dantona3': [0.2811, 0.5209, 0.1980],
     'dantona5': [0.21557895, 0.41663158, 0.277263158, 0.083578947,
