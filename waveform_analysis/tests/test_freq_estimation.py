@@ -20,7 +20,7 @@ def sine_wave(f, fs):
 
 def sawtooth_wave(f, fs):
     """
-    Generate 1 second of sine wave at f frequency sampled at fs rate
+    Generate 1 second of sawtooth wave at f frequency sampled at fs rate
     """
     t = np.linspace(0, 1, fs, endpoint=False)
     return sawtooth(2*pi * f * t)
@@ -54,6 +54,7 @@ class TestFreqFromCrossings(object):
         correct = pytest.approx(f)
         assert freq_from_crossings(signal, fs, interp='none') == correct
         assert freq_from_crossings(signal, fs, interp=None) == correct
+        assert freq_from_crossings(signal, fs, interp='linear') == correct
 
 
 class TestFreqFromFFT(object):
