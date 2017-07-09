@@ -10,6 +10,6 @@ dependencies:
 
 test:
   override:
-    - pip install .
+    - pip install -e .
     - pytest --cov=waveform_analysis
     - codecov
