@@ -10,6 +10,14 @@ Since they have a lot in common, I'm trying to combine them into one repository,
 
 Please don't blindly trust this.  If you use this and find a stupid error, please let me know.  Also let me know if you use this and it works perfectly.  :D
 
+Installation
+============
+
+This should now be an installable package, using:
+
+    pip install git+https://github.com/endolith/waveform_analysis.git@master
+
+I'm in the process of splitting it into callable functions and scripts that use those functions.
 
 Waveform analyzer
 =================
@@ -21,7 +29,7 @@ Usage: `python wave_analyzer.py "audio file.flac"`
 For Windows' SendTo menu: `pythonw wave_analyzer_launcher.py`
 
 **Requires:**
-- Python
+- Python 3
 - NumPy
 - SciPy
 
