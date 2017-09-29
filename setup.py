@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-setup(name='Waveform analysis',
+setup(name='waveform_analysis',
       version='0.1',
       description='A collection of functions and scripts for analyzing '
                   'waveforms, especially audio',
