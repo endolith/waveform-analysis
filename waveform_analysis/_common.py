@@ -162,6 +162,10 @@ def parabolic(f, x):
     In [4]: parabolic(f, argmax(f))
     Out[4]: (3.2142857142857144, 6.1607142857142856)
     """
+    if int(x) != x:
+        raise ValueError('x must be an integer sample index')
+    else:
+        x = int(x)
     xv = 1/2. * (f[x-1] - f[x+1]) / (f[x-1] - 2 * f[x] + f[x+1]) + x
     yv = f[x] - 1/4. * (f[x-1] - f[x+1]) * (xv - x)
     return (xv, yv)

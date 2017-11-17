@@ -19,6 +19,7 @@ intended tolerances for the measurement of A-weighted sound level by a
 precision (type 1) sound level meter."
 """
 
+import numpy as np
 from numpy import pi, log10
 from scipy.signal import zpk2tf, zpk2sos, freqs, sosfilt
 from waveform_analysis.weighting_filters._filter_design import _zpkbilinear
@@ -98,7 +99,7 @@ def ABC_weighting(curve='A'):
     b, a = zpk2tf(z, p, k)
     k /= abs(freqs(b, a, [2*pi*1000])[1][0])
 
-    return z, p, k
+    return np.array(z), np.array(p), k
 
 
 def A_weighting(fs, output='ba'):
@@ -139,14 +140,14 @@ def A_weighting(fs, output='ba'):
     z, p, k = ABC_weighting('A')
 
     # Use the bilinear transformation to get the digital filter.
-    zz, pz, kz = _zpkbilinear(z, p, k, fs)
+    z_d, p_d, k_d = _zpkbilinear(z, p, k, fs)
 
     if output == 'zpk':
-        return zz, pz, kz
+        return z_d, p_d, k_d
     elif output in {'ba', 'tf'}:
-        return zpk2tf(zz, pz, kz)
+        return zpk2tf(z_d, p_d, k_d)
     elif output == 'sos':
-        return zpk2sos(zz, pz, kz)
+        return zpk2sos(z_d, p_d, k_d)
     else:
         raise ValueError("'%s' is not a valid output form." % output)
 
@@ -218,6 +219,7 @@ def _derive_coefficients():
 
     for norm in ('C1000', 'A1000'):
         print('{} = {}'.format(norm, float(eval(norm))))
+
 
 if __name__ == '__main__':
     import pytest
