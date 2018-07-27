@@ -1,4 +1,4 @@
-from scipy.signal.windows import _cos_win
+from scipy.signal.windows import general_cosine
 from scipy.fftpack import next_fast_len
 from numpy.fft import rfft, irfft
 from numpy import argmax, mean, log, concatenate, zeros
@@ -60,7 +60,7 @@ def THDN(signal, fs, weight=None):
     # TODO: Do this in the frequency domain, and take any skirts with it?
     signal -= mean(signal)
 
-    window = _cos_win(len(signal), flattops['HFT248D'])
+    window = general_cosine(len(signal), flattops['HFT248D'])
     windowed = signal * window
     del signal
 
@@ -119,7 +119,7 @@ def THD(signal, fs):
     # TODO: Do this in the frequency domain, and take any skirts with it?
     signal -= mean(signal)
 
-    window = _cos_win(len(signal), flattops['HFT248D'])
+    window = general_cosine(len(signal), flattops['HFT248D'])
     windowed = signal * window
     del signal
 
