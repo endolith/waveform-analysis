@@ -2,6 +2,8 @@
 
 import argparse
 import importlib.util
+import math
+import sys
 
 from numpy import absolute, array_equal, mean
 
@@ -13,6 +15,9 @@ if has_easygui:
     import easygui
 
 SEPARATOR = '-----------------'
+
+# Offset for dBFS vs dBov
+rt2 = math.sqrt(2)  # 3.01 dB
 
 
 def display(header, results, gui):
@@ -91,6 +96,7 @@ def properties(signal, sample_rate):
     signal -= mean(signal)
 
     # Measurements that don't include DC
+    # TODO: Account for intersample peaks and use dBTP
     signal_level = rms_flat(signal)
     peak_level = max(absolute(signal))
     crest_factor = peak_level/signal_level
@@ -110,11 +116,11 @@ def properties(signal, sample_rate):
         f'Crest factor:\t{crest_factor:.3f} ({dB(crest_factor):.3f} dB)',
         # Peak level doesn't account for intersample peaks!
         f'Peak level:\t{peak_level:.3f} ({dB(peak_level):.3f} dBFS)',
-        f'RMS level:\t{signal_level:.3f} ({dB(signal_level):.3f} dBFS)',
-        (f'RMS A-weighted:\t{Aweighted_level:.3f} ({dB(Aweighted_level):.3f} '
+        f'RMS level:\t{signal_level:.3f} ({dB(signal_level * rt2):.3f} dBFS)',
+        (f'RMS A-weighted:\t{Aweighted_level:.3f} ({dB(Aweighted_level * rt2):.3f} '
          f'dBFS(A), {dB(Aweighted_level / signal_level):.3f} dB)'),
         (f'RMS 468-weighted:\t{ITUweighted_level:.3f} '
-         f'({dB(ITUweighted_level):.3f} dBFS(468), '
+         f'({dB(ITUweighted_level * rt2):.3f} dBFS(468), '
          f'{dB(ITUweighted_level / signal_level):.3f} dB)'),
         SEPARATOR,
     ]
@@ -128,7 +134,7 @@ def analyze(filename, gui):
     samples = soundfile['samples']
     file_format = soundfile['format']
 
-    header = 'dBFS values are relative to a full-scale square wave'
+    header = 'RMS dBFS values are relative to a full-scale sine wave (AES17)'
 
     if samples/sample_rate >= 1:
         length = f"{str(samples / sample_rate)} seconds"
