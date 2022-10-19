@@ -140,6 +140,6 @@ def THD(signal, fs):
     for x in range(2, 15):
         print('%.3f' % abs(f[i * x]), end=' ')
 
-    THD = sum([abs(f[i*x]) for x in range(2, 15)]) / abs(f[i])
+    THD = sum(abs(f[i*x]) for x in range(2, 15)) / abs(f[i])
     print('\nTHD: %f%%' % (THD * 100))
     return

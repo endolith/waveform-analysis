@@ -105,7 +105,7 @@ def analyze(filename):
         channels = sf.channels
         sample_rate = sf.samplerate
         samples = len(sf)
-        file_format = sf.format_info + ' ' + sf.subtype_info
+        file_format = f'{sf.format_info} {sf.subtype_info}'
         sf.close()
     elif wav_loader == 'scikits.audiolab':
         sf = Sndfile(filename, 'r')
@@ -126,17 +126,16 @@ def analyze(filename):
 
         # Scale common formats
         # Other bit depths (24, 20) are not handled by SciPy correctly.
-        if file_format == 'int16':
+        if file_format == 'float32':
+            pass
+        elif file_format == 'int16':
             signal = signal.astype(float) / (2**15)
-        elif file_format == 'uint8':
-            signal = (signal.astype(float) - 128) / (2**7)
         elif file_format == 'int32':
             signal = signal.astype(float) / (2**31)
-        elif file_format == 'float32':
-            pass
+        elif file_format == 'uint8':
+            signal = (signal.astype(float) - 128) / (2**7)
         else:
-            raise Exception("Don't know how to handle file "
-                            "format {}".format(file_format))
+            raise Exception(f"Don't know how to handle file format {file_format}")
 
     else:
         raise Exception("wav_loader has failed")
@@ -144,9 +143,9 @@ def analyze(filename):
     header = 'dBFS values are relative to a full-scale square wave'
 
     if samples/sample_rate >= 1:
-        length = str(samples/sample_rate) + ' seconds'
+        length = f'{str(samples / sample_rate)} seconds'
     else:
-        length = str(samples/sample_rate*1000) + ' milliseconds'
+        length = f'{str(samples / sample_rate * 1000)} milliseconds'
 
     results = [
         "Using sound file backend '" + wav_loader + "'",

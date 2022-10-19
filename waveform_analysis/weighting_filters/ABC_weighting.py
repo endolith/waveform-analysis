@@ -83,9 +83,7 @@ def ABC_weighting(curve='A'):
 
         p.append(-2*pi*107.65264864304628)
         p.append(-2*pi*737.8622307362899)
-        z.append(0)
-        z.append(0)
-
+        z.extend((0, 0))
     elif curve == 'B':
         # ANSI S1.4-1983 B weighting
         #    Same as C weighting +
@@ -205,7 +203,7 @@ def _derive_coefficients():
     assert abs(float(f_4) - 12194) < 0.5
 
     for f in ('f_1', 'f_2', 'f_3', 'f_4'):
-        print('{} = {}'.format(f, float(eval(f))))
+        print(f'{f} = {float(eval(f))}')
 
     # Section 5.4.8  Normalizations
     f = 1000
@@ -218,7 +216,7 @@ def _derive_coefficients():
     assert abs(20*log10(float(A1000)) + 2.000) < 0.0005
 
     for norm in ('C1000', 'A1000'):
-        print('{} = {}'.format(norm, float(eval(norm))))
+        print(f'{norm} = {float(eval(norm))}')
 
 
 if __name__ == '__main__':

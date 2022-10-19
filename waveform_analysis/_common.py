@@ -61,7 +61,7 @@ def load_dict(filename):
         soundfile['channels'] = sf.channels
         soundfile['fs'] = sf.samplerate
         soundfile['samples'] = len(sf)
-        soundfile['format'] = sf.format_info + ' ' + sf.subtype_info
+        soundfile['format'] = f'{sf.format_info} {sf.subtype_info}'
         sf.close()
     elif wav_loader == 'scikits.audiolab':
         sf = Sndfile(filename, 'r')
