@@ -4,7 +4,8 @@ from waveform_analysis._common import parabolic
 from numpy.fft import rfft
 from numpy import asarray, argmax, mean, diff, log, copy
 from waveform_analysis._common import find
-from scipy.signal import correlate, kaiser, decimate
+from scipy.signal import correlate, decimate
+from scipy.signal.windows import kaiser
 
 
 def freq_from_crossings(signal, fs, interp='linear'):
