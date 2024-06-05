@@ -37,9 +37,10 @@ class TestTHDN(object):
         with pytest.raises(TypeError):
             THDN(np.array([1, 2]), sample_rate=50)
 
-#    def test_array_like(self):
-#        freq_from_crossings([-1, +1, -1, +1], 10)
-#
+    def test_array_like(self):
+        signal = [-1, 0, +1, +1, +1, 0, -1]*100
+        assert THDN(signal, 1234) > 0
+
     def test_sine(self):
         # TODO use non-easy signal lengths and frequencies
         # padding, etc.
