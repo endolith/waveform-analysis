@@ -46,7 +46,7 @@ def THDN(signal, fs, weight=None):
 
     Prints the estimated fundamental frequency and the measured THD+N.  This is
     calculated from the ratio of the entire signal before and after
-    notch-filtering.
+    notch-filtering, so it is THD(R), not THD(F).
 
     This notch-filters by nulling out the frequency coefficients ±10% of the
     fundamental
