@@ -25,12 +25,14 @@ def sawtooth_wave(f, fs):
 
 class TestTHDN(object):
     def test_invalid_params(self):
+        # Invalid signal type
         with pytest.raises(TypeError):
             THDN(None)
 
-#        with pytest.raises(TypeError):
-#            THDN(np.array([1, 2]), sample_rate=50)
-#
+        # Invalid parameter name
+        with pytest.raises(TypeError):
+            THDN(np.array([1, 2]), sample_rate=50)
+
 #    def test_array_like(self):
 #        freq_from_crossings([-1, +1, -1, +1], 10)
 #
