@@ -1,6 +1,9 @@
+import os
+
 import numpy as np
 import pytest
 from numpy import pi, sin
+from scipy.io.wavfile import read
 from scipy.signal import sawtooth
 
 # This package must first be installed with `pip install -e .` or similar
@@ -44,6 +47,25 @@ class TestTHDN(object):
         signal = sine_wave(f, fs) + 0.1 * sine_wave(2*f, fs)
         assert THDN(signal, fs) == pytest.approx(0.1, rel=1e-2)
         # TODO: Tighten tolerances
+
+    # Optional sanity tests with third-party wav files.  To avoid any issues
+    # with copyright or repo size, these files are not committed.
+    # https://web.archive.org/web/20111020022811/http://members.cox.net:80/artludwig
+    @pytest.mark.parametrize("filename,thd", [
+        ("440Hz.wav", 0.0),
+        ("440SE.wav", 5.0),  # "The THD for the single-ended triode is 5%"
+        ("440SS.wav", 0.5),  # "for the solid state THD is 0.5%"
+    ])
+    def test_art_ludwig_wav_files(self, filename, thd):
+        full_path = os.path.join(os.path.dirname(__file__), "thd_files",
+                                 filename)
+        if not os.path.exists(full_path):
+            pytest.skip(f"{filename} not found. Skipping test.")
+
+        fs, channels = read(full_path)
+        result = THDN(channels[:, 0], fs)  # Stereo files
+        assert pytest.approx(result, rel=0.03, abs=0.00003) == thd/100
+
 
 #    def test_interp(self):
 #        fs = 100000  # Hz
