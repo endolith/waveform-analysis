@@ -12,7 +12,8 @@ https://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
 """
 
 from numpy import pi
-from scipy.signal import zpk2tf, zpk2sos, freqs, sosfilt
+from scipy.signal import freqs, sosfilt, zpk2sos, zpk2tf
+
 from waveform_analysis.weighting_filters._filter_design import _zpkbilinear
 
 __all__ = ['ITU_R_468_weighting_analog', 'ITU_R_468_weighting',

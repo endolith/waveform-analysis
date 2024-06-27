@@ -1,13 +1,12 @@
-import pytest
 import numpy as np
-from numpy import sin, pi
+import pytest
+from numpy import pi, sin
 from scipy.signal import sawtooth
 
 # This package must first be installed with `pip install -e .` or similar
-from waveform_analysis.freq_estimation import (freq_from_crossings,
-                                               freq_from_fft,
-                                               freq_from_autocorr,
-                                               freq_from_hps)
+from waveform_analysis.freq_estimation import (freq_from_autocorr,
+                                               freq_from_crossings,
+                                               freq_from_fft, freq_from_hps)
 
 
 def sine_wave(f, fs):

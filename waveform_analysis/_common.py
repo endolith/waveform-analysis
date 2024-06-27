@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-from numpy import array_equal, polyfit, sqrt, mean, absolute, log10, arange
 import numpy as np
+from numpy import absolute, arange, array_equal, log10, mean, polyfit, sqrt
 from scipy.stats import gmean
 
 try:

@@ -23,9 +23,7 @@
 #
 
 
-
-
-#print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
+# print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
 #
 #    print("THD+N:      %.4f%% or %.1f dB"    % (THDN  * 100, 20 * log10(THDN)))
 #    print("A-weighted: %.4f%% or %.1f dB(A)" % (THDNA * 100, 20 * log10(THDNA)))

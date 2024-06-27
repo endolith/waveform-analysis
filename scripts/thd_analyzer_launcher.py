@@ -25,8 +25,8 @@ try:
 except BaseException as e:
     try:
         # Tkinter is built-in so it should always Just Work?
-        from tkinter import Tk
         import tkinter.messagebox
+        from tkinter import Tk
         root = Tk().withdraw()  # hiding the main window
         var = tkinter.messagebox.showerror('THD analyzer',
                                            'Exception:\n' + str(e))

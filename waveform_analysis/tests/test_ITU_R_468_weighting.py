@@ -1,12 +1,12 @@
+import numpy as np
 import pytest
+from numpy import pi
 from scipy import signal
 from scipy.interpolate import interp1d
-import numpy as np
-from numpy import pi
 
 # This package must first be installed with `pip install -e .` or similar
-from waveform_analysis import (ITU_R_468_weighting_analog,
-                               ITU_R_468_weighting, ITU_R_468_weight)
+from waveform_analysis import (ITU_R_468_weight, ITU_R_468_weighting,
+                               ITU_R_468_weighting_analog)
 
 # It will plot things for sanity-checking if MPL is installed
 try:
@@ -21,25 +21,25 @@ frequencies = np.array((
     31.5, 63, 100, 200, 400, 800, 1000, 2000, 3150, 4000, 5000,
     6300,
     7100, 8000, 9000, 10000, 12500, 14000, 16000, 20000, 31500
-    ))
+))
 
 responses = np.array((
     -29.9, -23.9, -19.8, -13.8, -7.8, -1.9, 0, +5.6, +9.0, +10.5, +11.7,
     +12.2,
     +12.0, +11.4, +10.1, +8.1, 0, -5.3, -11.7, -22.2, -42.7
-    ))
+))
 
 upper_limits = np.array((
     +2.0, +1.4, +1.0, +0.85, +0.7, +0.55, +0.5, +0.5, +0.5, +0.5, +0.5,
     +0.01,  # Actually 0 tolerance, but specified with 1 significant figure
     +0.2, +0.4, +0.6, +0.8, +1.2, +1.4, +1.6, +2.0, +2.8
-    ))
+))
 
 lower_limits = np.array((
     -2.0, -1.4, -1.0, -0.85, -0.7, -0.55, -0.5, -0.5, -0.5, -0.5, -0.5,
     -0.01,  # Actually 0 tolerance, but specified with 1 significant figure
     -0.2, -0.4, -0.6, -0.8, -1.2, -1.4, -1.6, -2.0, -float('inf')
-    ))
+))
 
 
 class TestITU468WeightingAnalog(object):

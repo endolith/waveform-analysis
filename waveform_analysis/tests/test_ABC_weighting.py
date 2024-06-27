@@ -1,11 +1,11 @@
+import numpy as np
 import pytest
+from numpy import pi
 from scipy import signal
 from scipy.interpolate import interp1d
-import numpy as np
-from numpy import pi
 
 # This package must first be installed with `pip install -e .` or similar
-from waveform_analysis import ABC_weighting, A_weighting, A_weight
+from waveform_analysis import A_weight, A_weighting, ABC_weighting
 
 # It will plot things for sanity-checking if MPL is installed
 try:

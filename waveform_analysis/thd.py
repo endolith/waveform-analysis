@@ -1,11 +1,11 @@
-from scipy.signal.windows import general_cosine
-from scipy.fftpack import next_fast_len
-from numpy.fft import rfft, irfft
-from numpy import argmax, mean, log, concatenate, zeros
 import numpy as np
-from waveform_analysis._common import rms_flat, parabolic
-from waveform_analysis import A_weight
+from numpy import argmax, concatenate, log, mean, zeros
+from numpy.fft import irfft, rfft
+from scipy.fftpack import next_fast_len
+from scipy.signal.windows import general_cosine
 
+from waveform_analysis import A_weight
+from waveform_analysis._common import parabolic, rms_flat
 
 # This requires accurately measuring frequency component amplitudes, so use a
 # flat-top window (https://holometer.fnal.gov/GH_FFT.pdf)
@@ -38,7 +38,7 @@ flattops = {
     'HFT248D': [1, 1.985844164102, 1.791176438506, 1.282075284005,
                 0.667777530266, 0.240160796576, 0.056656381764, 0.008134974479,
                 0.000624544650, 0.000019808998, 0.000000132974],
-    }
+}
 
 
 def THDN(signal, fs, weight=None):

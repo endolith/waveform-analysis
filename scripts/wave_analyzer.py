@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import sys
-from numpy import mean, absolute, array_equal
+
+from numpy import absolute, array_equal, mean
+
 from waveform_analysis import A_weight, ITU_R_468_weight
-from waveform_analysis._common import rms_flat, dB
+from waveform_analysis._common import dB, rms_flat
 
 try:
     from soundfile import SoundFile
@@ -157,7 +159,7 @@ def analyze(filename):
         'Samples:\t%d' % samples,
         'Length: \t' + length,
         '-----------------',
-        ]
+    ]
 
     if channels == 1:
         # Monaural

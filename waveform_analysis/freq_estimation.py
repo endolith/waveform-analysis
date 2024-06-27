@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-from waveform_analysis._common import parabolic
+from numpy import argmax, asarray, copy, diff, log, mean
 from numpy.fft import rfft
-from numpy import asarray, argmax, mean, diff, log, copy
-from waveform_analysis._common import find
 from scipy.signal import correlate, decimate
 from scipy.signal.windows import kaiser
+
+from waveform_analysis._common import find, parabolic
 
 
 def freq_from_crossings(signal, fs, interp='linear'):
