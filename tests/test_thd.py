@@ -4,7 +4,7 @@ from glob import glob
 import numpy as np
 import pytest
 from numpy import pi, sin
-from scipy.io.wavfile import read
+from scipy.io.wavfile import WavFileWarning, read
 from scipy.signal import sawtooth
 
 # This package must first be installed with `pip install -e .` or similar
@@ -89,7 +89,8 @@ class TestTHDN(object):
         if not os.path.exists(filename):
             pytest.skip(f"{filename} not found. Skipping test.")
 
-        fs, sig = read(full_path)
+        with pytest.warns(WavFileWarning):
+            fs, sig = read(full_path)
         result = THDN(sig, fs)  # Mono files
         assert pytest.approx(result, abs=0.0002) == thd/100
 
