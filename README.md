@@ -29,16 +29,19 @@ Usage: `python wave_analyzer.py "audio file.flac"`
 For Windows' SendTo menu: `pythonw wave_analyzer_launcher.py`
 
 **Requires:**
-- Python 3
-- NumPy
-- SciPy
+
+* Python 3
+* NumPy
+* SciPy
 
 **Recommended:**
--  [PySoundFile](http://pysoundfile.readthedocs.io) or [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html) ([PyPI](http://pypi.python.org/pypi/scikits.audiolab)) for opening any file format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/).  ([No MP3s yet.](https://github.com/bastibe/PySoundFile/issues/162))  Otherwise it falls back to SciPy's very limited WAV file support.
+
+* [PySoundFile](http://pysoundfile.readthedocs.io) or [Audiolab](http://www.ar.media.kyoto-u.ac.jp/members/david/softwares/audiolab/sphinx/index.html) ([PyPI](http://pypi.python.org/pypi/scikits.audiolab)) for opening any file format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/).  ([No MP3s yet.](https://github.com/bastibe/PySoundFile/issues/162))  Otherwise it falls back to SciPy's very limited WAV file support.
 
 **Optional:**
-- [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console)
-- Matplotlib (histogram of sample values)
+
+* [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console)
+* Matplotlib (histogram of sample values)
 
 A-weighting
 ===========
@@ -46,7 +49,6 @@ A-weighting
 Applies an A-weighting filter to a sound file stored as a NumPy array.
 
 I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
-
 
 Frequency estimator
 ===================
@@ -59,13 +61,12 @@ frequency estimation or pitch detection.  (Such as here: [Music - How do you ana
 None of them work well in all situations, these are "offline", not real-time, and I am sure there are much better methods "in the literature", but here is some code for the simple methods at least.
 
 * Count zero-crossings
- * Using interpolation to find a "truer" zero-crossing gives better accuracy
- * Spline is better than linear interpolation?
+  * Using interpolation to find a "truer" zero-crossing gives better accuracy
+  * Spline is better than linear interpolation?
 * Do FFT and find the peak
- * Using quadratic interpolation on a log-scaled spectrum to find a "truer" peak gives better accuracy
+  * Using quadratic interpolation on a log-scaled spectrum to find a "truer" peak gives better accuracy
 * Do autocorrelation and find the peak
 * Calculate harmonic product spectrum and find the peak
-
 
 THD+N calculator
 ================
@@ -150,9 +151,9 @@ recorded into my 96 kHz 24-bit sound card and measured with this script:
 
 So it's mostly accurate.   Mostly.
 
-
 To do
 =====
+
 * Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
   * Do FFT, see if there is one continuous peak
   * [Identifying common periodic waveforms (square, sine, sawtooth, …)](http://stackoverflow.com/questions/1141342/identifying-common-periodic-waveforms-square-sine-sawtooth)
@@ -210,5 +211,5 @@ Done
   * actually, interpolated FFT is the best, without any filtering or crossings counting
 * say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
 * Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
-  * analog spec: http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR
-  * digital approximation: http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4
+  * analog spec: <http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR>
+  * digital approximation: <http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4>
