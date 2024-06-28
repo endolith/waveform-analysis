@@ -15,7 +15,7 @@ Installation
 
 This should now be an installable package, using:
 
-    pip install git+https://github.com/endolith/waveform_analysis.git@master
+    pip install git+https://github.com/endolith/waveform-analysis.git@master
 
 I'm in the process of splitting it into callable functions and scripts that use those functions.
 
