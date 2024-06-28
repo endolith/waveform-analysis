@@ -93,14 +93,6 @@ class TestTHDN(object):
         result = THDN(sig, fs)  # Mono files
         assert pytest.approx(result, abs=0.0002) == thd/100
 
-#    def test_interp(self):
-#        fs = 100000  # Hz
-#        f = 1234.56789  # Hz
-#        signal = sine_wave(f, fs)
-#        correct = pytest.approx(f)
-#        assert freq_from_crossings(signal, fs, interp='none') == correct
-#        assert freq_from_crossings(signal, fs, interp=None) == correct
-
 
 if __name__ == '__main__':
     pytest.main([__file__, "--capture=sys"])
