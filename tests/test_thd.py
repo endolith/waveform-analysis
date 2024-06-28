@@ -83,11 +83,10 @@ class TestTHDN(object):
 
     @pytest.mark.parametrize("filename, thd", audiocheck_files_thd)
     def test_audiocheck_wav_files(self, filename, thd):
+        # If empty, parametrize will raise a warning instead.
         print(filename, thd)
         full_path = os.path.join(os.path.dirname(__file__), "thd_files",
                                  filename)
-        if not os.path.exists(filename):
-            pytest.skip(f"{filename} not found. Skipping test.")
 
         with pytest.warns(WavFileWarning):
             fs, sig = read(full_path)
