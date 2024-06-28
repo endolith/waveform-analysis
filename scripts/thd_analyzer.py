@@ -1,3 +1,5 @@
+from waveform_analysis._common import analyze_channels
+from waveform_analysis.thd import THDN
 
 # if __name__ == '__main__':
 #
