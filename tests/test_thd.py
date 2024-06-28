@@ -1,4 +1,5 @@
 import os
+from glob import glob
 
 import numpy as np
 import pytest
@@ -66,6 +67,31 @@ class TestTHDN(object):
         result = THDN(channels[:, 0], fs)  # Stereo files
         assert pytest.approx(result, rel=0.03, abs=0.00003) == thd/100
 
+    # https://www.audiocheck.net/testtones_thdFull.php (54 files)
+    thd_files_path = os.path.join(os.path.dirname(__file__), "thd_files")
+    audiocheck_files = glob(os.path.join(
+        thd_files_path, "audiocheck.net_thd*.wav"))
+
+    audiocheck_files_thd = []
+    for filename in audiocheck_files:
+        basename = os.path.basename(filename)
+        parts = basename.split('_')
+        frequency = float(parts[2])
+        thd_str = parts[3].split('.')[0]
+        thd = float(thd_str[0] + '.' + thd_str[1:])
+        audiocheck_files_thd.append((basename, thd))
+
+    @pytest.mark.parametrize("filename, thd", audiocheck_files_thd)
+    def test_audiocheck_wav_files(self, filename, thd):
+        print(filename, thd)
+        full_path = os.path.join(os.path.dirname(__file__), "thd_files",
+                                 filename)
+        if not os.path.exists(filename):
+            pytest.skip(f"{filename} not found. Skipping test.")
+
+        fs, sig = read(full_path)
+        result = THDN(sig, fs)  # Mono files
+        assert pytest.approx(result, abs=0.0002) == thd/100
 
 #    def test_interp(self):
 #        fs = 100000  # Hz
