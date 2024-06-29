@@ -41,18 +41,54 @@ flattops = {
 
 
 def THDN(signal, fs, weight=None):
-    """Measure the THD+N for a signal and print the results
+    """
+    Calculate the Total Harmonic Distortion + Noise (THD+N) of a signal.
 
-    Prints the estimated fundamental frequency and the measured THD+N.  This is
-    calculated from the ratio of the entire signal before and after
-    notch-filtering, so it is THD(R), not THD(F).
+    Parameters
+    ----------
+    signal : array_like
+        Input signal to analyze.
+    fs : float
+        Sampling frequency of the signal in Hz.
+    weight : {'A', None}, optional
+        Weighting type for the noise measurement:
 
-    This notch-filters by nulling out the frequency coefficients ±10% of the
-    fundamental
+        - 'A' : Apply A-weighting to the residual noise.
+        - None : No weighting applied (default).
 
-    TODO: Make R vs F reference a parameter (currently is R)
-    TODO: Or report all of the above in a dictionary?
+    Returns
+    -------
+    thdn : float
+        The THD+N of the input signal as a dimensionless ratio.
 
+    Notes
+    -----
+    This function calculates the total harmonic distortion and noise ratio
+    of the signal by nulling out the frequency coefficients ±10% of the
+    fundamental frequency, to isolate harmonic components and noise.
+
+    The fundamental is estimated from the peak of the frequency spectrum, so
+    it must be the strongest frequency in the signal.
+
+    The signal is windowed using a flattop window to reduce spectral leakage,
+    while still allowing accurate amplitude measurements. It is then
+    zero-padded to the nearest size that provides efficient FFT computation.
+
+    This calculates the ratio vs the RMS value of the original signal, so this
+    is THD(R), not THD(F).
+
+    Examples
+    --------
+    Calculate THD+N for a 1 kHz sine wave sampled at 48 kHz, with a
+    2nd harmonic at 10% amplitude:
+
+    >>> import numpy as np
+    >>> fs = 48000  # Hz
+    >>> t = np.linspace(0, 1, fs, endpoint=False)
+    >>> signal = np.sin(2*np.pi*1000*t) + 0.1*np.sin(2*np.pi*2000*t)
+    >>> THDN_ratio = THDN(signal, fs)
+    >>> print(f"THD+N ratio: {THDN_ratio*100:.1f}%")
+    THD+N ratio: 10.0%
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
