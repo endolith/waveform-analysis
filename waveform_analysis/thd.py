@@ -49,7 +49,7 @@ def THDN(signal, fs, weight=None):
     signal : array_like
         Input signal to analyze.
     fs : float
-        Sampling frequency of the signal in Hz.
+        Sampling frequency of the signal in Hz, used for A-weighting.
     weight : {'A', None}, optional
         Weighting type for the noise measurement:
 
@@ -110,7 +110,7 @@ def THDN(signal, fs, weight=None):
     f = rfft(windowed)
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
-    frequency = fs * (true_i / len(windowed))
+    # frequency = fs * (true_i / len(windowed))
 
     # Filter out fundamental by throwing away values ±10%
     lowermin = int(true_i * 0.9)
