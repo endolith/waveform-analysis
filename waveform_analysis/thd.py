@@ -1,7 +1,6 @@
 import numpy as np
 from numpy import argmax, concatenate, log, mean, zeros
-from numpy.fft import irfft, rfft
-from scipy.fftpack import next_fast_len
+from scipy.fft import irfft, next_fast_len, rfft
 from scipy.signal.windows import general_cosine
 
 from waveform_analysis import A_weight
