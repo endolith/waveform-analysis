@@ -87,15 +87,14 @@ def properties(signal, sample_rate):
     return [
         f'DC offset:\t{DC_offset:f} ({DC_offset * 100:.3f}%)',
         f'Crest factor:\t{crest_factor:.3f} ({dB(crest_factor):.3f} dB)',
-        'Peak level:\t%.3f (%.3f dBFS)' %
-        (peak_level, dB(peak_level)),  # Doesn't account for intersample peaks!
+        # Peak level doesn't account for intersample peaks!
+        f'Peak level:\t{peak_level:.3f} ({dB(peak_level):.3f} dBFS)',
         f'RMS level:\t{signal_level:.3f} ({dB(signal_level):.3f} dBFS)',
-        'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
-        (Aweighted_level, dB(Aweighted_level),
-         dB(Aweighted_level/signal_level)),
-        'RMS 468-weighted:\t%.3f (%.3f dBFS(468), %.3f dB)' %
-        (ITUweighted_level, dB(ITUweighted_level),
-         dB(ITUweighted_level/signal_level)),
+        (f'RMS A-weighted:\t{Aweighted_level:.3f} ({dB(Aweighted_level):.3f} '
+         f'dBFS(A), {dB(Aweighted_level / signal_level):.3f} dB)'),
+        (f'RMS 468-weighted:\t{ITUweighted_level:.3f} '
+         f'({dB(ITUweighted_level):.3f} dBFS(468), '
+         f'{dB(ITUweighted_level / signal_level):.3f} dB)'),
         '-----------------',
     ]
 
@@ -137,7 +136,8 @@ def analyze(filename):
         elif file_format == 'float32':
             pass
         else:
-            raise Exception(f"Don't know how to handle file format {file_format}")
+            raise Exception("Don't know how to handle file format "
+                            f"{file_format}")
 
     else:
         raise Exception("wav_loader has failed")

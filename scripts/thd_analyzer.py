@@ -25,10 +25,10 @@ from waveform_analysis.thd import THDN
 #
 
 
-# print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
-#
-#    print("THD+N:      %.4f%% or %.1f dB"    % (THDN  * 100, 20 * log10(THDN)))
-#    print("A-weighted: %.4f%% or %.1f dB(A)" % (THDNA * 100, 20 * log10(THDNA)))
+# print(f'Frequency: {fs * (true_i / len(windowed)):f} Hz')
+
+# print(f"THD+N:      {THDN * 100:.4f}% or {20 * log10(THDN):.1f} dB")
+# print(f"A-weighted: {THDNA * 100:.4f}% or {20 * log10(THDNA):.1f} dB(A)")
 
 
 def thd_analyzer(files):
