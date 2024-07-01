@@ -162,9 +162,9 @@ def THD(signal, fs):
     f = rfft(windowed)
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
-    print('Frequency: %f Hz' % (fs * (true_i / len(windowed))))
+    print(f'Frequency: {fs * (true_i / len(windowed)):f} Hz')
 
-    print('fundamental amplitude: %.3f' % abs(f[i]))
+    print(f'fundamental amplitude: {abs(f[i]):.3f}')
 
     # Find the values for the first 15 harmonics.  Includes harmonic peaks
     # only, by definition
@@ -173,8 +173,8 @@ def THD(signal, fs):
     # Instead of limited to 15, figure out how many fit based on f0 and
     # sampling rate and report this "4 harmonics" and list the strength of each
     for x in range(2, 15):
-        print('%.3f' % abs(f[i * x]), end=' ')
+        print(f'{abs(f[i * x]):.3f}', end=' ')
 
     THD = sum([abs(f[i*x]) for x in range(2, 15)]) / abs(f[i])
-    print('\nTHD: %f%%' % (THD * 100))
+    print(f'\nTHD: {THD * 100:f}%')
     return
