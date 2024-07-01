@@ -48,6 +48,13 @@ class TestTHDN(object):
         signal = sine_wave(f, fs) + 0.1 * sine_wave(2*f, fs)
         assert THDN(signal, fs) == pytest.approx(0.1, rel=0.005)
 
+    def test_sawtooth(self):
+        # THDR is 62.6% (from conversion of THDF of 80.3% from Wikipedia)
+        fs = 100000  # Hz
+        f = 1000  # Hz
+        signal = sawtooth_wave(f, fs)
+        assert THDN(signal, fs) == pytest.approx(62.6/100, rel=0.001)
+
     # Optional sanity tests with third-party wav files.  To avoid any issues
     # with copyright or repo size, these files are not committed.
     # https://web.archive.org/web/20111020022811/http://members.cox.net:80/artludwig
