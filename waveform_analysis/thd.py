@@ -172,11 +172,14 @@ def THD(signal, fs):
     # TODO: Should peak-find near each one, not just assume that fundamental
     # was perfectly estimated.
     num_harmonics = int((fs/2)/frequency)
+    harmonic_amplitudes = []
     for h in range(2, num_harmonics + 1):
         freq = frequency * h
         ampl = abs(f[i * h])
+        harmonic_amplitudes.append(ampl)
         print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
 
-    THD = sum([abs(f[i*x]) for x in range(2, num_harmonics + 1)]) / abs(f[i])
+    THD = np.sqrt(sum([h**2 for h in harmonic_amplitudes])) / abs(f[i])
+
     print(f'\nTHD: {THD * 100:f}%')
     return THD

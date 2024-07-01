@@ -32,28 +32,40 @@ class TestTHDN(object):
         # Invalid signal type
         with pytest.raises(TypeError):
             THDN(None)
+            THD(None)
 
         # Invalid parameter name
         with pytest.raises(TypeError):
             THDN(np.array([1, 2]), sample_rate=50)
+            THD(np.array([1, 2]), sample_rate=50)
 
     def test_array_like(self):
         signal = [-1, 0, +1, +1, +1, 0, -1]*100
         assert THDN(signal, 1234) > 0
+        assert THD(signal, 1234) > 0
 
     def test_sine(self):
         # TODO use non-easy signal lengths and frequencies, padding, etc.
         fs = 100000  # Hz
         f = 1000  # Hz
-        signal = sine_wave(f, fs) + 0.1 * sine_wave(2*f, fs)
-        assert THDN(signal, fs) == pytest.approx(0.1, rel=0.005)
+        signal = sine_wave(f, fs) + 0.75 * sine_wave(2*f, fs)
+        # THDF of 75% = THDR of 75%/(sqrt(1+75%**2)) = 60%
+        assert THDN(signal, fs) == pytest.approx(0.6)
+        assert THD(signal, fs) == pytest.approx(0.75)
 
     def test_sawtooth(self):
+        # These won't be perfect because of aliasing
         # THDR is 62.6% (from conversion of THDF of 80.3% from Wikipedia)
         fs = 100000  # Hz
         f = 1000  # Hz
         signal = sawtooth_wave(f, fs)
         assert THDN(signal, fs) == pytest.approx(62.6/100, rel=0.001)
+
+        # THDF is 80.3%
+        fs = 100000  # Hz
+        f = 10  # Hz
+        signal = sawtooth_wave(f, fs)
+        assert THD(signal, fs) == pytest.approx(80.3/100, rel=0.001)
 
     # Optional sanity tests with third-party wav files.  To avoid any issues
     # with copyright or repo size, these files are not committed.
