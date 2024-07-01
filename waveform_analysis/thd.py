@@ -148,6 +148,8 @@ def THD(signal, fs):
     TODO: Make weighting a parameter
     TODO: Make R vs F reference a parameter (F as default??)
 
+    Currently this is THDF, not THDR.
+
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
