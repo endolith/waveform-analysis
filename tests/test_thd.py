@@ -42,13 +42,11 @@ class TestTHDN(object):
         assert THDN(signal, 1234) > 0
 
     def test_sine(self):
-        # TODO use non-easy signal lengths and frequencies
-        # padding, etc.
+        # TODO use non-easy signal lengths and frequencies, padding, etc.
         fs = 100000  # Hz
         f = 1000  # Hz
         signal = sine_wave(f, fs) + 0.1 * sine_wave(2*f, fs)
-        assert THDN(signal, fs) == pytest.approx(0.1, rel=1e-2)
-        # TODO: Tighten tolerances
+        assert THDN(signal, fs) == pytest.approx(0.1, rel=0.005)
 
     # Optional sanity tests with third-party wav files.  To avoid any issues
     # with copyright or repo size, these files are not committed.
