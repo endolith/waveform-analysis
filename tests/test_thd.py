@@ -51,8 +51,12 @@ class TestTHDN(object):
         signal = sine_wave(f, fs) + 0.75 * sine_wave(2*f, fs)
         # THDF of 75% = THDR of 75%/(sqrt(1+75%**2)) = 60%
         assert THDN(signal, fs) == pytest.approx(0.6)
-        assert THD(signal, fs) == pytest.approx(0.75)
+        assert THD(signal, fs) == pytest.approx(0.75)  # THDF by default
 
+        assert THD(signal, fs, ref='r') == pytest.approx(0.6)
+        assert THD(signal, fs, ref='f') == pytest.approx(0.75)
+
+    # TODO: parametrize test cases
     def test_sawtooth(self):
         # These won't be perfect because of aliasing
         # THDR is 62.6% (from conversion of THDF of 80.3% from Wikipedia)
@@ -66,6 +70,9 @@ class TestTHDN(object):
         f = 10  # Hz
         signal = sawtooth_wave(f, fs)
         assert THD(signal, fs) == pytest.approx(80.3/100, rel=0.001)
+        assert THD(signal, fs, ref='f') == pytest.approx(80.3/100, rel=0.001)
+        assert THD(signal, fs, ref='r') == pytest.approx(62.6/100, rel=0.001)
+
 
     # Optional sanity tests with third-party wav files.  To avoid any issues
     # with copyright or repo size, these files are not committed.
@@ -83,6 +90,9 @@ class TestTHDN(object):
 
         fs, channels = read(full_path)
         result = THDN(channels[:, 0], fs)  # Stereo files
+        assert pytest.approx(result, rel=0.03, abs=0.00003) == thd/100
+
+        result = THD(channels[:, 0], fs, ref='r')  # Stereo files
         assert pytest.approx(result, rel=0.03, abs=0.00003) == thd/100
 
     # https://www.audiocheck.net/testtones_thdFull.php (54 files)
@@ -109,6 +119,9 @@ class TestTHDN(object):
         with pytest.warns(WavFileWarning):
             fs, sig = read(full_path)
         result = THDN(sig, fs)  # Mono files
+        assert pytest.approx(result, abs=0.0002) == thd/100
+
+        result = THD(sig, fs, ref='r')  # Mono files
         assert pytest.approx(result, abs=0.0002) == thd/100
 
 

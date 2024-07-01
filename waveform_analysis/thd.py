@@ -137,7 +137,7 @@ def THDN(signal, fs, weight=None):
     return rms_flat(noise) / total_rms
 
 
-def THD(signal, fs):
+def THD(signal, fs, *, ref='f'):
     """Measure the THD for a signal
 
     This function is not yet trustworthy.
@@ -146,10 +146,11 @@ def THD(signal, fs):
     calculated by finding peaks in the spectrum.
 
     TODO: Make weighting a parameter
-    TODO: Make R vs F reference a parameter (F as default??)
 
-    Currently this is THDF, not THDR.
-
+    ref = r uses the THDR definition, including the rms value of the entire
+    signal in the denominator.
+    ref = f uses the THDF definition, including only the fundamental in the
+    denominator.
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
@@ -181,7 +182,13 @@ def THD(signal, fs):
         harmonic_amplitudes.append(ampl)
         print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
 
-    THD = np.sqrt(sum([h**2 for h in harmonic_amplitudes])) / abs(f[i])
+    THD = np.sqrt(sum([h**2 for h in harmonic_amplitudes]))
+    if ref.lower() == 'f':
+        THD /= abs(f[i])
+    elif ref.lower() == 'r':
+        THD /= np.sqrt(abs(f[i])**2 + THD**2)
+    else:
+        raise ValueError('Reference argument not understood.')
 
     print(f'\nTHD: {THD * 100:f}%')
     return THD
