@@ -179,4 +179,4 @@ def THD(signal, fs):
 
     THD = sum([abs(f[i*x]) for x in range(2, num_harmonics + 1)]) / abs(f[i])
     print(f'\nTHD: {THD * 100:f}%')
-    return
+    return THD
