@@ -42,7 +42,7 @@ lower_limits = np.array((
 ))
 
 
-class TestITU468WeightingAnalog(object):
+class TestITU468WeightingAnalog:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             ITU_R_468_weighting_analog('eels')
@@ -70,7 +70,7 @@ class TestITU468WeightingAnalog(object):
         assert all(np.greater_equal(levels, lower))
 
 
-class TestITU468Weighting(object):
+class TestITU468Weighting:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             ITU_R_468_weighting(fs='spam')
@@ -124,7 +124,7 @@ class TestITU468Weighting(object):
         assert all(np.greater_equal(levels, responses + lower_limits))
 
 
-class TestITU468Weight(object):
+class TestITU468Weight:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             ITU_R_468_weight('change this')

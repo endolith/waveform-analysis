@@ -25,7 +25,7 @@ def sawtooth_wave(f, fs):
     return sawtooth(2*pi * f * t)
 
 
-class TestFreqFromCrossings(object):
+class TestFreqFromCrossings:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             freq_from_crossings(None)
@@ -56,7 +56,7 @@ class TestFreqFromCrossings(object):
         assert freq_from_crossings(signal, fs, interp='linear') == correct
 
 
-class TestFreqFromFFT(object):
+class TestFreqFromFFT:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             freq_from_fft(None)
@@ -75,7 +75,7 @@ class TestFreqFromFFT(object):
                 assert freq_from_fft(signal, fs) == pytest.approx(f)
 
 
-class TestFreqFromAutocorr(object):
+class TestFreqFromAutocorr:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             freq_from_autocorr(None)
@@ -88,7 +88,7 @@ class TestFreqFromAutocorr(object):
                         pytest.approx(f, rel=1e-4))
 
 
-class TestFreqFromHPS(object):
+class TestFreqFromHPS:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             freq_from_hps(None)

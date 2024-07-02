@@ -27,7 +27,7 @@ def sawtooth_wave(f, fs):
     return sawtooth(2*pi * f * t)
 
 
-class TestTHDN(object):
+class TestTHDN:
     def test_invalid_params(self):
         # Invalid signal type
         with pytest.raises(TypeError):

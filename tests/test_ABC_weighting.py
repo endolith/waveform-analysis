@@ -68,7 +68,7 @@ lower_limits = np.array((-5.0, -4.0, -3.0, -2.0, -1.5, -1.0, -1.0, -1.0, -1.0,
                          ))
 
 
-class TestABCWeighting(object):
+class TestABCWeighting:
     def test_invalid_params(self):
         with pytest.raises(ValueError):
             ABC_weighting('D')
@@ -99,7 +99,7 @@ class TestABCWeighting(object):
             assert all(np.greater_equal(levels, lower))
 
 
-class TestAWeighting(object):
+class TestAWeighting:
     def test_invalid_params(self):
         with pytest.raises(TypeError):
             A_weighting(fs='spam')
@@ -159,7 +159,7 @@ class TestAWeighting(object):
         assert all(np.greater_equal(levels, responses['A'] + lower_limits))
 
 
-class TestAWeight(object):
+class TestAWeight:
     def test_freq_resp(self):
         # Test that frequency response meets tolerance from ANSI S1.4-1983
         N = 40000
