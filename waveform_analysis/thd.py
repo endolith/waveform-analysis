@@ -138,19 +138,53 @@ def THDN(signal, fs, weight=None):
 
 
 def THD(signal, fs, *, ref='f'):
-    """Measure the THD for a signal
+    """
+    Calculate the Total Harmonic Distortion (THD) of a signal.
 
-    This function is not yet trustworthy.
+    Parameters
+    ----------
+    signal : array_like
+        Input signal to analyze.
+    fs : float
+        Sampling frequency of the signal in Hz.
+    ref : {'r', 'f'}, optional
+        Reference type for the THD calculation:
 
-    Returns the estimated fundamental frequency and the measured THD,
-    calculated by finding peaks in the spectrum.
+        - 'r' : Use the RMS value of the original signal as reference.
+        - 'f' : Use the fundamental amplitude as reference (default).
 
-    TODO: Make weighting a parameter
+    Returns
+    -------
+    thd : float
+        The THD of the input signal as a dimensionless ratio.
 
-    ref = r uses the THDR definition, including the rms value of the entire
-    signal in the denominator.
-    ref = f uses the THDF definition, including only the fundamental in the
-    denominator.
+    Notes
+    -----
+    This function calculates the total harmonic distortion ratio of the
+    signal by identifying the fundamental frequency and its harmonics in the
+    frequency spectrum.
+
+    The fundamental is estimated from the peak of the frequency spectrum, so
+    it must be the strongest frequency in the signal.
+
+    The signal is windowed using a flattop window to reduce spectral leakage,
+    while still allowing accurate amplitude measurements.
+
+    Examples
+    --------
+    Calculate THD for a 10 kHz sine wave sampled at 48 kHz, with a
+    2nd harmonic at 10% amplitude:
+
+    >>> import numpy as np
+    >>> fs = 48000  # Hz
+    >>> t = np.linspace(0, 1, fs, endpoint=False)
+    >>> signal = np.sin(2*np.pi*10000*t) + 0.1*np.sin(2*np.pi*20000*t)
+    >>> THD_ratio = THD(signal, fs)
+    Frequency: 10000.000000 Hz
+    fundamental amplitude: 23999.500
+    Harmonic 2 at 20000.000 Hz: 2399.950
+
+    THD: 10.000000%
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
