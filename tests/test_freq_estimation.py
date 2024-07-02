@@ -40,20 +40,19 @@ class TestFreqFromCrossings:
         signal = [-1, 0, +1, 0, -1, 0, +1, 0]
         assert freq_from_crossings(signal, 8) == pytest.approx(2)
 
-    def test_sine(self):
-        for fs in {48000, 44100}:  # Hz
-            for f in {1000, 1234.56789, 3000}:  # Hz
-                signal = sine_wave(f, fs)
-                assert freq_from_crossings(signal, fs) == pytest.approx(f)
+    @pytest.mark.parametrize("fs", (48000, 44100))  # Hz
+    @pytest.mark.parametrize("f", (1000, 1234.56789, 3000))  # Hz
+    def test_sine(self, fs, f):
+        signal = sine_wave(f, fs)
+        assert freq_from_crossings(signal, fs) == pytest.approx(f)
 
-    def test_interp(self):
+    @pytest.mark.parametrize("interp", ('none', None, 'linear'))
+    def test_interp(self, interp):
         fs = 100000  # Hz
         f = 1234.56789  # Hz
         signal = sine_wave(f, fs)
         correct = pytest.approx(f)
-        assert freq_from_crossings(signal, fs, interp='none') == correct
-        assert freq_from_crossings(signal, fs, interp=None) == correct
-        assert freq_from_crossings(signal, fs, interp='linear') == correct
+        assert freq_from_crossings(signal, fs, interp=interp) == correct
 
 
 class TestFreqFromFFT:
@@ -68,11 +67,11 @@ class TestFreqFromFFT:
         signal = [-1, 0, +1, 0, -1, 0, +1, 0]
         assert freq_from_fft(signal, 8) == pytest.approx(2)
 
-    def test_sine(self):
-        for fs in {48000, 44100}:  # Hz
-            for f in {1000, 1234.56789, 3000}:  # Hz
-                signal = sine_wave(f, fs)
-                assert freq_from_fft(signal, fs) == pytest.approx(f)
+    @pytest.mark.parametrize("fs", (48000, 44100))  # Hz
+    @pytest.mark.parametrize("f", (1000, 1234.56789, 3000))  # Hz
+    def test_sine(self, fs, f):
+        signal = sine_wave(f, fs)
+        assert freq_from_fft(signal, fs) == pytest.approx(f)
 
 
 class TestFreqFromAutocorr:
@@ -80,12 +79,11 @@ class TestFreqFromAutocorr:
         with pytest.raises(TypeError):
             freq_from_autocorr(None)
 
-    def test_sine(self):
-        for fs in {100000}:  # Hz
-            for f in {1000, 1234.56789}:  # Hz
-                signal = sine_wave(f, fs)
-                assert (freq_from_autocorr(signal, fs) ==
-                        pytest.approx(f, rel=1e-4))
+    @pytest.mark.parametrize("fs", (100000,))  # Hz
+    @pytest.mark.parametrize("f", (1000, 1234.56789))  # Hz
+    def test_sine(self, fs, f):
+        signal = sine_wave(f, fs)
+        assert freq_from_autocorr(signal, fs) == pytest.approx(f, rel=1e-4)
 
 
 class TestFreqFromHPS:
@@ -93,11 +91,11 @@ class TestFreqFromHPS:
         with pytest.raises(TypeError):
             freq_from_hps(None)
 
-    def test_sawtooth(self):
-        for fs in {48000, 100000}:  # Hz
-            for f in {1000, 1234.56789, 3000}:  # Hz
-                signal = sawtooth_wave(f, fs)
-                assert freq_from_hps(signal, fs) == pytest.approx(f, rel=1e-4)
+    @pytest.mark.parametrize("fs", (48000, 100000))  # Hz
+    @pytest.mark.parametrize("f", (1000, 1234.56789, 3000))  # Hz
+    def test_sawtooth(self, fs, f):
+        signal = sawtooth_wave(f, fs)
+        assert freq_from_hps(signal, fs) == pytest.approx(f, rel=1e-4)
 
 
 if __name__ == '__main__':
