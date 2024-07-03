@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""
+r"""
 Created a SendTo shortcut to
 
     C:\...\pythonw.exe "C:\...\wave_analyzer_launcher.py"
