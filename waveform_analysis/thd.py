@@ -216,7 +216,7 @@ def THD(signal, fs, *, ref='f'):
         harmonic_amplitudes.append(ampl)
         print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
 
-    THD = np.sqrt(sum([h**2 for h in harmonic_amplitudes]))
+    THD = np.sqrt(sum(h**2 for h in harmonic_amplitudes))
     if ref.lower() == 'f':
         THD /= abs(f[i])
     elif ref.lower() == 'r':
