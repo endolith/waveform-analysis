@@ -43,8 +43,9 @@ jobs:
       - name: Test with pytest and generate coverage report
         run: |
           pytest --cov=waveform_analysis --cov-report=xml
-          
+
       - name: Upload coverage to Codecov
+        if: matrix.python-version == '3.12'
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml
