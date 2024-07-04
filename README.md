@@ -1,3 +1,6 @@
+[![example workflow](https://github.com/endolith/waveform-analysis/actions/workflows/python-package.yml/badge.svg)](https://github.com/endolith/waveform-analysis/actions)
+[![codecov](https://codecov.io/github/endolith/waveform-analysis/graph/badge.svg?token=yDrCwmlDYa)](https://codecov.io/github/endolith/waveform-analysis)
+
 This was originally several different scripts for measuring or processing waveforms, which I pasted on gist:
 
 * [Total harmonic distortion measurement](http://gist.github.com/246092)
