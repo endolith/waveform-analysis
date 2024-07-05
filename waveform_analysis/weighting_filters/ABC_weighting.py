@@ -41,7 +41,7 @@ def ABC_weighting(curve='A'):
     >>> import matplotlib.pyplot as plt
     >>> for curve in ['A', 'B', 'C']:
     ...     z, p, k = ABC_weighting(curve)
-    ...     w = 2*pi*logspace(log10(10), log10(100000), 1000)
+    ...     w = 2*pi*np.geomspace(10, 100000, 1000)
     ...     w, h = signal.freqs_zpk(z, p, k, w)
     ...     plt.semilogx(w/(2*pi), 20*np.log10(h), label=curve)
     >>> plt.title('Frequency response')
@@ -127,7 +127,7 @@ def A_weighting(fs, output='ba'):
     >>> import matplotlib.pyplot as plt
     >>> fs = 200000
     >>> b, a = A_weighting(fs)
-    >>> f = np.logspace(np.log10(10), np.log10(fs/2), 1000)
+    >>> f = np.geomspace(10, fs/2, 1000)
     >>> w = 2*pi * f / fs
     >>> w, h = freqz(b, a, w)
     >>> plt.semilogx(w*fs/(2*pi), 20*np.log10(abs(h)))

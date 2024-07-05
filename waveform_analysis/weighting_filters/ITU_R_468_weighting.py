@@ -57,7 +57,7 @@ def ITU_R_468_weighting(fs, output='ba'):
     >>> import matplotlib.pyplot as plt
     >>> fs = 200000
     >>> b, a = ITU_R_468_weighting(fs)
-    >>> f = np.logspace(np.log10(10), np.log10(fs/2), 1000)
+    >>> f = np.geomspace(10, fs/2, 1000)
     >>> w = 2*pi * f / fs
     >>> w, h = freqz(b, a, w)
     >>> plt.semilogx(w*fs/(2*pi), 20*np.log10(abs(h)))
