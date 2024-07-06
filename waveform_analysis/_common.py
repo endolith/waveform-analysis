@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import numpy as np
-from numpy import absolute, arange, array_equal, log10, mean, polyfit, sqrt
 from scipy.stats import gmean
 
 try:
@@ -96,7 +95,7 @@ def analyze_channels(filename, function):
         function(signal, sample_rate)
     elif channels == 2:
         # Stereo
-        if array_equal(signal[:, 0], signal[:, 1]):
+        if np.array_equal(signal[:, 0], signal[:, 1]):
             print('-- Left and Right channels are identical --')
             function(signal[:, 0], sample_rate)
         else:
@@ -117,7 +116,7 @@ def rms_flat(a):
     """
     Return the root mean square of all the elements of *a*, flattened out.
     """
-    return sqrt(mean(absolute(a)**2))
+    return np.sqrt(np.mean(np.absolute(a)**2))
 
 
 def find(condition):
@@ -130,7 +129,7 @@ def dB(q):
     """
     Return the level of a field quantity in decibels.
     """
-    return 20 * log10(q)
+    return 20 * np.log10(q)
 
 
 def spectral_flatness(spectrum):
@@ -140,7 +139,7 @@ def spectral_flatness(spectrum):
 
     I'm not sure if the spectrum should be squared first...
     """
-    return gmean(spectrum)/mean(spectrum)
+    return gmean(spectrum)/np.mean(spectrum)
 
 
 def parabolic(f, x):
@@ -179,7 +178,7 @@ def parabolic_polyfit(f, x, n):
 
     n is the number of samples of the curve used to fit the parabola.
     """
-    a, b, c = polyfit(arange(x-n//2, x+n//2+1), f[x-n//2:x+n//2+1], 2)
+    a, b, c = np.polyfit(np.arange(x-n//2, x+n//2+1), f[x-n//2:x+n//2+1], 2)
     xv = -0.5 * b/a
     yv = a * xv**2 + b * xv + c
     return (xv, yv)
