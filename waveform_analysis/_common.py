@@ -132,16 +132,6 @@ def dB(q):
     return 20 * np.log10(q)
 
 
-def spectral_flatness(spectrum):
-    """
-    The spectral flatness is calculated by dividing the geometric mean of
-    the power spectrum by the arithmetic mean of the power spectrum
-
-    I'm not sure if the spectrum should be squared first...
-    """
-    return gmean(spectrum)/np.mean(spectrum)
-
-
 def parabolic(f, x):
     """
     Quadratic interpolation for estimating the true position of an
