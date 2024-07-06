@@ -39,6 +39,16 @@ class TestTHDN:
             THDN(np.array([1, 2]), sample_rate=50)
             THD(np.array([1, 2]), sample_rate=50)
 
+        # Invalid weighting filter
+        with pytest.raises(ValueError):
+            signal = sine_wave(100, 1000)
+            THDN(signal, 1000, weight='Q')
+
+        # Invalid reference type
+        with pytest.raises(ValueError):
+            signal = sine_wave(100, 1000)
+            THD(signal, 1000, ref='Q')
+
     def test_array_like(self):
         signal = [-1, 0, +1, +1, +1, 0, -1]*100
         assert THDN(signal, 1234) > 0
