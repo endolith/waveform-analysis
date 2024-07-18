@@ -140,4 +140,4 @@ def freq_from_hps(signal, fs):
 
 if __name__ == '__main__':
     import pytest
-    pytest.main(['./tests/test_freq_estimation.py', "--capture=sys"])
+    pytest.main(['../tests/test_freq_estimation.py', "--capture=sys"])

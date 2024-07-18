@@ -223,4 +223,4 @@ def _derive_coefficients():
 
 if __name__ == '__main__':
     import pytest
-    pytest.main(['../tests/test_ABC_weighting.py', "--capture=sys"])
+    pytest.main(['../../tests/test_ABC_weighting.py', "--capture=sys"])

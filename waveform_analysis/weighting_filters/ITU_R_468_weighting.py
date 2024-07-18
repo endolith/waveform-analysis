@@ -96,4 +96,4 @@ def ITU_R_468_weight(signal, fs):
 
 if __name__ == '__main__':
     import pytest
-    pytest.main(['../tests/test_ITU_R_468_weighting.py', "--capture=sys"])
+    pytest.main(['../../tests/test_ITU_R_468_weighting.py', "--capture=sys"])
