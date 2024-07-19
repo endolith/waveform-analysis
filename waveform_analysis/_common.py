@@ -105,7 +105,7 @@ def analyze_channels(filename, function):
     else:
         # Multi-channel
         for ch_no, channel in enumerate(signal.transpose()):
-            print('-- Channel %d --' % (ch_no + 1))
+            print(f'-- Channel {int(ch_no + 1)} --')
             function(channel, sample_rate)
 
 

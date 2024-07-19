@@ -153,9 +153,9 @@ def analyze(filename):
         f"Using sound file backend '{wav_loader}'",
         f"Properties for \"{filename}\"",
         str(file_format),
-        'Channels:\t%d' % channels,
-        'Sampling rate:\t%d Hz' % sample_rate,
-        'Samples:\t%d' % samples,
+        f'Channels:\t{int(channels)}',
+        f'Sampling rate:\t{int(sample_rate)} Hz',
+        f'Samples:\t{int(samples)}',
         f"Length: \t{length}",
         '-----------------',
     ]
@@ -176,7 +176,7 @@ def analyze(filename):
     else:
         # Multi-channel
         for ch_no, channel in enumerate(signal.transpose()):
-            results += ['Channel %d:' % (ch_no + 1)]
+            results += [f'Channel {int(ch_no + 1)}:']
             results += properties(channel, sample_rate)
 
     display(header, results)
