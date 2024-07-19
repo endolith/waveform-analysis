@@ -87,7 +87,7 @@ class TestABCWeighting:
 
             if mpl:
                 plt.figure(curve)
-                plt.title('{}-weighting limits (Type 0)'.format(curve))
+                plt.title(f'{curve}-weighting limits (Type 0)')
                 plt.semilogx(f_test, levels, alpha=0.7, label='analog')
                 plt.semilogx(f_test, upper, 'r:', alpha=0.7)
                 plt.semilogx(f_test, lower, 'r:', alpha=0.7)

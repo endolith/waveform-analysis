@@ -149,7 +149,7 @@ def A_weighting(fs, output='ba'):
     elif output == 'sos':
         return zpk2sos(z_d, p_d, k_d)
     else:
-        raise ValueError("'%s' is not a valid output form." % output)
+        raise ValueError(f"'{output}' is not a valid output form.")
 
 
 def A_weight(signal, fs):
@@ -205,7 +205,7 @@ def _derive_coefficients():
     assert abs(float(f_4) - 12194) < 0.5
 
     for f in ('f_1', 'f_2', 'f_3', 'f_4'):
-        print('{} = {}'.format(f, float(eval(f))))
+        print(f'{f} = {float(eval(f))}')
 
     # Section 5.4.8  Normalizations
     f = 1000
@@ -218,7 +218,7 @@ def _derive_coefficients():
     assert abs(20*log10(float(A1000)) + 2.000) < 0.0005
 
     for norm in ('C1000', 'A1000'):
-        print('{} = {}'.format(norm, float(eval(norm))))
+        print(f'{norm} = {float(eval(norm))}')
 
 
 if __name__ == '__main__':

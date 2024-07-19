@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
         def freq_wrapper(signal, fs):
             freq = freq_from_fft(signal, fs)
-            print('%f Hz' % freq)
+            print(f'{freq:f} Hz')
 
         files = sys.argv[1:]
         if files:
@@ -17,7 +17,7 @@ if __name__ == '__main__':
                 try:
                     start_time = time()
                     analyze_channels(filename, freq_wrapper)
-                    print('\nTime elapsed: %.3f s\n' % (time() - start_time))
+                    print(f'\nTime elapsed: {time() - start_time:.3f} s\n')
 
                 except IOError:
                     print('Couldn\'t analyze "' + filename + '"\n')

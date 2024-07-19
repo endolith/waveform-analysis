@@ -77,7 +77,7 @@ def ITU_R_468_weighting(fs, output='ba'):
     elif output == 'sos':
         return zpk2sos(zz, pz, kz)
     else:
-        raise ValueError("'%s' is not a valid output form." % output)
+        raise ValueError(f"'{output}' is not a valid output form.")
 
 
 def ITU_R_468_weight(signal, fs):

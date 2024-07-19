@@ -85,11 +85,11 @@ def properties(signal, sample_rate):
     # TODO: rjust instead of tabs
 
     return [
-        'DC offset:\t%f (%.3f%%)' % (DC_offset, DC_offset * 100),
-        'Crest factor:\t%.3f (%.3f dB)' % (crest_factor, dB(crest_factor)),
+        f'DC offset:\t{DC_offset:f} ({DC_offset * 100:.3f}%)',
+        f'Crest factor:\t{crest_factor:.3f} ({dB(crest_factor):.3f} dB)',
         'Peak level:\t%.3f (%.3f dBFS)' %
         (peak_level, dB(peak_level)),  # Doesn't account for intersample peaks!
-        'RMS level:\t%.3f (%.3f dBFS)' % (signal_level, dB(signal_level)),
+        f'RMS level:\t{signal_level:.3f} ({dB(signal_level):.3f} dBFS)',
         'RMS A-weighted:\t%.3f (%.3f dBFS(A), %.3f dB)' %
         (Aweighted_level, dB(Aweighted_level),
          dB(Aweighted_level/signal_level)),
@@ -137,8 +137,7 @@ def analyze(filename):
         elif file_format == 'float32':
             pass
         else:
-            raise Exception("Don't know how to handle file "
-                            "format {}".format(file_format))
+            raise Exception(f"Don't know how to handle file format {file_format}")
 
     else:
         raise Exception("wav_loader has failed")
