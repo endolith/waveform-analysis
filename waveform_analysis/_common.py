@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import numpy as np
-from scipy.stats import gmean
 
 try:
     from soundfile import SoundFile
