@@ -116,7 +116,7 @@ class TestTHDN:
         parts = basename.split('_')
         frequency = float(parts[2])
         thd_str = parts[3].split('.')[0]
-        thd = float(thd_str[0] + '.' + thd_str[1:])
+        thd = float(f"{thd_str[0]}.{thd_str[1:]}")
         audiocheck_files_thd.append((basename, thd))
 
     @pytest.mark.parametrize("filename, thd", audiocheck_files_thd)

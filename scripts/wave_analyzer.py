@@ -107,7 +107,7 @@ def analyze(filename):
         channels = sf.channels
         sample_rate = sf.samplerate
         samples = len(sf)
-        file_format = sf.format_info + ' ' + sf.subtype_info
+        file_format = f"{sf.format_info} {sf.subtype_info}"
         sf.close()
     elif wav_loader == 'scikits.audiolab':
         sf = Sndfile(filename, 'r')
@@ -145,18 +145,18 @@ def analyze(filename):
     header = 'dBFS values are relative to a full-scale square wave'
 
     if samples/sample_rate >= 1:
-        length = str(samples/sample_rate) + ' seconds'
+        length = f"{str(samples / sample_rate)} seconds"
     else:
-        length = str(samples/sample_rate*1000) + ' milliseconds'
+        length = f"{str(samples / sample_rate * 1000)} milliseconds"
 
     results = [
-        "Using sound file backend '" + wav_loader + "'",
-        'Properties for "' + filename + '"',
+        f"Using sound file backend '{wav_loader}'",
+        f"Properties for \"{filename}\"",
         str(file_format),
         'Channels:\t%d' % channels,
         'Sampling rate:\t%d Hz' % sample_rate,
         'Samples:\t%d' % samples,
-        'Length: \t' + length,
+        f"Length: \t{length}",
         '-----------------',
     ]
 
@@ -192,7 +192,7 @@ def wave_analyzer(files):
             try:
                 analyze(filename)
             except IOError:
-                print('Couldn\'t analyze "' + filename + '"\n')
+                print(f"Couldn't analyze \"{filename}\"\n")
             print('')
     else:
         # TODO: realtime analyzer goes here

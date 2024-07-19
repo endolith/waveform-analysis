@@ -26,7 +26,7 @@ except BaseException as e:
         from tkinter import Tk
         root = Tk().withdraw()  # hiding the main window
         var = tkinter.messagebox.showerror('Waveform analyzer',
-                                           'Exception:\n' + str(e))
+                                           f"Exception:\n{str(e)}")
         raise
     except:  # ImportError:
         # This shouldn't ever happen, and if it does it will be hidden by

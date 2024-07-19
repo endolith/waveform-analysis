@@ -20,7 +20,7 @@ if __name__ == '__main__':
                     print(f'\nTime elapsed: {time() - start_time:.3f} s\n')
 
                 except IOError:
-                    print('Couldn\'t analyze "' + filename + '"\n')
+                    print(f"Couldn't analyze \"{filename}\"\n")
                 print('')
         else:
             sys.exit("You must provide at least one file to analyze")

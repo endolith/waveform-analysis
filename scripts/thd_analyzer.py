@@ -39,7 +39,7 @@ def thd_analyzer(files):
             try:
                 analyze_channels(filename, THDN)
             except IOError:
-                print('Couldn\'t analyze "' + filename + '"\n')
+                print(f"Couldn't analyze \"{filename}\"\n")
             print('')
     else:
         sys.exit("You must provide at least one file to analyze:\n"
