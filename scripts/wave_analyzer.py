@@ -186,3 +186,8 @@ def wave_analyzer(files):
         # TODO: realtime analyzer goes here
         sys.exit("You must provide at least one file to analyze:\n"
                  "python wave_analyzer.py filename.wav")
+
+
+if __name__ == "__main__":
+    import sys
+    wave_analyzer(sys.argv[1:])
