@@ -22,6 +22,16 @@ class TestWaveAnalyzer:
             capture_output=True, text=True)
         assert "Couldn't analyze \"nonexistent.wav\"" in result.stdout
 
+    def test_real_file(self):
+        test_file_path = os.path.join(os.path.dirname(__file__), 'test_files',
+                                      '1234 Hz -12.3 dB Ocenaudio 16-bit.wav')
+
+        result = subprocess.run([sys.executable, self.script_path,
+                                 test_file_path],
+                                capture_output=True, text=True)
+
+        assert result.returncode == 0
+
 
 if __name__ == "__main__":
     pytest.main([__file__])
