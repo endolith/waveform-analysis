@@ -16,6 +16,10 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+        dependencies: [
+          "scipy-io-wavfile",
+          "pysoundfile"
+        ]
 
     steps:
       - uses: actions/checkout@v4
@@ -39,6 +43,10 @@ jobs:
       - name: Install package
         run: |
           pip install -e .
+
+      - name: Install PySoundFile
+        if: matrix.dependencies == 'pysoundfile'
+        run: pip install pysoundfile
 
       - name: Lint with flake8
         run: |
