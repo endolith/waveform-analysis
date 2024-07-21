@@ -12,15 +12,11 @@ try:
     wav_loader = 'pysoundfile'
 except:
     try:
-        from scikits.audiolab import Sndfile
-        wav_loader = 'scikits.audiolab'
+        from scipy.io.wavfile import read
+        wav_loader = 'scipy.io.wavfile'
     except:
-        try:
-            from scipy.io.wavfile import read
-            wav_loader = 'scipy.io.wavfile'
-        except:
-            raise ImportError('No sound file loading package installed '
-                              '(PySoundFile, scikits.audiolab, or SciPy)')
+        raise ImportError('No sound file loading package installed '
+                          '(PySoundFile or SciPy)')
 
 try:
     import easygui
@@ -107,14 +103,6 @@ def analyze(filename):
         sample_rate = sf.samplerate
         samples = len(sf)
         file_format = f"{sf.format_info} {sf.subtype_info}"
-        sf.close()
-    elif wav_loader == 'scikits.audiolab':
-        sf = Sndfile(filename, 'r')
-        signal = sf.read_frames(sf.nframes)
-        channels = sf.channels
-        sample_rate = sf.samplerate
-        samples = sf.nframes
-        file_format = sf.format
         sf.close()
     elif wav_loader == 'scipy.io.wavfile':
         sample_rate, signal = read(filename)

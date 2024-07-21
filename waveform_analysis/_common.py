@@ -7,15 +7,11 @@ try:
     wav_loader = 'pysoundfile'
 except:
     try:
-        from scikits.audiolab import Sndfile
-        wav_loader = 'scikits.audiolab'
+        from scipy.io.wavfile import read
+        wav_loader = 'scipy.io.wavfile'
     except:
-        try:
-            from scipy.io.wavfile import read
-            wav_loader = 'scipy.io.wavfile'
-        except:
-            raise ImportError('No sound file loading package installed '
-                              '(PySoundFile, scikits.audiolab, or SciPy)')
+        raise ImportError('No sound file loading package installed '
+                          '(PySoundFile or SciPy)')
 
 
 def load(filename):
@@ -27,12 +23,6 @@ def load(filename):
     if wav_loader == 'pysoundfile':
         sf = SoundFile(filename)
         signal = sf.read()
-        channels = sf.channels
-        sample_rate = sf.samplerate
-        sf.close()
-    elif wav_loader == 'scikits.audiolab':
-        sf = Sndfile(filename, 'r')
-        signal = sf.read_frames(sf.nframes)
         channels = sf.channels
         sample_rate = sf.samplerate
         sf.close()
@@ -60,14 +50,6 @@ def load_dict(filename):
         soundfile['fs'] = sf.samplerate
         soundfile['samples'] = len(sf)
         soundfile['format'] = f"{sf.format_info} {sf.subtype_info}"
-        sf.close()
-    elif wav_loader == 'scikits.audiolab':
-        sf = Sndfile(filename, 'r')
-        soundfile['signal'] = sf.read_frames(sf.nframes)
-        soundfile['channels'] = sf.channels
-        soundfile['fs'] = sf.samplerate
-        soundfile['samples'] = sf.nframes
-        soundfile['format'] = sf.format
         sf.close()
     elif wav_loader == 'scipy.io.wavfile':
         soundfile['fs'], soundfile['signal'] = read(filename)
