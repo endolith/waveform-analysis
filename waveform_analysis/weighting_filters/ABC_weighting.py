@@ -20,9 +20,7 @@ precision (type 1) sound level meter."
 
 import numpy as np
 from numpy import log10, pi
-from scipy.signal import freqs, sosfilt, zpk2sos, zpk2tf
-
-from waveform_analysis.weighting_filters._filter_design import _zpkbilinear
+from scipy.signal import bilinear_zpk, freqs, sosfilt, zpk2sos, zpk2tf
 
 __all__ = ['ABC_weighting', 'A_weighting', 'A_weight']
 
@@ -140,7 +138,7 @@ def A_weighting(fs, output='ba'):
     z, p, k = ABC_weighting('A')
 
     # Use the bilinear transformation to get the digital filter.
-    z_d, p_d, k_d = _zpkbilinear(z, p, k, fs)
+    z_d, p_d, k_d = bilinear_zpk(z, p, k, fs)
 
     if output == 'zpk':
         return z_d, p_d, k_d

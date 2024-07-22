@@ -107,9 +107,9 @@ class TestAWeighting:
         with pytest.raises(ValueError):
             A_weighting(fs=10000, output='eggs')
 
-    def test_zpkbilinear_bug(self):
+    def test_bilinear_zpk_bug(self):
         # https://github.com/scipy/scipy/pull/7504
-        # Copied a local version and fixed it, but just to make sure:
+        # Previously copied a local version and fixed it, but now using SciPy's version:
         z, p, k = A_weighting(fs=48000, output='zpk')
         assert k != 0
 

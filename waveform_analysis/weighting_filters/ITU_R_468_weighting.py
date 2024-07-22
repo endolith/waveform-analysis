@@ -11,9 +11,7 @@ https://en.wikipedia.org/wiki/ITU-R_468_noise_weighting
 """
 
 from numpy import pi
-from scipy.signal import freqs, sosfilt, zpk2sos, zpk2tf
-
-from waveform_analysis.weighting_filters._filter_design import _zpkbilinear
+from scipy.signal import bilinear_zpk, freqs, sosfilt, zpk2sos, zpk2tf
 
 __all__ = ['ITU_R_468_weighting_analog', 'ITU_R_468_weighting',
            'ITU_R_468_weight']
@@ -68,7 +66,7 @@ def ITU_R_468_weighting(fs, output='ba'):
     z, p, k = ITU_R_468_weighting_analog()
 
     # Use the bilinear transformation to get the digital filter.
-    zz, pz, kz = _zpkbilinear(z, p, k, fs)
+    zz, pz, kz = bilinear_zpk(z, p, k, fs)
 
     if output == 'zpk':
         return zz, pz, kz
