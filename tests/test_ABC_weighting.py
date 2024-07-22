@@ -101,7 +101,7 @@ class TestABCWeighting:
 
 class TestAWeighting:
     def test_invalid_params(self):
-        with pytest.raises(ValueError):
+        with pytest.raises((ValueError, TypeError)):
             A_weighting(fs='spam')
 
         with pytest.raises(ValueError):

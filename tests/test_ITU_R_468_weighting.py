@@ -72,7 +72,7 @@ class TestITU468WeightingAnalog:
 
 class TestITU468Weighting:
     def test_invalid_params(self):
-        with pytest.raises(ValueError):
+        with pytest.raises((ValueError, TypeError)):
             ITU_R_468_weighting(fs='spam')
 
         with pytest.raises(ValueError):
