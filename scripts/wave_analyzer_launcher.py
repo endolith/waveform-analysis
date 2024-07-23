@@ -15,7 +15,7 @@ import sys
 try:
     from wave_analyzer import wave_analyzer
     files = sys.argv[1:]
-    wave_analyzer(files)
+    wave_analyzer(files, gui=True)
 
 # Catches SystemExit, KeyboardInterrupt and GeneratorExit as well
 # but that's ok because it re-raises them.

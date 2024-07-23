@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import argparse
 import sys
 
 from numpy import absolute, array_equal, mean
@@ -20,20 +21,21 @@ except:
 
 try:
     import easygui
-    displayer = 'easygui'
+    has_easygui = True
 except:
-    displayer = 'stdout'
+    has_easygui = False
 
 
-def display(header, results):
+def display(header, results, gui):
     """
     Display header string and list of result lines
     """
-    if displayer == 'easygui':
+    if gui and not has_easygui:
+        print('No EasyGUI; printing output to console\n')
+    elif gui and has_easygui:
         title = 'Waveform properties'
         easygui.codebox(header, title, '\n'.join(results))
     else:
-        print('No EasyGUI; printing output to console\n')
         print(header)
         print('-----------------')
         print('\n'.join(results))
@@ -95,7 +97,7 @@ def properties(signal, sample_rate):
     ]
 
 
-def analyze(filename):
+def analyze(filename, gui):
     if wav_loader == 'pysoundfile':
         sf = SoundFile(filename)
         signal = sf.read()
@@ -167,18 +169,18 @@ def analyze(filename):
             results += [f'Channel {ch_no + 1}:']
             results += properties(channel, sample_rate)
 
-    display(header, results)
+    display(header, results, gui)
 
     plot_histogram = False
     if plot_histogram:
         histogram(signal)
 
 
-def wave_analyzer(files):
+def wave_analyzer(files, gui):
     if files:
         for filename in files:
             try:
-                analyze(filename)
+                analyze(filename, gui)
             except IOError:
                 print(f"Couldn't analyze \"{filename}\"\n")
             print('')
@@ -189,5 +191,10 @@ def wave_analyzer(files):
 
 
 if __name__ == "__main__":
-    import sys
-    wave_analyzer(sys.argv[1:])
+    parser = argparse.ArgumentParser(description="Analyze waveform properties")
+    parser.add_argument("filename", help="Path to the wave file to analyze")
+    parser.add_argument("--gui", action="store_true",
+                        help="Use GUI for output if available")
+    args = parser.parse_args()
+
+    wave_analyzer([args.filename], gui=args.gui)
