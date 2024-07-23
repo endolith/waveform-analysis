@@ -177,6 +177,20 @@ def analyze(filename, gui):
 
 
 def wave_analyzer(files, gui):
+    """
+    Analyze one or more audio files and display their properties.
+
+    Parameters
+    ----------
+    files : list
+        List of file paths to analyze.
+    gui : bool
+        If True, attempt to use GUI for output display.
+
+    Returns
+    -------
+    None
+    """
     if files:
         for filename in files:
             try:
