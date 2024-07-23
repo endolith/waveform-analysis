@@ -187,14 +187,15 @@ def wave_analyzer(files, gui):
     else:
         # TODO: realtime analyzer goes here
         sys.exit("You must provide at least one file to analyze:\n"
-                 "python wave_analyzer.py filename.wav")
+                 "python wave_analyzer.py filename.wav [filename2.wav ...]")
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Analyze waveform properties")
-    parser.add_argument("filename", help="Path to the wave file to analyze")
+    parser.add_argument("filenames", nargs='+',
+                        help="Path(s) to the wave file(s) to analyze")
     parser.add_argument("--gui", action="store_true",
                         help="Use GUI for output if available")
     args = parser.parse_args()
 
-    wave_analyzer([args.filename], gui=args.gui)
+    wave_analyzer(args.filenames, gui=args.gui)

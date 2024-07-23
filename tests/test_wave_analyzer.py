@@ -14,7 +14,7 @@ class TestWaveAnalyzer:
         result = subprocess.run([sys.executable, self.script_path],
                                 capture_output=True, text=True)
         assert result.returncode != 0
-        assert "You must provide at least one file to analyze:" in result.stderr
+        assert "the following arguments are required: filenames" in result.stderr
 
     def test_nonexistent_file(self):
         result = subprocess.run(
