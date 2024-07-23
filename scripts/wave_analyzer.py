@@ -195,8 +195,15 @@ def wave_analyzer(files, gui):
         for filename in files:
             try:
                 analyze(filename, gui)
-            except IOError:
-                print(f"Couldn't analyze \"{filename}\"\n")
+            except FileNotFoundError:
+                print(f'File not found: "{filename}"')
+            except IOError as e:
+                print(
+                    f'I/O error occurred while reading "{filename}": {str(e)}')
+            except ValueError as e:
+                print(f'Invalid audio file: "{filename}". Error: {str(e)}')
+            except Exception as e:
+                print(f'Unexpected error analyzing "{filename}": {str(e)}')
             print('')
     else:
         # TODO: realtime analyzer goes here

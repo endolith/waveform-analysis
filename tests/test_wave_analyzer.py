@@ -20,7 +20,7 @@ class TestWaveAnalyzer:
         result = subprocess.run(
             [sys.executable, self.script_path, "nonexistent.wav"],
             capture_output=True, text=True)
-        assert "Couldn't analyze \"nonexistent.wav\"" in result.stdout
+        assert 'File not found: "nonexistent.wav"' in result.stdout
 
     def test_real_file(self):
         test_file_path = os.path.join(os.path.dirname(__file__), 'test_files',
