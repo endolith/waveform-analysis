@@ -4,33 +4,33 @@ import sys
 
 import pytest
 
+# Get the base directory for waveform-analysis project
+tests_dir = os.path.dirname(__file__)
+script_path = os.path.join(tests_dir, '..', 'scripts', 'wave_analyzer.py')
+test_files_dir = os.path.join(tests_dir, 'test_files')
+
 
 class TestWaveAnalyzer:
-    def setup_method(self):
-        self.script_path = os.path.join(os.path.dirname(
-            __file__), '..', 'scripts', 'wave_analyzer.py')
-
     def test_no_arguments(self):
-        result = subprocess.run([sys.executable, self.script_path],
+        result = subprocess.run([sys.executable, script_path],
                                 capture_output=True, text=True)
-        assert result.returncode != 0
+        assert result.returncode != os.EX_OK
         assert "the following arguments are required: filenames" in result.stderr
 
     def test_nonexistent_file(self):
-        result = subprocess.run([sys.executable, self.script_path,
+        result = subprocess.run([sys.executable, script_path,
                                  "nonexistent.wav"],
                                 capture_output=True, text=True)
         assert 'File not found: "nonexistent.wav"' in result.stdout
 
     def test_real_file(self):
-        test_file_path = os.path.join(os.path.dirname(__file__), 'test_files',
+        test_file_path = os.path.join(test_files_dir,
                                       '1234 Hz -12.3 dB Ocenaudio 16-bit.wav')
 
-        result = subprocess.run([sys.executable, self.script_path,
-                                 test_file_path],
+        result = subprocess.run([sys.executable, script_path, test_file_path],
                                 capture_output=True, text=True)
 
-        assert result.returncode == 0
+        assert result.returncode == os.EX_OK
 
 
 if __name__ == "__main__":
