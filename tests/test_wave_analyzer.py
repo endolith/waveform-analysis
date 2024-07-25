@@ -17,9 +17,9 @@ class TestWaveAnalyzer:
         assert "the following arguments are required: filenames" in result.stderr
 
     def test_nonexistent_file(self):
-        result = subprocess.run(
-            [sys.executable, self.script_path, "nonexistent.wav"],
-            capture_output=True, text=True)
+        result = subprocess.run([sys.executable, self.script_path,
+                                 "nonexistent.wav"],
+                                capture_output=True, text=True)
         assert 'File not found: "nonexistent.wav"' in result.stdout
 
     def test_real_file(self):
