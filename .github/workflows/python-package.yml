@@ -46,7 +46,7 @@ jobs:
 
       - name: Install PySoundFile
         if: matrix.dependencies == 'pysoundfile'
-        run: pip install pysoundfile
+        run: pip install soundfile
 
       - name: Lint with flake8
         run: |
