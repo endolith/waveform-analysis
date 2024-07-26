@@ -10,26 +10,27 @@ script_path = os.path.join(tests_dir, '..', 'scripts', 'wave_analyzer.py')
 test_files_dir = os.path.join(tests_dir, 'test_files')
 
 
+def run_wave_analyzer(filename=None, extra_args=[]):
+    cmd = [sys.executable, script_path]
+    if filename:
+        cmd.append(os.path.join(test_files_dir, filename))
+    cmd.extend(extra_args)
+    return subprocess.run(cmd, capture_output=True, text=True)
+
+
 class TestWaveAnalyzer:
     def test_no_arguments(self):
-        result = subprocess.run([sys.executable, script_path],
-                                capture_output=True, text=True)
+        result = run_wave_analyzer()
         assert result.returncode != os.EX_OK
         assert "the following arguments are required: filenames" in result.stderr
 
     def test_nonexistent_file(self):
-        result = subprocess.run([sys.executable, script_path,
-                                 "nonexistent.wav"],
-                                capture_output=True, text=True)
-        assert 'File not found: "nonexistent.wav"' in result.stdout
+        result = run_wave_analyzer("nonexistent.wav")
+        assert 'File not found:' in result.stdout
+        assert "nonexistent.wav" in result.stdout
 
     def test_real_file(self):
-        test_file_path = os.path.join(test_files_dir,
-                                      '1234 Hz -12.3 dB Ocenaudio 16-bit.wav')
-
-        result = subprocess.run([sys.executable, script_path, test_file_path],
-                                capture_output=True, text=True)
-
+        result = run_wave_analyzer('1234 Hz -12.3 dB Ocenaudio 16-bit.wav')
         assert result.returncode == os.EX_OK
 
 
