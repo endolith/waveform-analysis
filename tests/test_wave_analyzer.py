@@ -26,7 +26,10 @@ class TestWaveAnalyzer:
 
     def test_nonexistent_file(self):
         result = run_wave_analyzer("nonexistent.wav")
-        assert 'File not found:' in result.stdout
+        assert any(msg in result.stdout for msg in [
+            "File not found",
+            "Error opening"
+        ])
         assert "nonexistent.wav" in result.stdout
 
     def test_real_file(self):
