@@ -6,7 +6,7 @@ import sys
 from numpy import absolute, array_equal, mean
 
 from waveform_analysis import A_weight, ITU_R_468_weight
-from waveform_analysis._common import dB, rms_flat
+from waveform_analysis._common import dB, load, rms_flat
 
 try:
     from soundfile import SoundFile
@@ -98,39 +98,12 @@ def properties(signal, sample_rate):
 
 
 def analyze(filename, gui):
-    if wav_loader == 'pysoundfile':
-        sf = SoundFile(filename)
-        signal = sf.read()
-        channels = sf.channels
-        sample_rate = sf.samplerate
-        samples = len(sf)
-        file_format = f"{sf.format_info} {sf.subtype_info}"
-        sf.close()
-    elif wav_loader == 'scipy.io.wavfile':
-        sample_rate, signal = read(filename)
-        try:
-            channels = signal.shape[1]
-        except IndexError:
-            channels = 1
-        samples = signal.shape[0]
-        file_format = str(signal.dtype)
-
-        # Scale common formats
-        # Other bit depths (24, 20) are not handled by SciPy correctly.
-        if file_format == 'int16':
-            signal = signal.astype(float) / (2**15)
-        elif file_format == 'uint8':
-            signal = (signal.astype(float) - 128) / (2**7)
-        elif file_format == 'int32':
-            signal = signal.astype(float) / (2**31)
-        elif file_format == 'float32':
-            pass
-        else:
-            raise Exception("Don't know how to handle file format "
-                            f"{file_format}")
-
-    else:
-        raise Exception("wav_loader has failed")
+    soundfile = load(filename)
+    signal = soundfile['signal']
+    channels = soundfile['channels']
+    sample_rate = soundfile['fs']
+    samples = soundfile['samples']
+    file_format = soundfile['format']
 
     header = 'dBFS values are relative to a full-scale square wave'
 

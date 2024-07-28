@@ -33,6 +33,20 @@ def load(filename):
         soundfile['samples'] = soundfile['signal'].shape[0]
         soundfile['format'] = str(soundfile['signal'].dtype)
 
+        # Scale common formats
+        # Other bit depths (24, 20) are not handled by SciPy correctly.
+        if soundfile['format'] == 'int16':
+            signal = signal.astype(float) / (2**15)
+        elif soundfile['format'] == 'uint8':
+            signal = (signal.astype(float) - 128) / (2**7)
+        elif soundfile['format'] == 'int32':
+            signal = signal.astype(float) / (2**31)
+        elif soundfile['format'] == 'float32':
+            pass
+        else:
+            raise Exception("Don't know how to handle file format "
+                            f"{soundfile['format']}")
+
     return soundfile
 
 
