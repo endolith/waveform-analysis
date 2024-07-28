@@ -57,6 +57,20 @@ class TestWaveAnalyzer:
         assert f"Sampling rate:\t{expected_fs} Hz" in result.stdout
         assert f"Channels:\t{expected_ch}" in result.stdout
 
+    @pytest.mark.skipif(wav_loader != 'scipy.io.wavfile',
+                        reason="Requires scipy backend")
+    @pytest.mark.parametrize("filename, expected_fs, expected_ch", [
+        ("test-8000Hz-le-3ch-5S-64bit.wav", 8000, 3),
+        ("test-8000Hz-le-3ch-5S-53bit.wav", 8000, 3),
+        ("test-8000Hz-le-3ch-5S-45bit.wav", 8000, 3),
+        ("test-8000Hz-le-3ch-5S-36bit.wav", 8000, 3),
+    ])
+    def test_scipy_only_files(self, filename, expected_fs, expected_ch):
+        result = run_wave_analyzer(filename)
+        assert result.returncode == os.EX_OK
+        assert f"Sampling rate:\t{expected_fs} Hz" in result.stdout
+        assert f"Channels:\t{expected_ch}" in result.stdout
+
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
         "test-44100Hz-le-1ch-4bytes-early-eof-no-data.wav",
@@ -68,11 +82,6 @@ class TestWaveAnalyzer:
                    "Invalid audio file", "Error in WAV file"])
 
     @pytest.mark.parametrize("filename", [
-        # Supported by neither, but could be made to work in scipy:
-        "test-8000Hz-le-3ch-5S-64bit.wav",  # 8000, 3),
-        "test-8000Hz-le-3ch-5S-53bit.wav",  # 8000, 3),
-        "test-8000Hz-le-3ch-5S-45bit.wav",  # 8000, 3),
-        "test-8000Hz-le-3ch-5S-36bit.wav",  # 8000, 3),
     ])
     def test_unsupported(self, filename):
         result = run_wave_analyzer(filename)

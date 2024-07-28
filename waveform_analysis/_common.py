@@ -48,6 +48,9 @@ def load(filename):
             # assuming the fixed point convention described in
             # https://github.com/scipy/scipy/pull/12507#issue-652818718
             signal = signal.astype(float) / (2**31)
+        elif soundfile['format'] == 'int64':
+            # 64-bit is rare but theoretically possible
+            signal = signal.astype(float) / (2**63)
         # Float:
         elif soundfile['format'] == 'float32':
             pass
