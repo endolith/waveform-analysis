@@ -60,16 +60,24 @@ class TestWaveAnalyzer:
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
         "test-44100Hz-le-1ch-4bytes-early-eof-no-data.wav",
+    ])
+    def test_invalid_audio_file(self, filename):
+        result = run_wave_analyzer(filename)
+        assert result.returncode != os.EX_OK
+        assert any(msg in result.stderr for msg in [
+                   "Invalid audio file", "Error in WAV file"])
+
+    @pytest.mark.parametrize("filename", [
         # Supported by neither, but could be made to work in scipy:
         "test-8000Hz-le-3ch-5S-64bit.wav",  # 8000, 3),
         "test-8000Hz-le-3ch-5S-53bit.wav",  # 8000, 3),
         "test-8000Hz-le-3ch-5S-45bit.wav",  # 8000, 3),
         "test-8000Hz-le-3ch-5S-36bit.wav",  # 8000, 3),
     ])
-    def test_invalid_files(self, filename):
+    def test_unsupported(self, filename):
         result = run_wave_analyzer(filename)
         assert result.returncode != os.EX_OK
-        assert "rror" in result.stderr
+        assert "Unexpected error analyzing" in result.stderr
 
     def test_no_arguments(self):
         result = run_wave_analyzer()
