@@ -36,23 +36,24 @@ def load(filename):
         # Scale common formats
         signal = soundfile['signal']
         # PCM:
-        if soundfile['format'] == 'uint8':
+        if signal.dtype.kind == 'u' and signal.dtype.itemsize == 1:
             # 8-bit and under are unsigned
             signal = (signal.astype(float) - 128) / (2**7)
-        elif soundfile['format'] == 'int16':
-            # 9-bit and higher will be stored in 16-bit and are signed
-            signal = signal.astype(float) / (2**15)
-        elif soundfile['format'] == 'int32':
-            # 32-bit is signed
-            # 24-bit are loaded as LJ 32-bit, so this gets scaled correctly,
-            # assuming the fixed point convention described in
-            # https://github.com/scipy/scipy/pull/12507#issue-652818718
-            signal = signal.astype(float) / (2**31)
-        elif soundfile['format'] == 'int64':
-            # 64-bit is rare but theoretically possible
-            signal = signal.astype(float) / (2**63)
+        elif signal.dtype.kind == 'i':  # int16, int32, int64
+            if signal.dtype.itemsize == 2:
+                # 9-bit and higher will be stored in 16-bit and are signed
+                signal = signal.astype(float) / (2**15)
+            elif signal.dtype.itemsize == 4:
+                # 32-bit is signed
+                # 24-bit are loaded as LJ 32-bit, so this gets scaled
+                # correctly, assuming the fixed point convention described in
+                # https://github.com/scipy/scipy/pull/12507#issue-652818718
+                signal = signal.astype(float) / (2**31)
+            elif signal.dtype.itemsize == 8:
+                # 64-bit is rare but theoretically possible
+                signal = signal.astype(float) / (2**63)
         # Float:
-        elif soundfile['format'] in {'float32', 'float64'}:
+        elif signal.dtype.kind == 'f':  # float32, float64
             pass
         else:
             raise Exception("Don't know how to handle file format "
