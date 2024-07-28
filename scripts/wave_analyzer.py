@@ -196,19 +196,21 @@ def wave_analyzer(files, gui):
             try:
                 analyze(filename, gui)
             except FileNotFoundError:
-                print(f'File not found: "{filename}"')
+                raise SystemExit(f'File not found: "{filename}"')
             except IOError as e:
-                print(
-                    f'I/O error occurred while reading "{filename}": {str(e)}')
+                raise SystemExit('I/O error occurred while reading '
+                                 f'"{filename}": {str(e)}')
             except ValueError as e:
-                print(f'Invalid audio file: "{filename}". Error: {str(e)}')
+                raise SystemExit('Invalid audio file: '
+                                 f'"{filename}": {str(e)}')
             except Exception as e:
-                print(f'Unexpected error analyzing "{filename}": {str(e)}')
+                raise SystemExit('Unexpected error analyzing '
+                                 f'"{filename}": {str(e)}')
             print('')
     else:
         # TODO: realtime analyzer goes here
-        sys.exit("You must provide at least one file to analyze:\n"
-                 "python wave_analyzer.py filename.wav [filename2.wav ...]")
+        raise SystemExit("You must provide at least one file to analyze:\n"
+                         "python wave_analyzer.py filename.wav [filename2.wav ...]")
 
 
 if __name__ == "__main__":

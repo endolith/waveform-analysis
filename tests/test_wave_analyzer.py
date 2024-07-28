@@ -68,8 +68,8 @@ class TestWaveAnalyzer:
     ])
     def test_invalid_files(self, filename):
         result = run_wave_analyzer(filename)
-        # assert result.returncode != os.EX_OK
-        assert "rror" in result.stdout
+        assert result.returncode != os.EX_OK
+        assert "rror" in result.stderr
 
     def test_no_arguments(self):
         result = run_wave_analyzer()
@@ -78,12 +78,12 @@ class TestWaveAnalyzer:
 
     def test_nonexistent_file(self):
         result = run_wave_analyzer("nonexistent.wav")
-        # assert result.returncode != os.EX_OK
-        assert any(msg in result.stdout for msg in [
+        assert result.returncode != os.EX_OK
+        assert any(msg in result.stderr for msg in [
             "File not found",
             "Error opening"
         ])
-        assert "nonexistent.wav" in result.stdout
+        assert "nonexistent.wav" in result.stderr
 
     def test_help_option(self):
         result = run_wave_analyzer("", extra_args=["--help"])
