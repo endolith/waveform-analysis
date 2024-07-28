@@ -52,7 +52,7 @@ def load(filename):
             # 64-bit is rare but theoretically possible
             signal = signal.astype(float) / (2**63)
         # Float:
-        elif soundfile['format'] == 'float32':
+        elif soundfile['format'] in {'float32', 'float64'}:
             pass
         else:
             raise Exception("Don't know how to handle file format "

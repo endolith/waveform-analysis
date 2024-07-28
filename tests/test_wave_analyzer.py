@@ -31,6 +31,7 @@ class TestWaveAnalyzer:
         ("test-8000Hz-le-2ch-1byteu.wav", 8000, 2),
         ("test-1234Hz-le-1ch-10S-20bit-extra.wav", 1234, 1),
         ("test-8000Hz-le-5ch-9S-5bit.wav", 8000, 5),  # but is level correct?
+        ("test-48000Hz-2ch-64bit-float-le-wavex.wav", 48000, 2),
     ])
     def test_common_files(self, filename, expected_fs, expected_ch):
         result = run_wave_analyzer(filename)
@@ -47,7 +48,6 @@ class TestWaveAnalyzer:
         ("test-8000Hz-le-1ch-1byte-ulaw.wav", 8000, 1),
         # could work in scipy though:
         ("test-8000Hz-be-3ch-5S-24bit.wav", 8000, 3),
-        ("test-48000Hz-2ch-64bit-float-le-wavex.wav", 48000, 2),
         ("test-44100Hz-be-1ch-4bytes.wav", 44100, 1),
         ("test-44100Hz-2ch-32bit-float-be.wav", 44100, 2),
     ])
