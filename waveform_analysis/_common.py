@@ -15,33 +15,6 @@ except:
 
 
 def load(filename):
-    """
-    Load a wave file and return the signal, sample rate and number of channels.
-
-    Can be any format supported by the underlying library (libsndfile or SciPy)
-    """
-    if wav_loader == 'pysoundfile':
-        sf = SoundFile(filename)
-        signal = sf.read()
-        channels = sf.channels
-        sample_rate = sf.samplerate
-        sf.close()
-    elif wav_loader == 'scipy.io.wavfile':
-        sample_rate, signal = read(filename)
-        try:
-            channels = signal.shape[1]
-        except IndexError:
-            channels = 1
-
-    return signal, sample_rate, channels
-
-
-def load_dict(filename):
-    """
-    Load a wave file and return the signal, sample rate and number of channels.
-
-    Can be any format supported by the underlying library (libsndfile or SciPy)
-    """
     soundfile = {}
     if wav_loader == 'pysoundfile':
         sf = SoundFile(filename)
