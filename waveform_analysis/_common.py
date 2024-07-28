@@ -34,18 +34,29 @@ def load(filename):
         soundfile['format'] = str(soundfile['signal'].dtype)
 
         # Scale common formats
-        # Other bit depths (24, 20) are not handled by SciPy correctly.
-        if soundfile['format'] == 'int16':
-            signal = signal.astype(float) / (2**15)
-        elif soundfile['format'] == 'uint8':
+        signal = soundfile['signal']
+        # PCM:
+        if soundfile['format'] == 'uint8':
+            # 8-bit and under are unsigned
             signal = (signal.astype(float) - 128) / (2**7)
+        elif soundfile['format'] == 'int16':
+            # 9-bit and higher will be stored in 16-bit and are signed
+            signal = signal.astype(float) / (2**15)
         elif soundfile['format'] == 'int32':
+            # 32-bit is signed
+            # 24-bit are loaded as LJ 32-bit, so this gets scaled correctly,
+            # assuming the fixed point convention described in
+            # https://github.com/scipy/scipy/pull/12507#issue-652818718
             signal = signal.astype(float) / (2**31)
+        # Float:
         elif soundfile['format'] == 'float32':
             pass
         else:
             raise Exception("Don't know how to handle file format "
                             f"{soundfile['format']}")
+        soundfile['signal'] = signal
+    else:
+        raise Exception("wav_loader has failed")
 
     return soundfile
 
