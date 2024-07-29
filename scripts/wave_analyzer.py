@@ -6,18 +6,7 @@ import sys
 from numpy import absolute, array_equal, mean
 
 from waveform_analysis import A_weight, ITU_R_468_weight
-from waveform_analysis._common import dB, load, rms_flat
-
-try:
-    from soundfile import SoundFile
-    wav_loader = 'pysoundfile'
-except:
-    try:
-        from scipy.io.wavfile import read
-        wav_loader = 'scipy.io.wavfile'
-    except:
-        raise ImportError('No sound file loading package installed '
-                          '(PySoundFile or SciPy)')
+from waveform_analysis._common import dB, load, rms_flat, wav_loader
 
 try:
     import easygui
