@@ -13,6 +13,7 @@ try:
     has_easygui = True
 except:
     has_easygui = False
+SEPARATOR = '-----------------'
 
 
 def display(header, results, gui):
@@ -26,7 +27,7 @@ def display(header, results, gui):
         easygui.codebox(header, title, '\n'.join(results))
     else:
         print(header)
-        print('-----------------')
+        print(SEPARATOR)
         print('\n'.join(results))
 
 
@@ -82,7 +83,7 @@ def properties(signal, sample_rate):
         (f'RMS 468-weighted:\t{ITUweighted_level:.3f} '
          f'({dB(ITUweighted_level):.3f} dBFS(468), '
          f'{dB(ITUweighted_level / signal_level):.3f} dB)'),
-        '-----------------',
+        SEPARATOR,
     ]
 
 
@@ -109,7 +110,7 @@ def analyze(filename, gui):
         f'Sampling rate:\t{sample_rate} Hz',
         f'Samples:\t{samples}',
         f"Length: \t{length}",
-        '-----------------',
+        SEPARATOR,
     ]
 
     if channels == 1:
