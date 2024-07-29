@@ -171,8 +171,9 @@ def wave_analyzer(files, gui):
             print('')
     else:
         # TODO: realtime analyzer goes here
-        raise SystemExit("You must provide at least one file to analyze:\n"
-                         "python wave_analyzer.py filename.wav [filename2.wav ...]")
+        raise SystemExit(
+            "You must provide at least one file to analyze:\n"
+            "python wave_analyzer.py filename.wav [filename2.wav ...]")
 
 
 if __name__ == "__main__":
