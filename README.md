@@ -213,7 +213,7 @@ Done
   * ~~FFT Filter out noise and get just the fundamental~~
   * ~~Count zero-crossings~~
   * actually, interpolated FFT is the best, without any filtering or crossings counting
-* say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale square wave)
+* say dBFS instead of dB wherever appropriate (with a note in readme that it is referenced to the RMS value of a full-scale sine wave)
 * Implement a [468-weighting filter](http://en.wikipedia.org/wiki/ITU-R_468_noise_weighting), too.
   * analog spec: <http://www.beis.de/Elektronik/AudioMeasure/WeightingFilters.html#CCIR>
   * digital approximation: <http://www.mathworks.com/products/dsp-system/demos.html?file=/products/demos/shipping/dsp/audioweightingdemo.html#4>
