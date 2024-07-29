@@ -2,7 +2,6 @@
 
 import argparse
 import importlib.util
-import sys
 
 from numpy import absolute, array_equal, mean
 
