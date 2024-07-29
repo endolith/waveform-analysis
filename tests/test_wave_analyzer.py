@@ -23,6 +23,7 @@ def run_wave_analyzer(filename=None, extra_args=[]):
 class TestWaveAnalyzer:
     @pytest.mark.parametrize("filename, expected_fs, expected_ch", [
         ("1234 Hz -12.3 dB Ocenaudio 16-bit.wav", 48000, 1),
+        ("1234 Hz -12.3 dB Ocenaudio 24-bit.wav", 44100, 1),
         ("test-44100Hz-le-1ch-4bytes.wav", 44100, 1),
         ("test-44100Hz-2ch-32bit-float-le.wav", 44100, 2),
         ("test-44100Hz-le-1ch-4bytes-early-eof.wav", 44100, 1),
