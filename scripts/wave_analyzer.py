@@ -17,7 +17,20 @@ SEPARATOR = '-----------------'
 
 def display(header, results, gui):
     """
-    Display header string and list of result lines
+    Display header string and list of result lines.
+
+    Parameters:
+    -----------
+    header : str
+        The header text to display.
+    results : list
+        A list of strings containing the results to display.
+    gui : bool
+        If True, attempt to use GUI for output display.
+
+    Returns:
+    --------
+    None
     """
     if gui and not has_easygui:
         print('No EasyGUI; printing output to console\n')
@@ -32,7 +45,16 @@ def display(header, results, gui):
 
 def histogram(signal):
     """
-    Plot a histogram of the sample values
+    Plot a histogram of the sample values.
+
+    Parameters:
+    -----------
+    signal : np.ndarray
+        The input signal to plot.
+
+    Returns:
+    --------
+    None
     """
     try:
         from matplotlib.pyplot import hist, show
@@ -46,7 +68,19 @@ def histogram(signal):
 
 def properties(signal, sample_rate):
     """
-    Return a list of some wave properties for a given 1-D signal
+    Return a list of some wave properties for a given 1-D signal.
+
+    Parameters:
+    -----------
+    signal : np.ndarray
+        The input signal to analyze.
+    sample_rate : float
+        The sampling rate of the input signal.
+
+    Returns:
+    --------
+    list
+        A list of strings containing the analyzed properties of the input signal.
     """
     # Measurements that include DC component
     DC_offset = mean(signal)
