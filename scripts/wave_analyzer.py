@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
+import importlib.util
 import sys
 
 from numpy import absolute, array_equal, mean
@@ -8,11 +9,10 @@ from numpy import absolute, array_equal, mean
 from waveform_analysis import A_weight, ITU_R_468_weight
 from waveform_analysis._common import dB, load, rms_flat, wav_loader
 
-try:
+has_easygui = importlib.util.find_spec("easygui") is not None
+if has_easygui:
     import easygui
-    has_easygui = True
-except:
-    has_easygui = False
+
 SEPARATOR = '-----------------'
 
 
