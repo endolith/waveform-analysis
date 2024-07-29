@@ -1,4 +1,5 @@
 import os
+import re
 import subprocess
 import sys
 
@@ -70,6 +71,37 @@ class TestWaveAnalyzer:
         assert result.returncode == os.EX_OK
         assert f"Sampling rate:\t{expected_fs} Hz" in result.stdout
         assert f"Channels:\t{expected_ch}" in result.stdout
+
+    @pytest.mark.parametrize("filename, expected_peak", [
+        ("1234 Hz -12.3 dB Ocenaudio 16-bit.wav", -12.3456),
+        ("1234 Hz -12.3 dB Ocenaudio 24-bit.wav", -12.3456),
+        ("test-44100Hz-le-1ch-4bytes.wav", -3.01),
+        ("test-44100Hz-2ch-32bit-float-le.wav", -1.94),
+        ("test-44100Hz-le-1ch-4bytes-early-eof.wav", -3.01),
+        ("test-8000Hz-le-2ch-1byteu.wav", -3.01),
+        ("test-48000Hz-2ch-64bit-float-le-wavex.wav", -1.94),
+    ])
+    def test_correctness(self, filename, expected_peak):
+        # Test some sine wave files for correct peak levels
+        # Short length of sine waves ruins accuracy because of DC offset
+        result = run_wave_analyzer(filename)
+        assert result.returncode == os.EX_OK
+
+        peak_pattern = r"Peak level:.*\(([-\d.]+) dBFS\)"
+        rms_pattern = r"RMS level:.*\(([-\d.]+) dBFS\)"
+        crest_pattern = r"Crest factor:.*\(([-\d.]+) dB\)"
+
+        peak_match = re.search(peak_pattern, result.stdout)
+        rms_match = re.search(rms_pattern, result.stdout)
+        crest_match = re.search(crest_pattern, result.stdout)
+
+        peak_db = float(peak_match.group(1))
+        rms_db = float(rms_match.group(1))
+        crest_factor_db = float(crest_match.group(1))
+
+        assert peak_db == pytest.approx(expected_peak, abs=0.6)
+        assert rms_db == pytest.approx(expected_peak - 3.01, abs=0.6)
+        assert crest_factor_db == pytest.approx(3.0, abs=0.6)
 
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
