@@ -5,11 +5,11 @@ import numpy as np
 try:
     from soundfile import SoundFile
     wav_loader = 'pysoundfile'
-except:
+except ModuleNotFoundError:
     try:
         from scipy.io.wavfile import read
         wav_loader = 'scipy.io.wavfile'
-    except:
+    except ModuleNotFoundError:
         raise ImportError('No sound file loading package installed '
                           '(PySoundFile or SciPy)')
 
