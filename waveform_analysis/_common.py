@@ -112,7 +112,8 @@ def dB(q):
     """
     Return the level of a field quantity in decibels.
     """
-    return 20 * np.log10(q)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        return 20 * np.log10(q)
 
 
 def parabolic(f, x):
