@@ -123,6 +123,29 @@ class TestWaveAnalyzer:
         # These are all sine waves, which always have crest factor of 3 dB.
         assert crest_factor_db == pytest.approx(3.01029995663, abs=0.6)
 
+    @pytest.mark.parametrize("filename, expected_level", [
+        ("test-44100Hz-le-1ch-4bytes.wav", -3.01),
+        ("test-8000Hz-le-2ch-1byteu.wav", -3.01),
+        ("test-44100Hz-le-1ch-4bytes-early-eof.wav", -3.01),
+    ])
+    def test_a_weighting_1khz(self, filename, expected_level):
+        """Test that A-weighted RMS matches unweighted RMS for 1 kHz sine waves"""
+        result = run_wave_analyzer(filename)
+        assert result.returncode == os.EX_OK
+
+        rms_pattern = r"RMS level:.*\(([-\d.]+) dBFS\)"
+        a_weighted_pattern = r"RMS A-weighted:.*\(([-\d.]+) dBFS\(A\)"
+
+        rms_match = re.search(rms_pattern, result.stdout)
+        a_weighted_match = re.search(a_weighted_pattern, result.stdout)
+
+        rms_db = float(rms_match.group(1))
+        a_weighted_db = float(a_weighted_match.group(1))
+
+        # At 1 kHz, A-weighting should match unweighted, no 3 dB offset
+        # (Wider tolerance due to short file length)
+        assert a_weighted_db == pytest.approx(rms_db, abs=0.3)
+
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
         "test-44100Hz-le-1ch-4bytes-early-eof-no-data.wav",
