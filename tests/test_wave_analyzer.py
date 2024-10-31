@@ -99,9 +99,29 @@ class TestWaveAnalyzer:
         rms_db = float(rms_match.group(1))
         crest_factor_db = float(crest_match.group(1))
 
+        """
+        AES17-1998:
+
+        3.3
+        full-scale amplitude
+        amplitude of a 997-Hz sine wave whose positive peak value reaches the
+        positive digital full scale, leaving the negative maximum code unused.
+
+        3.3.1
+        decibels, full scale
+        dB FS
+        amplitude expressed as a level in decibels relative to full-scale
+        amplitude (20 times the common logarithm of the amplitude over the
+        full-scale amplitude)
+
+        So the dBFS level should be 0 for a full-scale sine wave, whether
+        peak or RMS.
+        """
         assert peak_db == pytest.approx(expected_peak, abs=0.6)
-        assert rms_db == pytest.approx(expected_peak - 3.01, abs=0.6)
-        assert crest_factor_db == pytest.approx(3.0, abs=0.6)
+        assert rms_db == pytest.approx(expected_peak, abs=0.6)
+
+        # These are all sine waves, which always have crest factor of 3 dB.
+        assert crest_factor_db == pytest.approx(3.01029995663, abs=0.6)
 
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
