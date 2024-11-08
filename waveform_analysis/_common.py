@@ -70,7 +70,11 @@ def analyze_channels(filename, function):
     Given a filename, run the given analyzer function on each channel of the
     file
     """
-    signal, sample_rate, channels = load(filename)
+    soundfile = load(filename)
+    signal = soundfile['signal']
+    sample_rate = soundfile['fs']
+    channels = soundfile['channels']
+
     print(f"Analyzing \"{filename}\"...")
 
     if channels == 1:
