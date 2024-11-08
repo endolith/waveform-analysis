@@ -33,6 +33,8 @@ except BaseException as e:
         # pythonw.exe?
         print('Error:')
         print(e)
+        # Only wait for input when running in an interactive console
         # Otherwise Windows closes the window too quickly to read
-        input('(Press <Enter> to close)')
+        if sys.stdout.isatty():
+            input('(Press <Enter> to close)')
         raise

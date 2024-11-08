@@ -1,3 +1,4 @@
+import sys
 from time import time
 
 from waveform_analysis._common import analyze_channels
@@ -5,8 +6,6 @@ from waveform_analysis.freq_estimation import freq_from_fft
 
 if __name__ == '__main__':
     try:
-        import sys
-
         def freq_wrapper(signal, fs):
             freq = freq_from_fft(signal, fs)
             print(f'{freq:f} Hz')
@@ -29,5 +28,7 @@ if __name__ == '__main__':
         print(e)
         raise
     finally:
+        # Only wait for input when running in an interactive console
         # Otherwise Windows closes the window too quickly to read
-        input('(Press <Enter> to close)')
+        if sys.stdout.isatty():
+            input('(Press <Enter> to close)')
