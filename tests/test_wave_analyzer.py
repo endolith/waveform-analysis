@@ -146,6 +146,37 @@ class TestWaveAnalyzer:
         # (Wider tolerance due to short file length)
         assert a_weighted_db == pytest.approx(rms_db, abs=0.3)
 
+    @pytest.mark.parametrize("filename, expected_level, freq", [
+        ("test-44100Hz-be-1ch-4bytes.wav", -3.01, 1000),  # 1 kHz reference
+        ("test-44100Hz-le-1ch-4bytes.wav", -3.01, 1000),  # 1 kHz reference
+        ("test-8000Hz-le-2ch-1byteu.wav", -3.01, 1000),   # 1 kHz reference
+        ("1234 Hz -12.3 dB Ocenaudio 16-bit.wav", -12.3456, 1234),
+        ("1234 Hz -12.3 dB Ocenaudio 24-bit.wav", -12.3456, 1234),
+    ])
+    def test_itu_r_468_weighting(self, filename, expected_level, freq):
+        """Test ITU-R 468-weighted RMS matches expected values"""
+        result = run_wave_analyzer(filename)
+        assert result.returncode == os.EX_OK
+
+        rms_pattern = r"RMS level:.*\(([-\d.]+) dBFS\)"
+        itu_weighted_pattern = r"RMS 468-weighted:.*\(([-\d.]+) dBFS\(468\)"
+
+        rms_match = re.search(rms_pattern, result.stdout)
+        itu_weighted_match = re.search(itu_weighted_pattern, result.stdout)
+
+        rms_db = float(rms_match.group(1))
+        itu_weighted_db = float(itu_weighted_match.group(1))
+
+        if freq == 1000:
+            # At 1 kHz, ITU-R 468 weighting should match unweighted
+            assert itu_weighted_db == pytest.approx(rms_db, abs=0.6)
+        else:
+            # At 1234 Hz, ITU-R 468 weighting is +1.31 dB (interpolated from
+            # Wikipedia table)
+            weighting = 5.6 * (freq - 1000) / 1000  # Linear interpolation
+            assert itu_weighted_db == pytest.approx(rms_db + weighting,
+                                                    abs=0.6)
+
     @pytest.mark.parametrize("filename", [
         "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav",
         "test-44100Hz-le-1ch-4bytes-early-eof-no-data.wav",
