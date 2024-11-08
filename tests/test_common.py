@@ -49,36 +49,84 @@ class TestLoad:
             from soundfile import LibsndfileError
             expected_error = LibsndfileError
         except ModuleNotFoundError:
-            expected_error = IOError
+            # For scipy backend, expect ValueError for corrupted files
+            expected_error = (IOError, ValueError)
 
+        # Test nonexistent file
         with pytest.raises(expected_error):
             load("nonexistent_file.wav")
+
+        # Test corrupted WAV file
+        filepath = os.path.join(
+            test_files_dir, "test-44100Hz-le-1ch-4bytes-incomplete-chunk.wav")
+        with pytest.raises(expected_error):
+            load(filepath)
+
+        # Note: Can't test "Don't know how to handle file format" error
+        # because WAV files can only contain numeric data types that are
+        # already handled. The error case is kept as a safeguard and marked
+        # with "pragma: no cover"
 
 
 class TestAnalyzeChannels:
     def test_analyze_channels_processes_all_channels(self):
         """
-        Test that analyze_channels correctly processes mono and stereo files
+        Test that analyze_channels correctly processes all channel configurations:
+        - Mono
+        - Stereo (identical channels)
+        - Stereo (different channels)
+        - Multi-channel (4ch)
+        - Multi-channel (5ch)
         """
         results = []
 
         def dummy_analyzer(signal, fs):
-            results.append((len(signal), fs))
-
-        mono_file = os.path.join(
-            test_files_dir, "1234 Hz -12.3 dB Ocenaudio 16-bit.wav")
-        stereo_file = os.path.join(
-            test_files_dir, "test-44100Hz-2ch-32bit-float-be.wav")
+            # Store the actual signal to verify channel data
+            results.append((signal, fs))
 
         # Test mono file
+        mono_file = os.path.join(
+            test_files_dir, "1234 Hz -12.3 dB Ocenaudio 16-bit.wav")
         results.clear()
         analyze_channels(mono_file, dummy_analyzer)
         assert len(results) == 1  # One channel processed
+        assert results[0][0].ndim == 1  # Signal should be 1D array
 
-        # Test stereo file
+        # Test stereo file (with identical channels)
+        stereo_identical = os.path.join(
+            test_files_dir, "test-44100Hz-2ch-32bit-float-be.wav")
         results.clear()
-        analyze_channels(stereo_file, dummy_analyzer)
-        assert len(results) >= 1  # At least one channel processed
+        analyze_channels(stereo_identical, dummy_analyzer)
+        # One channel processed (optimization for identical channels)
+        assert len(results) == 1
+        assert results[0][0].ndim == 1  # Signal should be 1D array
+
+        # Test stereo file (with different channels)
+        stereo_different = os.path.join(
+            test_files_dir, "test-8000Hz-le-2ch-1byteu.wav")
+        results.clear()
+        analyze_channels(stereo_different, dummy_analyzer)
+        assert len(results) == 2  # Both channels processed
+        # Each channel should be 1D
+        assert all(r[0].ndim == 1 for r in results)
+
+        # Test 4-channel file
+        quad_file = os.path.join(
+            test_files_dir, "test-8000Hz-le-4ch-9S-12bit.wav")
+        results.clear()
+        analyze_channels(quad_file, dummy_analyzer)
+        assert len(results) == 4  # All four channels processed
+        # Each channel should be 1D
+        assert all(r[0].ndim == 1 for r in results)
+
+        # Test 5-channel file
+        five_ch_file = os.path.join(
+            test_files_dir, "test-8000Hz-le-5ch-9S-5bit.wav")
+        results.clear()
+        analyze_channels(five_ch_file, dummy_analyzer)
+        assert len(results) == 5  # All five channels processed
+        # Each channel should be 1D
+        assert all(r[0].ndim == 1 for r in results)
 
 
 class TestHelperFunctions:
@@ -110,6 +158,13 @@ class TestHelperFunctions:
         assert isinstance(xv, float)
         assert isinstance(yv, float)
         assert xv >= x-1 and xv <= x+1  # Interpolated x should be near peak
+
+    def test_parabolic_error(self):
+        """Test that parabolic() raises ValueError for non-integer x"""
+        f = [2, 3, 1, 6, 4, 2, 3, 1]
+        with pytest.raises(ValueError,
+                           match="x must be an integer sample index"):
+            parabolic(f, 3.5)
 
     def test_parabolic_polyfit(self):
         """Test parabolic fitting using polyfit"""
