@@ -39,8 +39,8 @@ For Windows' SendTo menu: `pythonw wave_analyzer_launcher.py`
 
 **Recommended:**
 
-* [PySoundFile](http://pysoundfile.readthedocs.io) for opening any file format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/) (including MP3).  Otherwise, it falls back to SciPy's very limited WAV file support.
-  * (Mostly note to self, 2024-07-25: Install using `pip install soundfile`, not `pip install pysoundfile`.  Using `conda install pysoundfile` installs a slightly older version that may or [may not work](https://github.com/conda-forge/pysoundfile-feedstock/issues/13).)
+* [SoundFile](https://python-soundfile.readthedocs.io/) for opening any file format supported by [libsndfile](http://www.mega-nerd.com/libsndfile/) (including MP3).  Otherwise, it falls back to SciPy's very limited WAV file support.
+  * (Mostly note to self, 2024-07-25: Install using `pip install soundfile`, not `pip install pysoundfile`.  Using `conda install pysoundfile` installs an older deprecated version that may or [may not work](https://github.com/conda-forge/pysoundfile-feedstock/issues/13).)
 
 **Optional:**
 

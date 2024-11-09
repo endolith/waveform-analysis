@@ -44,15 +44,15 @@ class TestWaveAnalyzer:
         assert f"Sampling rate:\t{expected_fs} Hz" in result.stdout
         assert f"Channels:\t{expected_ch}" in result.stdout
 
-    @pytest.mark.skipif(wav_loader != 'pysoundfile',
-                        reason="Requires pysoundfile backend")
+    @pytest.mark.skipif(wav_loader != 'python-soundfile',
+                        reason="Requires python-soundfile backend")
     @pytest.mark.parametrize("filename, expected_fs, expected_ch", [
         ("short_sine.mp3", 44100, 2),  # Only in v0.11.0 or later
         ("short_sine.flac", 44100, 2),
         ("test-8000Hz-le-3ch-5S-24bit-inconsistent.wav", 8000, 3),
         ("test-8000Hz-le-1ch-1byte-ulaw.wav", 8000, 1),
     ])
-    def test_pysoundfile_only_files(self, filename, expected_fs, expected_ch):
+    def test_soundfile_only_files(self, filename, expected_fs, expected_ch):
         result = run_wave_analyzer(filename)
         assert result.returncode == os.EX_OK
         assert f"Sampling rate:\t{expected_fs} Hz" in result.stdout

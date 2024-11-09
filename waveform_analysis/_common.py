@@ -4,19 +4,19 @@ import numpy as np
 
 try:
     from soundfile import SoundFile
-    wav_loader = 'pysoundfile'
+    wav_loader = 'python-soundfile'
 except ModuleNotFoundError:
     try:
         from scipy.io.wavfile import read
         wav_loader = 'scipy.io.wavfile'
     except ModuleNotFoundError:
         raise ImportError('No sound file loading package installed '
-                          '(PySoundFile or SciPy)')
+                          '(SoundFile or SciPy)')
 
 
 def load(filename):
     soundfile = {}
-    if wav_loader == 'pysoundfile':
+    if wav_loader == 'python-soundfile':
         sf = SoundFile(filename)
         soundfile['signal'] = sf.read()
         soundfile['channels'] = sf.channels
