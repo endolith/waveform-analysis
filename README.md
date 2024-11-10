@@ -1,3 +1,5 @@
+# Waveform Analysis
+
 [![example workflow](https://github.com/endolith/waveform-analysis/actions/workflows/python-package.yml/badge.svg)](https://github.com/endolith/waveform-analysis/actions/workflows/python-package.yml)
 [![codecov](https://codecov.io/github/endolith/waveform-analysis/graph/badge.svg?token=yDrCwmlDYa)](https://codecov.io/github/endolith/waveform-analysis)
 
@@ -13,8 +15,7 @@ Since they have a lot in common, I'm trying to combine them into one repository,
 
 Please don't blindly trust this.  If you use this and find a stupid error, please let me know.  Also let me know if you use this and it works perfectly.  :D
 
-Installation
-============
+## Installation
 
 This should now be an installable package, using:
 
@@ -22,8 +23,7 @@ This should now be an installable package, using:
 
 I'm in the process of splitting it into callable functions and scripts that use those functions.
 
-Waveform analyzer
-=================
+## Waveform analyzer
 
 Currently this displays file information and measurements like crest factor and noise (including A-weighted noise, which is not usually included by other tools).
 
@@ -47,15 +47,13 @@ For Windows' SendTo menu: `pythonw wave_analyzer_launcher.py`
 * [EasyGUI](http://easygui.sourceforge.net/) (output to a window instead of the console)
 * Matplotlib (histogram of sample values)
 
-A-weighting
-===========
+## A-weighting
 
 Applies an A-weighting filter to a sound file stored as a NumPy array.
 
 I was previously using the FFT filter in Adobe Audition to simulate an A-weighting filter.  This worked for large signal levels, but not for low noise floors, which is what I was stupidly using it for.
 
-Frequency estimator
-===================
+## Frequency estimator
 
 A few simple frequency estimation methods in Python
 
@@ -72,8 +70,7 @@ None of them work well in all situations, these are "offline", not real-time, an
 * Do autocorrelation and find the peak
 * Calculate harmonic product spectrum and find the peak
 
-THD+N calculator
-================
+## THD+N calculator
 
 Measures the total harmonic distortion plus noise (THD+N) for a given input
 signal, by guessing the fundamental frequency (finding the peak in the FFT),
@@ -155,8 +152,7 @@ recorded into my 96 kHz 24-bit sound card and measured with this script:
 
 So it's mostly accurate.   Mostly.
 
-To do
-=====
+## To do
 
 * Guess the type of waveform and do different measurements in different situations?  Noise vs sine vs whatever
   * Do FFT, see if there is one continuous peak
@@ -198,8 +194,7 @@ To do
 * `THD()` should use a flat-top window for improved accuracy.
 * bilinear transform makes weighting filters not accurate at high frequencies.  Use FIR frequency sampling method instead?  Or upsample the signal.
 
-Done
-----
+### Done
 
 * Total RMS level
 * Crest factor
