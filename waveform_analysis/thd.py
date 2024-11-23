@@ -3,8 +3,8 @@ from numpy import argmax, concatenate, log, mean, zeros
 from scipy.fft import irfft, next_fast_len, rfft
 from scipy.signal.windows import general_cosine
 
-from waveform_analysis import A_weight
 from waveform_analysis._common import parabolic, rms_flat
+from waveform_analysis.weighting_filters.ABC_weighting import A_weight
 
 # This requires accurately measuring frequency component amplitudes, so use a
 # flat-top window (https://holometer.fnal.gov/GH_FFT.pdf)
