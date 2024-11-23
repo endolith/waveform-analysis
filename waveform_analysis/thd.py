@@ -137,6 +137,9 @@ def THDN(signal, fs, weight=None):
     return rms_flat(noise) / total_rms
 
 
+thd_n = THDN
+
+
 def THD(signal, fs, *, ref='f'):
     """
     Calculate the Total Harmonic Distortion (THD) of a signal.
@@ -226,3 +229,6 @@ def THD(signal, fs, *, ref='f'):
 
     print(f'\nTHD: {THD * 100:f}%')
     return THD
+
+
+thd = THD
