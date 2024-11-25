@@ -140,7 +140,7 @@ def THDN(signal, fs, weight=None):
 thd_n = THDN
 
 
-def THD(signal, fs, *, ref='f', verbose=True):
+def THD(signal, fs, *, ref='f', verbose=True, return_harmonics=False):
     """
     Calculate the Total Harmonic Distortion (THD) of a signal.
 
@@ -157,15 +157,22 @@ def THD(signal, fs, *, ref='f', verbose=True):
         - 'f' : Use the fundamental amplitude as reference (default).
     verbose : bool, optional
         If True, print detailed measurements (default).
+    return_harmonics : bool, optional
+        If True, return a dictionary containing the THD ratio, fundamental
+        frequency, and details about each harmonic.
+        If False (default), return only the THD ratio.
 
     Returns
     -------
-    results : dict
-        A dictionary containing:
-            - 'thd': The THD ratio (float)
-            - 'frequency': Fundamental frequency in Hz (float)
-            - 'fundamental_amplitude': Amplitude of fundamental (float)
-            - 'harmonics': List of tuples (freq, amplitude) for each harmonic
+    thd : float or dict
+        If return_harmonics is False:
+            The THD ratio as a dimensionless float
+        If return_harmonics is True:
+            A dictionary containing:
+                - 'thd': The THD ratio (float)
+                - 'frequency': Fundamental frequency in Hz (float)
+                - 'fundamental_amplitude': Amplitude of fundamental (float)
+                - 'harmonics': List of tuples (freq, amplitude) for each harmonic
 
     Notes
     -----
@@ -194,8 +201,11 @@ def THD(signal, fs, *, ref='f', verbose=True):
     Harmonic 2 at 20000.000 Hz: 2399.950
 
     THD: 10.000000%
-    >>> results['thd']
+    >>> results
     0.1
+    >>> results = THD(signal, fs, return_harmonics=True)
+    >>> results['harmonics'][0]  # First harmonic (freq, amplitude)
+    (20000.0, 2399.95)
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
@@ -244,12 +254,14 @@ def THD(signal, fs, *, ref='f', verbose=True):
     if verbose:
         print(f'\nTHD: {THD * 100:f}%')
 
-    return {
-        'thd': THD,
-        'frequency': frequency,
-        'fundamental_amplitude': fundamental_amplitude,
-        'harmonics': harmonics,
-    }
+    if return_harmonics:
+        return {
+            'thd': THD,
+            'frequency': frequency,
+            'fundamental_amplitude': fundamental_amplitude,
+            'harmonics': harmonics,
+        }
+    return THD
 
 
 thd = THD
