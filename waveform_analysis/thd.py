@@ -140,7 +140,7 @@ def THDN(signal, fs, weight=None):
 thd_n = THDN
 
 
-def THD(signal, fs, *, ref='f'):
+def THD(signal, fs, *, ref='f', verbose=True):
     """
     Calculate the Total Harmonic Distortion (THD) of a signal.
 
@@ -155,11 +155,17 @@ def THD(signal, fs, *, ref='f'):
 
         - 'r' : Use the RMS value of the original signal as reference.
         - 'f' : Use the fundamental amplitude as reference (default).
+    verbose : bool, optional
+        If True, print detailed measurements (default).
 
     Returns
     -------
-    thd : float
-        The THD of the input signal as a dimensionless ratio.
+    results : dict
+        A dictionary containing:
+            - 'thd': The THD ratio (float)
+            - 'frequency': Fundamental frequency in Hz (float)
+            - 'fundamental_amplitude': Amplitude of fundamental (float)
+            - 'harmonics': List of tuples (freq, amplitude) for each harmonic
 
     Notes
     -----
@@ -182,12 +188,14 @@ def THD(signal, fs, *, ref='f'):
     >>> fs = 48000  # Hz
     >>> t = np.linspace(0, 1, fs, endpoint=False)
     >>> signal = np.sin(2*np.pi*10000*t) + 0.1*np.sin(2*np.pi*20000*t)
-    >>> THD_ratio = THD(signal, fs)
+    >>> results = THD(signal, fs)
     Frequency: 10000.000000 Hz
     fundamental amplitude: 23999.500
     Harmonic 2 at 20000.000 Hz: 2399.950
 
     THD: 10.000000%
+    >>> results['thd']
+    0.1
     """
     # Get rid of DC and window the signal
     signal = np.asarray(signal) + 0.0  # Float-like array
@@ -203,9 +211,12 @@ def THD(signal, fs, *, ref='f'):
     i = argmax(abs(f))
     true_i = parabolic(log(abs(f)), i)[0]
     frequency = fs * (true_i / len(windowed))
-    print(f'Frequency: {frequency:f} Hz')
+    if verbose:
+        print(f'Frequency: {frequency:f} Hz')
 
-    print(f'fundamental amplitude: {abs(f[i]):.3f}')
+    fundamental_amplitude = abs(f[i])
+    if verbose:
+        print(f'fundamental amplitude: {fundamental_amplitude:.3f}')
 
     # Find the values for the harmonics.  Includes harmonic peaks
     # only, by definition
@@ -213,22 +224,32 @@ def THD(signal, fs, *, ref='f'):
     # was perfectly estimated.
     num_harmonics = int((fs/2)/frequency)
     harmonic_amplitudes = []
+    harmonics = []
     for h in range(2, num_harmonics + 1):
         freq = frequency * h
         ampl = abs(f[i * h])
         harmonic_amplitudes.append(ampl)
-        print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
+        harmonics.append((freq, ampl))
+        if verbose:
+            print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
 
     THD = np.sqrt(sum(h**2 for h in harmonic_amplitudes))
     if ref.lower() == 'f':
-        THD /= abs(f[i])
+        THD /= fundamental_amplitude
     elif ref.lower() == 'r':
-        THD /= np.sqrt(abs(f[i])**2 + THD**2)
+        THD /= np.sqrt(fundamental_amplitude**2 + THD**2)
     else:
         raise ValueError('Reference argument not understood.')
 
-    print(f'\nTHD: {THD * 100:f}%')
-    return THD
+    if verbose:
+        print(f'\nTHD: {THD * 100:f}%')
+
+    return {
+        'thd': THD,
+        'frequency': frequency,
+        'fundamental_amplitude': fundamental_amplitude,
+        'harmonics': harmonics,
+    }
 
 
 thd = THD
