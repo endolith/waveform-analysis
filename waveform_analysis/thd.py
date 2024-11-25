@@ -40,7 +40,7 @@ flattops = {
 }
 
 
-def THDN(signal, fs, weight=None):
+def THDN(signal, fs, *, freq=None, weight=None):
     """
     Calculate the Total Harmonic Distortion + Noise (THD+N) of a signal.
 
@@ -50,6 +50,9 @@ def THDN(signal, fs, weight=None):
         Input signal to analyze.
     fs : float
         Sampling frequency of the signal in Hz, used for A-weighting.
+    freq : float, optional
+        Fundamental frequency in Hz. If None, it will be detected automatically
+        from the signal's spectrum (default: None).
     weight : {'A', None}, optional
         Weighting type for the noise measurement:
 
@@ -108,9 +111,13 @@ def THDN(signal, fs, weight=None):
 
     # Find the peak of the frequency spectrum (fundamental frequency)
     f = rfft(windowed)
-    i = argmax(abs(f))
-    true_i = parabolic(log(abs(f)), i)[0]
-    # frequency = fs * (true_i / len(windowed))
+    if freq is None:
+        i = argmax(abs(f))
+        true_i = parabolic(log(abs(f)), i)[0]
+    else:
+        # Calculate the bin index for the given frequency
+        true_i = freq * len(windowed) / fs
+        i = int(round(true_i))
 
     # Filter out fundamental by throwing away values ±10%
     lowermin = int(true_i * 0.9)
@@ -140,7 +147,7 @@ def THDN(signal, fs, weight=None):
 thd_n = THDN
 
 
-def THD(signal, fs, *, ref='f'):
+def THD(signal, fs, *, freq=None, ref='f'):
     """
     Calculate the Total Harmonic Distortion (THD) of a signal.
 
@@ -150,6 +157,9 @@ def THD(signal, fs, *, ref='f'):
         Input signal to analyze.
     fs : float
         Sampling frequency of the signal in Hz.
+    freq : float, optional
+        Fundamental frequency in Hz. If None, it will be detected automatically
+        from the signal's spectrum (default: None).
     ref : {'r', 'f'}, optional
         Reference type for the THD calculation:
 
@@ -200,9 +210,15 @@ def THD(signal, fs, *, ref='f'):
 
     # Find the peak of the frequency spectrum (fundamental frequency)
     f = rfft(windowed)
-    i = argmax(abs(f))
-    true_i = parabolic(log(abs(f)), i)[0]
-    frequency = fs * (true_i / len(windowed))
+    if freq is None:
+        i = argmax(abs(f))
+        true_i = parabolic(log(abs(f)), i)[0]
+        frequency = fs * (true_i / len(windowed))
+    else:
+        frequency = freq
+        true_i = frequency * len(windowed) / fs
+        i = int(round(true_i))
+
     print(f'Frequency: {frequency:f} Hz')
 
     print(f'fundamental amplitude: {abs(f[i]):.3f}')

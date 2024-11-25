@@ -134,6 +134,21 @@ class TestTHDN:
         result = THD(sig, fs, ref='r')  # Mono files
         assert pytest.approx(result, abs=0.0002) == thd/100
 
+    def test_freq_parameter(self):
+        fs = 48000  # Hz
+        f = 1000  # Hz
+        # Create a signal with known harmonics
+        signal = sine_wave(f, fs) + 0.75 * sine_wave(2*f, fs)
+
+        # Test that explicit frequency gives same results as auto-detection
+        auto_thdn = THDN(signal, fs)
+        explicit_thdn = THDN(signal, fs, freq=f)
+        assert explicit_thdn == pytest.approx(auto_thdn)
+
+        auto_thd = THD(signal, fs)
+        explicit_thd = THD(signal, fs, freq=f)
+        assert explicit_thd == pytest.approx(auto_thd)
+
 
 if __name__ == '__main__':
     pytest.main([__file__, "--capture=sys"])
