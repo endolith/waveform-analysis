@@ -4,12 +4,14 @@ from time import time
 from waveform_analysis._common import analyze_channels
 from waveform_analysis.freq_estimation import freq_from_fft
 
+
+def freq_wrapper(signal, fs):
+    freq = freq_from_fft(signal, fs)
+    print(f'{freq:f} Hz')
+
+
 if __name__ == '__main__':
     try:
-        def freq_wrapper(signal, fs):
-            freq = freq_from_fft(signal, fs)
-            print(f'{freq:f} Hz')
-
         files = sys.argv[1:]
         if files:
             for filename in files:
