@@ -147,7 +147,7 @@ def THDN(signal, fs, *, freq=None, weight=None):
 thd_n = THDN
 
 
-def THD(signal, fs, *, freq=None, ref='f'):
+def THD(signal, fs, *, freq=None, ref='f', verbose=False):
     """
     Calculate the Total Harmonic Distortion (THD) of a signal.
 
@@ -165,6 +165,8 @@ def THD(signal, fs, *, freq=None, ref='f'):
 
         - 'r' : Use the RMS value of the original signal as reference.
         - 'f' : Use the fundamental amplitude as reference (default).
+    verbose : bool, optional
+        If True, print detailed analysis information (default: False).
 
     Returns
     -------
@@ -219,9 +221,9 @@ def THD(signal, fs, *, freq=None, ref='f'):
         true_i = frequency * len(windowed) / fs
         i = int(round(true_i))
 
-    print(f'Frequency: {frequency:f} Hz')
-
-    print(f'fundamental amplitude: {abs(f[i]):.3f}')
+    if verbose:
+        print(f'Frequency: {frequency:f} Hz')
+        print(f'fundamental amplitude: {abs(f[i]):.3f}')
 
     # Find the values for the harmonics.  Includes harmonic peaks
     # only, by definition
@@ -233,7 +235,8 @@ def THD(signal, fs, *, freq=None, ref='f'):
         freq = frequency * h
         ampl = abs(f[i * h])
         harmonic_amplitudes.append(ampl)
-        print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
+        if verbose:
+            print(f'Harmonic {h} at {freq:.3f} Hz: {ampl:.3f}')
 
     THD = np.sqrt(sum(h**2 for h in harmonic_amplitudes))
     if ref.lower() == 'f':
@@ -243,7 +246,8 @@ def THD(signal, fs, *, freq=None, ref='f'):
     else:
         raise ValueError('Reference argument not understood.')
 
-    print(f'\nTHD: {THD * 100:f}%')
+    if verbose:
+        print(f'\nTHD: {THD * 100:f}%')
     return THD
 
 
