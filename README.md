@@ -17,9 +17,13 @@ Please don't blindly trust this.  If you use this and find a stupid error, pleas
 
 ## Installation
 
-This should now be an installable package, using:
+Install the latest revision from GitHub:
 
     pip install git+https://github.com/endolith/waveform-analysis.git@master
+
+From a local clone (editable install, includes test dependencies):
+
+    pip install -e ".[dev]"
 
 I'm in the process of splitting it into callable functions and scripts that use those functions.
 

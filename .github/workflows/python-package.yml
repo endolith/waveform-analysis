@@ -34,15 +34,10 @@ jobs:
       - name: Display Python version
         run: python -c "import sys; print(sys.version)"
 
-      - name: Install dependencies
+      - name: Install package and dev tools
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Install package
-        run: |
-          pip install -e .
+          pip install -e ".[dev]"
 
       - name: Install python-soundfile
         if: matrix.dependencies == 'soundfile'
