@@ -149,6 +149,18 @@ class TestTHDN:
         explicit_thd = THD(signal, fs, freq=f)
         assert explicit_thd == pytest.approx(auto_thd)
 
+    def test_low_fundamental_no_indexerror(self):
+        # Regression test for issue #38.  num_harmonics is derived from the
+        # continuous fundamental frequency, but harmonics are indexed by the
+        # rounded fundamental bin i.  For a low/fractional fundamental that
+        # rounds up, i * num_harmonics overshot the rfft length and raised
+        # IndexError instead of returning a THD value.
+        fs = 12000  # Hz
+        signal = sine_wave(6, fs)  # 12000 samples, fundamental ~6 Hz
+        result = THD(signal, fs, freq=5.994)  # rounds to bin 6
+        assert np.isfinite(result)
+        assert result >= 0
+
 
 if __name__ == '__main__':
     pytest.main([__file__, "--capture=sys"])

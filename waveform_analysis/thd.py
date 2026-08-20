@@ -232,6 +232,13 @@ def THD(signal, fs, *, freq=None, ref='f', verbose=False):
     num_harmonics = int((fs/2)/frequency)
     harmonic_amplitudes = []
     for h in range(2, num_harmonics + 1):
+        # num_harmonics is derived from the continuous fundamental frequency,
+        # but harmonics are indexed by the rounded fundamental bin i.  When i
+        # rounds up, i * h can overshoot the rfft length, landing above the
+        # Nyquist frequency where no component can exist.  h increases
+        # monotonically, so break once we run past the spectrum (issue #38).
+        if i * h >= len(f):
+            break
         freq = frequency * h
         ampl = abs(f[i * h])
         harmonic_amplitudes.append(ampl)
