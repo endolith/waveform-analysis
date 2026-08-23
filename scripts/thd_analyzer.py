@@ -1,3 +1,4 @@
+import sys
 from math import log10
 from time import time
 
@@ -34,7 +35,6 @@ def thd_analyzer(files):
 
 
 if __name__ == '__main__':
-    import sys
     try:
         files = sys.argv[1:]
         thd_analyzer(files)
