@@ -5,6 +5,8 @@ import sys
 
 import pytest
 
+from subprocess_helpers import env_with_repo_on_pythonpath
+
 # Get the base directory for waveform-analysis project
 tests_dir = os.path.dirname(__file__)
 script_path = os.path.join(tests_dir, '..', 'scripts', 'measure_freq.py')
@@ -32,7 +34,8 @@ def run_measure_freq(filename="", extra_args=None):
     result = subprocess.run(
         args,
         capture_output=True,
-        text=True
+        text=True,
+        env=env_with_repo_on_pythonpath(),
     )
     return result
 

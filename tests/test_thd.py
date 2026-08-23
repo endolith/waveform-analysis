@@ -1,4 +1,6 @@
+import io
 import os
+from contextlib import redirect_stdout
 from glob import glob
 
 import numpy as np
@@ -148,6 +150,30 @@ class TestTHDN:
         auto_thd = THD(signal, fs)
         explicit_thd = THD(signal, fs, freq=f)
         assert explicit_thd == pytest.approx(auto_thd)
+
+    def test_thdn_a_weighting_on_residual(self):
+        fs = 48000
+        f = 1000
+        t = np.linspace(0, 1, fs, endpoint=False)
+        signal = sine_wave(f, fs) + 0.75 * sine_wave(2 * f, fs)
+        unweighted = THDN(signal, fs, weight=None)
+        a_weighted = THDN(signal, fs, weight='A')
+        assert unweighted > 0
+        assert a_weighted > 0
+        assert a_weighted != pytest.approx(unweighted)
+
+    def test_thd_verbose_output(self):
+        fs = 100000
+        f = 1000
+        signal = sine_wave(f, fs) + 0.75 * sine_wave(2 * f, fs)
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            result = THD(signal, fs, verbose=True)
+        out = buf.getvalue()
+        assert 'Frequency:' in out
+        assert 'Harmonic 2' in out
+        assert 'THD:' in out
+        assert result == pytest.approx(0.75)
 
 
 if __name__ == '__main__':

@@ -1,10 +1,12 @@
 import os
+import tempfile
 
 import numpy as np
 import pytest
 
 from waveform_analysis._common import (analyze_channels, dB, find, load,
-                                       parabolic, parabolic_polyfit, rms_flat)
+                                       parabolic, parabolic_polyfit, rms_flat,
+                                       wav_loader)
 
 # Get the test files directory
 tests_dir = os.path.dirname(__file__)
@@ -66,6 +68,29 @@ class TestLoad:
         # because WAV files can only contain numeric data types that are
         # already handled. The error case is kept as a safeguard and marked
         # with "pragma: no cover"
+
+    @pytest.mark.skipif(
+        wav_loader != 'scipy.io.wavfile',
+        reason='32-bit PCM scaling is exercised in the SciPy wavfile path',
+    )
+    def test_load_scipy_int32_pcm_scaling(self):
+        from scipy.io import wavfile
+
+        sr = 8000
+        n = 4000
+        t = np.linspace(0, n / sr, n, endpoint=False)
+        pcm = (np.sin(2 * np.pi * 440 * t) * (2 ** 31 - 1)).astype(np.int32)
+        fd, path = tempfile.mkstemp(suffix='.wav')
+        os.close(fd)
+        try:
+            wavfile.write(path, sr, pcm)
+            soundfile = load(path)
+        finally:
+            os.unlink(path)
+        assert soundfile['fs'] == sr
+        assert soundfile['channels'] == 1
+        assert soundfile['signal'].dtype == np.float64
+        assert np.max(np.abs(soundfile['signal'])) <= 1.0
 
 
 class TestAnalyzeChannels:
