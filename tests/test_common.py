@@ -90,7 +90,8 @@ class TestLoad:
         assert soundfile['fs'] == sr
         assert soundfile['channels'] == 1
         assert soundfile['signal'].dtype == np.float64
-        assert np.max(np.abs(soundfile['signal'])) <= 1.0
+        np.testing.assert_allclose(
+            soundfile['signal'], pcm.astype(np.float64) / (2 ** 31))
 
 
 class TestAnalyzeChannels:
