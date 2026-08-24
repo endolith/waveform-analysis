@@ -10,6 +10,9 @@ from numpy import absolute, array_equal, mean
 from waveform_analysis import A_weight, ITU_R_468_weight
 from waveform_analysis._common import dB, load, rms_flat, wav_loader
 
+if wav_loader == 'python-soundfile':
+    from soundfile import LibsndfileError
+
 has_easygui = importlib.util.find_spec("easygui") is not None
 if has_easygui:
     import easygui
@@ -199,7 +202,7 @@ def wave_analyzer(files, gui):
                 analyze(filename, gui)
             except FileNotFoundError:
                 raise SystemExit(f'File not found: "{filename}"')
-            except IOError as e:
+            except (IOError, LibsndfileError) as e:
                 raise SystemExit('I/O error occurred while reading '
                                  f'"{filename}": {str(e)}')
             except ValueError as e:
