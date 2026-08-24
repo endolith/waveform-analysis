@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling>=1.24.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "waveform-analysis"
+version = "0.1"
+description = "Functions and scripts for analyzing waveforms, especially audio"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+requires-python = ">=3.7"
+authors = [
+    { name = "endolith", email = "endolith@gmail.com" },
+]
+dependencies = [
+    "numpy",
+    "scipy",
+]
+keywords = ["audio", "dsp", "waveform", "thd", "weighting"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+]
+urls.Homepage = "https://github.com/endolith/waveform-analysis"
+urls.Repository = "https://github.com/endolith/waveform-analysis"
+urls.Issues = "https://github.com/endolith/waveform-analysis/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "flake8",
+]
