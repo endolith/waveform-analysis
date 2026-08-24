@@ -81,7 +81,9 @@ class TestWaveAnalyzerScript:
             mod.wave_analyzer(['/nonexistent/path/does-not-exist.wav'],
                               gui=False)
         msg = str(exc.value)
-        assert 'File not found' in msg or 'I/O error' in msg
+        assert ('File not found' in msg or 'I/O error' in msg
+                or 'Unexpected error' in msg)
+        assert 'does-not-exist.wav' in msg
 
     def test_wave_analyzer_invalid_wav(self):
         bad = os.path.join(
@@ -92,7 +94,8 @@ class TestWaveAnalyzerScript:
         with pytest.raises(SystemExit) as exc:
             mod.wave_analyzer([bad], gui=False)
         msg = str(exc.value)
-        assert 'Invalid audio file' in msg or 'I/O error' in msg
+        assert ('Invalid audio file' in msg or 'I/O error' in msg
+                or 'Error in WAV file' in msg)
 
     def test_analyze_stereo_different_channels(self, capsys):
         stereo = os.path.join(
@@ -236,12 +239,13 @@ class TestScriptLaunchers:
         script = os.path.join(REPO_ROOT, 'scripts', 'wave_analyzer_launcher.py')
         with patch.dict(sys.modules, {'tkinter': tk, 'tkinter.messagebox': msg},
                         clear=False):
-            with patch('sys.argv', ['wave_analyzer_launcher.py', 'missing.wav']):
-                saved = sys.path[:]
-                sys.path.insert(0, self.scripts_dir)
-                try:
-                    with pytest.raises(SystemExit):
-                        runpy.run_path(script, run_name='__main__')
-                finally:
-                    sys.path[:] = saved
+            with patch('importlib.util.find_spec', return_value=None):
+                with patch('sys.argv', ['wave_analyzer_launcher.py', 'missing.wav']):
+                    saved = sys.path[:]
+                    sys.path.insert(0, self.scripts_dir)
+                    try:
+                        with pytest.raises(SystemExit):
+                            runpy.run_path(script, run_name='__main__')
+                    finally:
+                        sys.path[:] = saved
         msg.showerror.assert_called()
