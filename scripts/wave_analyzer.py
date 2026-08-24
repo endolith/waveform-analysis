@@ -10,8 +10,10 @@ from numpy import absolute, array_equal, mean
 from waveform_analysis import A_weight, ITU_R_468_weight
 from waveform_analysis._common import dB, load, rms_flat, wav_loader
 
-if wav_loader == 'python-soundfile':
+try:
     from soundfile import LibsndfileError
+except ImportError:
+    LibsndfileError = IOError
 
 has_easygui = importlib.util.find_spec("easygui") is not None
 if has_easygui:
