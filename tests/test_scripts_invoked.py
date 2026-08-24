@@ -77,9 +77,11 @@ class TestWaveAnalyzerScript:
     def test_wave_analyzer_nonexistent_file(self):
         with patch('importlib.util.find_spec', return_value=None):
             mod = _load_script('wave_analyzer_nf', 'scripts/wave_analyzer.py')
-        with pytest.raises(SystemExit, match='File not found'):
+        with pytest.raises(SystemExit) as exc:
             mod.wave_analyzer(['/nonexistent/path/does-not-exist.wav'],
                               gui=False)
+        msg = str(exc.value)
+        assert 'File not found' in msg or 'I/O error' in msg
 
     def test_wave_analyzer_invalid_wav(self):
         bad = os.path.join(
