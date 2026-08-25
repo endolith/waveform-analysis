@@ -5,6 +5,7 @@ import sys
 
 import pytest
 
+from subprocess_helpers import env_with_repo_on_pythonpath
 from waveform_analysis._common import wav_loader
 
 # Get the base directory for waveform-analysis project
@@ -18,7 +19,12 @@ def run_wave_analyzer(filename=None, extra_args=[]):
     if filename:
         cmd.append(os.path.join(test_files_dir, filename))
     cmd.extend(extra_args)
-    return subprocess.run(cmd, capture_output=True, text=True)
+    return subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        env=env_with_repo_on_pythonpath(),
+    )
 
 
 class TestWaveAnalyzer:
