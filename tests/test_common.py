@@ -1,5 +1,4 @@
 import os
-import tempfile
 
 import numpy as np
 import pytest
@@ -76,17 +75,11 @@ class TestLoad:
     def test_load_scipy_int32_pcm_scaling(self):
         from scipy.io import wavfile
 
-        sr = 8000
-        n = 4000
-        t = np.linspace(0, n / sr, n, endpoint=False)
-        pcm = (np.sin(2 * np.pi * 440 * t) * (2 ** 31 - 1)).astype(np.int32)
-        fd, path = tempfile.mkstemp(suffix='.wav')
-        os.close(fd)
-        try:
-            wavfile.write(path, sr, pcm)
-            soundfile = load(path)
-        finally:
-            os.unlink(path)
+        # 32-bit PCM file: load() should scale by 2**31
+        filepath = os.path.join(
+            test_files_dir, 'test-44100Hz-be-1ch-4bytes.wav')
+        sr, pcm = wavfile.read(filepath)
+        soundfile = load(filepath)
         assert soundfile['fs'] == sr
         assert soundfile['channels'] == 1
         assert soundfile['signal'].dtype == np.float64
